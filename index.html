@@ -20,11 +20,9 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- الشريط العلوي -->
   <header class="bg-[#0f172a] border-b border-slate-800 sticky top-0 z-40">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <!-- الضغط 5 مرات متتالية على حرف M يفتح لوحة المدير -->
         <button id="secretLogoBtn" type="button" onclick="handleSecretTap()" class="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center font-extrabold text-xl text-white select-none active:scale-95 transition">
           M
         </button>
@@ -41,7 +39,6 @@
     </div>
   </header>
 
-  <!-- المحتوى الرئيسي -->
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
 
     <!-- 1. شاشة تسجيل دخول الطلاب -->
@@ -256,11 +253,11 @@
   </div>
 
   <script>
-    // كلمات المرور وإعدادات المستودع الجديد
+    // كلمات المرور وإعدادات المستودع (مضبوطة على Malek-Medical-)
     const ADMIN_PASSWORD = "malek2026";
     let STUDENT_PASSWORD = "med2026";
     const GITHUB_OWNER = "nassarmalek833-ctrl";
-    const GITHUB_REPO = "Malek-Med-Exam";
+    const GITHUB_REPO = "Malek-Medical-";
     const GITHUB_FILE_PATH = "index.html";
 
     // قاعدة بيانات الأسئلة المنشورة للطلاب
@@ -378,7 +375,7 @@
     }
 
     async function publishDirectlyToGitHub() {
-      const token = localStorage.getItem("malek_gh_token") || document.getElementById("ghTokenInput").value.trim();
+      const token = (localStorage.getItem("malek_gh_token") || document.getElementById("ghTokenInput").value).trim();
       if (!token) {
         alert("يرجى لصق مفتاح GitHub Token في الخانة بالأعلى أولاً ثم الضغط على حفظ.");
         return;
@@ -395,12 +392,15 @@
         const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
         const getRes = await fetch(apiUrl, {
           headers: {
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `token ${token}`,
             "Accept": "application/vnd.github.v3+json"
           }
         });
 
-        if (!getRes.ok) throw new Error("تأكد من صحة مفتاح GitHub Token وصلاحياته (repo).");
+        if (!getRes.ok) {
+          const errData = await getRes.json().catch(() => ({}));
+          throw new Error(`(${getRes.status}) ${errData.message || "تأكد من صحة مفتاح GitHub Token وصلاحياته (repo)."}`);
+        }
         const fileData = await getRes.json();
 
         const currentContent = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ""))));
@@ -418,7 +418,7 @@
         const putRes = await fetch(apiUrl, {
           method: "PUT",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `token ${token}`,
             "Accept": "application/vnd.github.v3+json",
             "Content-Type": "application/json"
           },
@@ -437,222 +437,3 @@
         status.textContent = "✅ تم النشر بنجاح! التحديث متاح الآن على رابط الطلاب.";
         alert("تم نشر الأسئلة وكلمة المرور بنجاح للطلاب!");
       } catch (err) {
-        status.className = "text-xs font-bold text-red-400 mt-2";
-        status.textContent = "❌ خطأ: " + err.message;
-        alert("خطأ أثناء النشر: " + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "🚀 نشر التعديلات للطلاب فوراً";
-      }
-    }
-
-    function populateModels() {
-      const models = [...new Set(questions.map(q => q.model))];
-      const select = document.getElementById("modelSelect");
-      select.innerHTML = `<option value="ALL">جميع النماذج (${questions.length} سؤال)</option>` +
-        models.map(m => `<option value="${m}">${m}</option>`).join("");
-      document.getElementById("totalQuestionsBadge").textContent = questions.length;
-    }
-
-    function startExam() {
-      const selectedModel = document.getElementById("modelSelect").value;
-      currentMode = document.getElementById("modeSelect").value;
-      const mins = parseInt(document.getElementById("durationInput").value) || 45;
-
-      activeQuestions = selectedModel === "ALL" ? [...questions] : questions.filter(q => q.model === selectedModel);
-      if (activeQuestions.length === 0) {
-        alert("لا توجد أسئلة في هذا النموذج حالياً.");
-        return;
-      }
-
-      currentIdx = 0;
-      userAnswers = {};
-      flaggedSet.clear();
-      remainingSeconds = mins * 60;
-      isPaused = false;
-
-      document.getElementById("examSetupCard").classList.add("hidden");
-      document.getElementById("resultScreen").classList.add("hidden");
-      document.getElementById("examRunner").classList.remove("hidden");
-
-      startTimer();
-      renderQuestion();
-    }
-
-    function startTimer() {
-      clearInterval(timerInterval);
-      updateTimerUI();
-      timerInterval = setInterval(() => {
-        if (!isPaused) {
-          remainingSeconds--;
-          updateTimerUI();
-          if (remainingSeconds <= 0) {
-            clearInterval(timerInterval);
-            finishExam();
-          }
-        }
-      }, 1000);
-    }
-
-    function updateTimerUI() {
-      const m = String(Math.floor(remainingSeconds / 60)).padStart(2, "0");
-      const s = String(remainingSeconds % 60).padStart(2, "0");
-      document.getElementById("timerDisplay").textContent = `${m}:${s}`;
-    }
-
-    function togglePause() {
-      isPaused = !isPaused;
-      document.getElementById("pauseBtn").textContent = isPaused ? "استئناف" : "إيقاف مؤقت";
-    }
-
-    function renderQuestion() {
-      const q = activeQuestions[currentIdx];
-      document.getElementById("questionProgressText").textContent = `سؤال ${currentIdx + 1} من ${activeQuestions.length}`;
-      document.getElementById("questionCategoryBadge").textContent = q.model;
-      document.getElementById("questionText").textContent = q.text;
-
-      const flagBtn = document.getElementById("flagBtn");
-      flagBtn.classList.toggle("bg-amber-600", flaggedSet.has(currentIdx));
-      flagBtn.classList.toggle("text-white", flaggedSet.has(currentIdx));
-
-      const letters = ["A", "B", "C", "D"];
-      const container = document.getElementById("optionsContainer");
-      const chosen = userAnswers[currentIdx];
-      const showInstant = currentMode === "practice" && chosen !== undefined;
-
-      container.innerHTML = q.options.map((opt, idx) => {
-        let cls = "option-btn w-full text-right p-4 rounded-xl flex items-center gap-3 font-semibold ";
-        if (showInstant) {
-          if (idx === q.correct) cls += "option-correct";
-          else if (idx === chosen) cls += "option-wrong";
-        } else if (chosen === idx) {
-          cls += "option-selected";
-        }
-        return `
-          <button type="button" onclick="selectOption(${idx})" ${showInstant ? "disabled" : ""} class="${cls}">
-            <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-sm font-bold text-orange-400 shrink-0">${letters[idx]}</span>
-            <span>${opt}</span>
-          </button>
-        `;
-      }).join("");
-
-      const expBox = document.getElementById("instantExplanationBox");
-      if (showInstant) {
-        document.getElementById("instantExplanationText").textContent = q.explanation;
-        expBox.classList.remove("hidden");
-      } else {
-        expBox.classList.add("hidden");
-      }
-
-      document.getElementById("prevBtn").disabled = currentIdx === 0;
-      document.getElementById("nextBtn").textContent = currentIdx === activeQuestions.length - 1 ? "إنهاء وعرض النتيجة" : "التالي";
-      renderNavGrid();
-    }
-
-    function renderNavGrid() {
-      const grid = document.getElementById("navGrid");
-      grid.innerHTML = activeQuestions.map((_, i) => {
-        let bg = "bg-slate-800 text-slate-300 border-slate-700";
-        if (flaggedSet.has(i)) bg = "bg-amber-600 text-white border-amber-500";
-        else if (userAnswers[i] !== undefined) bg = "bg-blue-700 text-white border-blue-500";
-        if (i === currentIdx) bg += " ring-2 ring-orange-400";
-        return `<button type="button" onclick="jumpTo(${i})" class="w-8 h-8 rounded-lg border text-xs font-bold ${bg}">${i + 1}</button>`;
-      }).join("");
-    }
-
-    function selectOption(idx) {
-      userAnswers[currentIdx] = idx;
-      renderQuestion();
-    }
-
-    function toggleFlag() {
-      if (flaggedSet.has(currentIdx)) flaggedSet.delete(currentIdx);
-      else flaggedSet.add(currentIdx);
-      renderQuestion();
-    }
-
-    function jumpTo(i) { currentIdx = i; renderQuestion(); }
-    function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
-    function nextQuestion() {
-      if (currentIdx < activeQuestions.length - 1) { currentIdx++; renderQuestion(); }
-      else finishExam();
-    }
-
-    function finishExam() {
-      clearInterval(timerInterval);
-      document.getElementById("examRunner").classList.add("hidden");
-      document.getElementById("resultScreen").classList.remove("hidden");
-
-      let correctCount = 0;
-      activeQuestions.forEach((q, i) => { if (userAnswers[i] === q.correct) correctCount++; });
-      const pct = Math.round((correctCount / activeQuestions.length) * 100);
-
-      document.getElementById("scorePercentage").textContent = `${pct}%`;
-      document.getElementById("scoreSummaryText").textContent = `أجبت بشكل صحيح على ${correctCount} من أصل ${activeQuestions.length} سؤال`;
-      document.getElementById("studentGradeLabel").textContent =
-        pct >= 90 ? "ممتاز (Excellent)" : pct >= 80 ? "جيد جداً (Very Good)" : pct >= 65 ? "جيد (Good)" : "بحاجة لمراجعة (Needs Improvement)";
-
-      const letters = ["A", "B", "C", "D"];
-      document.getElementById("reviewContainer").innerHTML = activeQuestions.map((q, i) => {
-        const chosen = userAnswers[i];
-        const isRight = chosen === q.correct;
-        return `
-          <div class="p-4 rounded-xl border ${isRight ? "border-emerald-700 bg-emerald-950/30" : "border-red-800 bg-red-950/30"}">
-            <p class="font-bold text-white mb-2">${i + 1}. ${q.text}</p>
-            <p class="text-xs text-slate-300">إجابتك: <span class="font-bold">${chosen !== undefined ? letters[chosen] + " - " + q.options[chosen] : "لم تتم الإجابة"}</span></p>
-            <p class="text-xs text-emerald-400 mt-1">الإجابة الصحيحة: <span class="font-bold">${letters[q.correct]} - ${q.options[q.correct]}</span></p>
-            <p class="text-xs text-blue-300 mt-2 bg-slate-900/80 p-2.5 rounded-lg">💡 ${q.explanation}</p>
-          </div>
-        `;
-      }).join("");
-    }
-
-    function resetToHome() {
-      document.getElementById("resultScreen").classList.add("hidden");
-      document.getElementById("examSetupCard").classList.remove("hidden");
-    }
-
-    // وظائف المدير
-    function addQuestion(e) {
-      e.preventDefault();
-      const newQ = {
-        model: document.getElementById("qModel").value.trim(),
-        text: document.getElementById("qText").value.trim(),
-        options: [
-          document.getElementById("opt0").value.trim(),
-          document.getElementById("opt1").value.trim(),
-          document.getElementById("opt2").value.trim(),
-          document.getElementById("opt3").value.trim()
-        ],
-        correct: parseInt(document.getElementById("qCorrect").value),
-        explanation: document.getElementById("qExp").value.trim()
-      };
-      questions.push(newQ);
-      localStorage.setItem("malek_admin_draft_questions", JSON.stringify(questions));
-      e.target.reset();
-      renderAdminList();
-      alert("تمت إضافة السؤال للقائمة! اضغط الآن على 'نشر التعديلات للطلاب فوراً'.");
-    }
-
-    function deleteQuestion(idx) {
-      questions.splice(idx, 1);
-      localStorage.setItem("malek_admin_draft_questions", JSON.stringify(questions));
-      renderAdminList();
-    }
-
-    function renderAdminList() {
-      document.getElementById("adminQCount").textContent = questions.length;
-      document.getElementById("adminQuestionsList").innerHTML = questions.map((q, i) => `
-        <div class="p-3 rounded-xl bg-slate-900 border border-slate-700 flex items-start justify-between gap-3">
-          <div>
-            <span class="text-xs text-orange-400 font-bold">${q.model}</span>
-            <p class="text-sm font-semibold text-white mt-1">${i + 1}. ${q.text}</p>
-          </div>
-          <button type="button" onclick="deleteQuestion(${i})" class="text-xs px-2.5 py-1 rounded bg-red-900/60 text-red-200 hover:bg-red-800 shrink-0">حذف</button>
-        </div>
-      `).join("");
-    }
-  </script>
-</body>
-</html>
-
