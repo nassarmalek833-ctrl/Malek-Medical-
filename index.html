@@ -262,21 +262,31 @@
 
     // قاعدة بيانات الأسئلة المنشورة للطلاب
     const DEFAULT_QUESTIONS = [
-      {
-        model: "General Medicine - Model 1",
-        text: "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
-        options: ["Glossopharyngeal nerve (CN IX)", "Vagus nerve (CN X)", "Accessory nerve (CN XI)", "Hypoglossal nerve (CN XII)"],
-        correct: 1,
-        explanation: "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
-      },
-      {
-        model: "General Medicine - Model 1",
-        text: "What is the primary pacemaker of the normal human heart?",
-        options: ["Atrioventricular (AV) node", "Bundle of His", "Sinoatrial (SA) node", "Purkinje fibers"],
-        correct: 2,
-        explanation: "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
-      }
-    ];
+  {
+    "model": "General Medicine - Model 1",
+    "text": "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
+    "options": [
+      "Glossopharyngeal nerve (CN IX)",
+      "Vagus nerve (CN X)",
+      "Accessory nerve (CN XI)",
+      "Hypoglossal nerve (CN XII)"
+    ],
+    "correct": 1,
+    "explanation": "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
+  },
+  {
+    "model": "General Medicine - Model 1",
+    "text": "What is the primary pacemaker of the normal human heart?",
+    "options": [
+      "Atrioventricular (AV) node",
+      "Bundle of His",
+      "Sinoatrial (SA) node",
+      "Purkinje fibers"
+    ],
+    "correct": 2,
+    "explanation": "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
+  }
+];
 
     let questions = [...DEFAULT_QUESTIONS];
     let activeQuestions = [];
