@@ -369,23 +369,137 @@
 
     // قاعدة بيانات الأسئلة المنشورة للطلاب
     const DEFAULT_QUESTIONS = [
-      {
-        model: "General Medicine - Model 1",
-        text: "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
-        image: "",
-        options: ["Glossopharyngeal nerve (CN IX)", "Vagus nerve (CN X)", "Accessory nerve (CN XI)", "Hypoglossal nerve (CN XII)"],
-        correct: 1,
-        explanation: "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
-      },
-      {
-        model: "General Medicine - Model 1",
-        text: "What is the primary pacemaker of the normal human heart?",
-        image: "",
-        options: ["Atrioventricular (AV) node", "Bundle of His", "Sinoatrial (SA) node", "Purkinje fibers"],
-        correct: 2,
-        explanation: "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
-      }
-    ];
+  {
+    "model": "Biology",
+    "text": "Which two properties of water are of crucial importance to the structure and function of\nbiomolecules?",
+    "image": "",
+    "options": [
+      "A) Its high density as a solid and its low heat of vaporization",
+      "B) Cohesion of its molecules and a slight tendency to ionize",
+      "C) Its nonpolar bonds and its ability to dissolve lipids readily",
+      "D) Its linear shape and the great strength of its hydrogen bonds"
+    ],
+    "correct": 1,
+    "explanation": "The attractive forces (cohesion) between water molecules and the slight tendency of water to ionize\nunderlie the behaviour of biomolecules. Every other option names properties water does not have; for example,\nice is less dense than the liquid and hydrogen bonds are relatively weak."
+  },
+  {
+    "model": "Biology",
+    "text": "Suppose oxygen and hydrogen had equal electronegativity. Which consequence for water\nwould follow?",
+    "image": "",
+    "options": [
+      "A) Its H-O-H bond angle would widen to exactly 180°",
+      "B) Each of its hydrogen atoms would carry a δ− charge",
+      "C) Water would become a far better solvent for NaCl",
+      "D) Its molecules could no longer form hydrogen bonds"
+    ],
+    "correct": 3,
+    "explanation": "The partial charges exist only because oxygen is more electronegative and pulls the shared\nelectrons toward itself. With equal sharing the O-H bonds would be nonpolar, leaving no δ+ and δ− regions to\nattract neighbouring molecules, so cohesion and the ability to hydrate ions would be lost."
+  },
+  {
+    "model": "Biology",
+    "text": "In which of the following molecules are the electrons of every covalent bond shared\nequally between the bonded atoms?",
+    "image": "",
+    "options": [
+      "H2O",
+      "CO2",
+      "O2",
+      "NH3"
+    ],
+    "correct": 2,
+    "explanation": "التفسير العلمي : In O2, as in N2, the two bonded atoms are identical, so electrons are shared equally and the bond\nis nonpolar. In CO2 each C=O bond is polar; the molecule is nonpolar only because the two dipoles cancel. The\nbonds of H2O and NH3 are polar"
+  },
+  {
+    "model": "Biology",
+    "text": "A hydrogen bond results from the attraction between a hydrogen atom covalently bonded\nto a very electronegative atom and another very electronegative atom. Which group lists\natoms of this kind",
+    "image": "",
+    "options": [
+      "N, O and F",
+      "C, H and P",
+      "Na, K and Ca",
+      "C, Na and H"
+    ],
+    "correct": 0,
+    "explanation": "Hydrogen bonds form when H is covalently attached to a very electronegative atom such as N, O or\nF and is attracted to another such atom. Carbon is only slightly more electronegative than hydrogen, so options\ncontaining C cannot supply these atoms."
+  },
+  {
+    "model": "Biology",
+    "text": "A central water molecule can be hydrogen-bonded to four neighbouring water molecules.\nWhich feature of the central molecule makes this possible?",
+    "image": "",
+    "options": [
+      "Its oxygen shares electrons equally with both of its hydrogens",
+      "Its two hydrogens form covalent bonds with neighbouring oxygens",
+      "Its δ+ oxygen atom attracts δ− hydrogens on all four neighbours",
+      "Its δ− oxygen and two δ+ hydrogens each attract opposite charges"
+    ],
+    "correct": 3,
+    "explanation": "The molecule is polar: its δ− oxygen attracts the δ+ hydrogens of two neighbours, while each of its\nδ+ hydrogens attracts the δ− oxygen of another neighbour, giving four hydrogen bonds. Hydrogen bonds are\nelectrostatic attractions, not covalent bonds"
+  },
+  {
+    "model": "Biology",
+    "text": "A student draws two neighbouring water molecules with the hydrogen atoms of one\npointing directly at the hydrogen atoms of the other. Why is this arrangement unlikely?",
+    "image": "",
+    "options": [
+      "Hydrogen atoms can never take part in weak attractions",
+      "The facing δ+ hydrogen atoms repel each other",
+      "The facing hydrogens would form a covalent H-H bond",
+      "Both oxygen atoms carry δ+ charges and repel each other"
+    ],
+    "correct": 1,
+    "explanation": "Like partial charges repel; a hydrogen bond requires the δ+ hydrogen of one molecule to face the\nδ− oxygen of the other. Oxygen is the δ− region of water, not δ+."
+  },
+  {
+    "model": "Biology",
+    "text": "How does a water molecule at the air-water surface differ from a water molecule in the\ninterior of the liquid?",
+    "image": "",
+    "options": [
+      "It forms more hydrogen bonds than an interior molecule",
+      "It is hydrogen-bonded to gas molecules in the air above",
+      "C) It is pulled equally in all directions by its neighbours",
+      "It lacks partners above, so it is pulled toward the interior"
+    ],
+    "correct": 3,
+    "explanation": "A surface molecule is hydrogen-bonded to its neighbours and to the water below but not to the air\nabove. The unbalanced cohesive forces give a net force directed into the liquid, producing water's high surface\ntension."
+  },
+  {
+    "model": "Biology",
+    "text": "An insect stands on the surface of a pond without breaking through it. Which property of\nwater chiefly makes this possible?",
+    "image": "",
+    "options": [
+      "High surface tension resulting from cohesion",
+      "High heat of vaporization of liquid water",
+      "C) Lower density of ice than of liquid water",
+      "Lower freezing point of water containing solutes"
+    ],
+    "correct": 0,
+    "explanation": ": Hydrogen-bonded molecules at the surface form an ordered layer that resists being stretched or\nbroken, so the surface behaves like an invisible film able to support the insect."
+  },
+  {
+    "model": "Biology",
+    "text": "In the water-conducting cells of a tree, what is the specific contribution of adhesion",
+    "image": "",
+    "options": [
+      "A) It holds water molecules together as an unbroken column",
+      "B) It pulls water upward by evaporation from the leaves",
+      "C) It binds water to the cell walls, helping resist gravity",
+      "D) It lowers the freezing point of the water in the stem"
+    ],
+    "correct": 2,
+    "explanation": "Adhesion of water to the cell walls by hydrogen bonds helps resist the downward pull of gravity.\nCohesion holds the column together, and evaporation from the leaves provides the upward pull."
+  },
+  {
+    "model": "Biology",
+    "text": "Which of the following common solvents has the weakest attractive forces between its\nmolecules in the liquid phase (lowest heat of vaporization: 247 J/g)?",
+    "image": "",
+    "options": [
+      "A) Water (2,260 J/g)",
+      "B) Methanol (1,100 J/g)",
+      "C) Hexane (423 J/g)",
+      "D) Chloroform (247 J/g)"
+    ],
+    "correct": 3,
+    "explanation": "Heat of vaporization is a direct measure of the energy needed to overcome attractive forces\nbetween molecules in the liquid, and chloroform has the lowest value (247 J/g). Water, at 2,260 J/g, has the\nstrongest internal cohesion because of its extensive hydrogen bonding."
+  }
+];
 
     let studentsList = loadMergedStudents();
     let currentStudent = null;
