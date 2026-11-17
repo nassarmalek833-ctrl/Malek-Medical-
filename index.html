@@ -50,7 +50,7 @@
   <!-- المحتوى الرئيسي -->
   <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
 
-    <!-- 1. بوابة الطلاب (تسجيل الدخول أو إنشاء حساب ينتظر موافقة المدير) -->
+    <!-- 1. بوابة الطلاب (دخول بالكود المعطى من المدير أو إرسال طلب تسجيل بدون إظهار الكود) -->
     <section id="studentLoginScreen" class="max-w-md mx-auto mt-6">
       <div class="card rounded-3xl p-7 border-amber-500/20">
         <div class="text-center mb-6">
@@ -58,7 +58,7 @@
             🩺
           </div>
           <h2 class="text-2xl font-black text-white">بوابة طلاب منصة المالك</h2>
-          <p class="text-xs text-slate-400 mt-1">الدخول مقتصر على الحسابات المفعّلة من قبل إدارة المنصة</p>
+          <p class="text-xs text-slate-400 mt-1">الدخول مقتصر على الطلاب الحاصلين على كود مفعّل من الإدارة</p>
         </div>
 
         <!-- التبديل بين الدخول والتسجيل -->
@@ -67,22 +67,22 @@
             دخول بكود الطالب
           </button>
           <button type="button" id="tabRegisterBtn" onclick="switchAuthTab('register')" class="py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">
-            طلب إنشاء حساب
+            طلب تسجيل حساب
           </button>
         </div>
 
         <!-- نموذج الدخول بالكود -->
         <form id="codeLoginForm" onsubmit="loginWithStudentCode(event)" class="space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1.5">كود الطالب الخاص بك</label>
-            <input id="studentCodeInput" type="text" required placeholder="مثال: MED-4829" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-center font-mono text-base uppercase tracking-widest focus:outline-none focus:border-amber-500" />
+            <label class="block text-xs font-bold text-slate-300 mb-1.5">كود الدخول الخاص بك</label>
+            <input id="studentCodeInput" type="text" required placeholder="أدخل الكود الممنوح لك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-center font-mono text-base uppercase tracking-widest focus:outline-none focus:border-amber-500" />
           </div>
           <button type="submit" class="btn-gold w-full py-3 rounded-xl text-sm shadow-lg shadow-amber-500/20">
             دخول إلى المنصة ←
           </button>
         </form>
 
-        <!-- نموذج إنشاء حساب جديد -->
+        <!-- نموذج طلب تسجيل حساب (بدون إظهار الكود للطالب) -->
         <form id="studentRegisterForm" onsubmit="registerNewStudent(event)" class="hidden space-y-4">
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">اسم الطالب الكامل</label>
@@ -90,7 +90,7 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">الرقم الجامعي أو رقم الواتساب</label>
-            <input id="regStudentId" type="text" required placeholder="للتواصل وتفعيل حسابك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
+            <input id="regStudentId" type="text" required placeholder="لإرسال كود الدخول إليك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">السنة الدراسية</label>
@@ -104,27 +104,21 @@
             </select>
           </div>
           <button type="submit" class="w-full py-3 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition">
-            إنشاء الحساب وإصدار الكود ✨
+            إرسال طلب التسجيل للإدارة 📩
           </button>
         </form>
 
-        <!-- بطاقة عرض الكود وحالة الانتظار بعد التسجيل -->
-        <div id="generatedCodeBox" class="hidden mt-5 p-4 rounded-2xl bg-amber-950/40 border border-amber-500/50 text-center space-y-3">
-          <p class="text-xs font-bold text-amber-300">⏳ تم تسجيل طلبك بنجاح! كودك الخاص هو:</p>
-          <div class="bg-slate-950 border border-amber-500/40 rounded-xl py-2.5 px-4 flex items-center justify-between">
-            <span id="newGeneratedCodeText" class="font-mono text-xl font-black text-amber-400 tracking-wider">MED-0000</span>
-            <button type="button" onclick="copyGeneratedCode()" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white border border-slate-600">
-              نسخ الكود
-            </button>
-          </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">
-            حسابك الآن <strong>قيد المراجعة</strong>. أرسل كودك إلى الدكتور مالك ليقوم بتفعيل دخولك من لوحة التحكم.
+        <!-- رسالة تأكيد استلام الطلب فقط (بدون إظهار الكود للطالب) -->
+        <div id="pendingApprovalNotice" class="hidden mt-5 p-4 rounded-2xl bg-amber-950/40 border border-amber-500/50 text-center space-y-2">
+          <p class="text-sm font-black text-amber-400">⏳ تم إرسال طلبك بنجاح!</p>
+          <p class="text-xs text-slate-200 leading-relaxed">
+            حسابك الآن <strong>قيد المراجعة لدى إدارة منصة المالك</strong>. تواصل مع الدكتور مالك ليقوم بتفعيل حسابك وتزويدك بكود الدخول الخاص بك.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- 2. واجهة الطالب الرئيسية (بعد التفعيل) -->
+    <!-- 2. واجهة الطالب الرئيسية (تفتح فقط بعد التفعيل وإدخال الكود) -->
     <section id="studentView" class="hidden space-y-6">
 
       <!-- خانة الاستعلامات والإعلانات الجديدة في الواجهة -->
@@ -142,7 +136,6 @@
             <h2 class="text-xl font-black text-white">المكتبة الأكاديمية والاختبارات</h2>
             <p class="text-xs text-slate-400 mt-0.5">اختر السنة الدراسية ثم الفصل الدراسي لعرض المواد المتاحة</p>
           </div>
-          <!-- مسار التنقل (Breadcrumb) -->
           <div id="academicBreadcrumb" class="flex items-center gap-1.5 text-xs font-bold text-amber-400 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800"></div>
         </div>
 
@@ -185,7 +178,6 @@
               </button>
               <h3 id="currentSubjectTitle" class="text-2xl font-black text-amber-400"></h3>
             </div>
-            <!-- تبويبات المادة الثلاثة -->
             <div class="flex flex-wrap gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
               <button type="button" id="subTabLectures" onclick="switchSubjectTab('lectures')" class="px-4 py-2 rounded-lg text-xs tab-active">
                 🎥 روابط المحاضرات
@@ -199,10 +191,8 @@
             </div>
           </div>
 
-          <!-- محتوى تبويب 1: روابط المحاضرات -->
           <div id="subjectLecturesPane" class="space-y-3"></div>
 
-          <!-- محتوى تبويب 2: الملفات مقسمة إلى (تلاخيص | شباتر | شروحات) -->
           <div id="subjectFilesPane" class="hidden space-y-5">
             <div class="flex gap-2 border-b border-slate-800 pb-3">
               <button type="button" id="fileCatAll" onclick="filterFilesCategory('الكل')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">الكل</button>
@@ -213,7 +203,6 @@
             <div id="subjectFilesList" class="grid sm:grid-cols-2 gap-3"></div>
           </div>
 
-          <!-- محتوى تبويب 3: اختبارات المادة -->
           <div id="subjectExamsPane" class="hidden space-y-4">
             <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 grid md:grid-cols-3 gap-4 items-end">
               <div>
@@ -298,7 +287,7 @@
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
           <div>
             <h2 class="text-xl font-black text-amber-400">👑 لوحة تحكم المدير الشاملة — منصة المالك</h2>
-            <p class="text-xs text-slate-400 mt-0.5">تحكم كامل في الطلاب، المواد، المحاضرات، الملفات، الاختبارات، والإعلانات.</p>
+            <p class="text-xs text-slate-400 mt-0.5">الأكواد تظهر لك هنا فقط لتمنحها للطلاب بعد تفعيل حساباتهم.</p>
           </div>
           <div class="flex flex-wrap gap-2">
             <button type="button" id="togglePlatformLockBtn" onclick="togglePlatformMaintenance()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-amber-300">
@@ -360,12 +349,29 @@
         </button>
       </div>
 
-      <!-- القسم 1 في المدير: إدارة الطلاب (تفعيل / إغلاق / حذف) -->
-      <div id="adminPaneStudents" class="card rounded-2xl p-6 border-emerald-500/30">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4 mb-4">
+      <!-- القسم 1 في المدير: إدارة الطلاب + إنشاء حساب طالب مباشرة من المدير -->
+      <div id="adminPaneStudents" class="card rounded-2xl p-6 border-emerald-500/30 space-y-5">
+        <div class="border-b border-slate-800 pb-4">
+          <h3 class="text-lg font-extrabold text-emerald-400">إضافة طالب وتوليد كود له مباشرة (مُفعّل فوراً)</h3>
+          <form onsubmit="adminCreateStudentDirect(event)" class="grid md:grid-cols-4 gap-3 mt-3 items-end">
+            <input id="admNewStuName" required placeholder="اسم الطالب الكامل..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <input id="admNewStuId" required placeholder="الرقم الجامعي / الواتساب..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <select id="admNewStuYear" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs">
+              <option value="السنة الأولى">السنة الأولى</option>
+              <option value="السنة الثانية">السنة الثانية</option>
+              <option value="السنة الثالثة">السنة الثالثة</option>
+              <option value="السنة الرابعة">السنة الرابعة</option>
+              <option value="السنة الخامسة">السنة الخامسة</option>
+              <option value="السنة السادسة">السنة السادسة</option>
+            </select>
+            <button type="submit" class="btn-gold py-2 rounded-xl text-xs">+ إنشاء وتوليد كود مفعّل</button>
+          </form>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 class="text-lg font-extrabold text-emerald-400">سجل الطلاب وطلبات تفعيل الحسابات</h3>
-            <p class="text-xs text-slate-400">أي طالب يسجل حساباً جديداً يظهر هنا بحالة "مُعلّق" حتى تضغط على زر تفعيل، وبعدها اضغط "نشر التعديلات".</p>
+            <h3 class="text-base font-extrabold text-white">سجل الطلاب وطلبات التفعيل</h3>
+            <p class="text-xs text-slate-400">فعّل الطالب ثم اضغط "نشر جميع التعديلات" وانسخ الكود لإرساله له.</p>
           </div>
           <button type="button" onclick="renderAdminStudentsTable()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-bold text-slate-200 border border-slate-700">
             🔄 تحديث الجدول
@@ -377,9 +383,9 @@
             <thead>
               <tr class="border-b border-slate-800 text-slate-400">
                 <th class="py-3 px-3">اسم الطالب</th>
-                <th class="py-3 px-3">الرقم الجامعي / الهاتف</th>
+                <th class="py-3 px-3">الرقم الجامعي / الواتساب</th>
                 <th class="py-3 px-3">السنة</th>
-                <th class="py-3 px-3">كود الدخول</th>
+                <th class="py-3 px-3">كود الدخول (سري لك)</th>
                 <th class="py-3 px-3">الحالة</th>
                 <th class="py-3 px-3">النتائج</th>
                 <th class="py-3 px-3">التحكم الكامل</th>
@@ -390,7 +396,7 @@
         </div>
       </div>
 
-      <!-- القسم 2 في المدير: إضافة وحذف المواد ضمن السنوات والفصول -->
+      <!-- القسم 2 في المدير: إضافة وحذف المواد -->
       <div id="adminPaneSubjects" class="hidden card rounded-2xl p-6 space-y-5">
         <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إضافة مادة جديدة (حسب السنة والفصل)</h3>
         <form onsubmit="addSubject(event)" class="grid md:grid-cols-4 gap-3 items-end">
@@ -422,10 +428,9 @@
         <div id="adminSubjectsList" class="grid sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2"></div>
       </div>
 
-      <!-- القسم 3 في المدير: إضافة المحاضرات والملفات (تلاخيص / شباتر / شروحات) -->
+      <!-- القسم 3 في المدير: إضافة المحاضرات والملفات -->
       <div id="adminPaneContent" class="hidden card rounded-2xl p-6 space-y-6">
         <div class="grid md:grid-cols-2 gap-6">
-          <!-- نموذج إضافة رابط محاضرة -->
           <form onsubmit="addLecture(event)" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
             <h4 class="font-extrabold text-amber-400 text-sm">🎥 إضافة رابط محاضرة لمادة</h4>
             <div>
@@ -434,7 +439,7 @@
             </div>
             <div>
               <label class="block text-xs text-slate-400 mb-1">عنوان المحاضرة</label>
-              <input id="lecTitleInput" required placeholder="مثال: المحاضرة الأولى - مقدمة في الجهاز العصبي" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+              <input id="lecTitleInput" required placeholder="مثال: المحاضرة الأولى - مقدمة" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
             </div>
             <div>
               <label class="block text-xs text-slate-400 mb-1">رابط المحاضرة (YouTube / Drive / Zoom...)</label>
@@ -443,7 +448,6 @@
             <button type="submit" class="btn-gold w-full py-2 rounded-xl text-xs">+ إضافة رابط المحاضرة</button>
           </form>
 
-          <!-- نموذج إضافة ملف (تلاخيص / شباتر / شروحات) -->
           <form onsubmit="addStudyFile(event)" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
             <h4 class="font-extrabold text-emerald-400 text-sm">📁 إضافة ملف لمادة (تلاخيص / شباتر / شروحات)</h4>
             <div class="grid grid-cols-2 gap-2">
@@ -472,7 +476,6 @@
           </form>
         </div>
 
-        <!-- عرض المحاضرات والملفات المضافة للحذف -->
         <div class="grid md:grid-cols-2 gap-6 pt-2">
           <div>
             <h4 class="font-bold text-sm text-white mb-2">روابط المحاضرات الحالية</h4>
@@ -514,7 +517,6 @@
             <textarea id="qText" required rows="2" placeholder="اكتب السؤال الطبي هنا..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm"></textarea>
           </div>
 
-          <!-- إضافة صورة للسؤال -->
           <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
             <label class="block text-xs font-bold text-amber-400">🖼️ صورة توضيحية للسؤال (اختياري)</label>
             <div class="grid md:grid-cols-2 gap-3">
@@ -548,7 +550,7 @@
         </div>
       </div>
 
-      <!-- القسم 5 في المدير: إدارة الاستعلامات والإعلانات الجديدة -->
+      <!-- القسم 5 في المدير: إدارة الاستعلامات والإعلانات -->
       <div id="adminPaneAnnouncements" class="hidden card rounded-2xl p-6 space-y-5">
         <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إدارة خانة الاستعلامات والإعلانات في الواجهة</h3>
         <form onsubmit="addAnnouncement(event)" class="flex flex-col sm:flex-row gap-3">
@@ -583,103 +585,55 @@
     const GITHUB_REPO = "Malek-Medical-";
     const GITHUB_FILE_PATH = "index.html";
 
-    // بيانات المنصة المنشورة (تُحدّث تلقائياً عند الضغط على زر النشر)
+    // بيانات المنصة المنشورة
     const DEFAULT_STUDENTS = [];
 
     const DEFAULT_ANNOUNCEMENTS = [
-  {
-    "id": "ann1",
-    "text": "أهلاً بكم في منصة المالك الطبية! تم تفعيل نظام المواد والاختبارات الإلكترونية.",
-    "date": "2026"
-  }
-];
+      { id: "ann1", text: "أهلاً بكم في منصة المالك الطبية! تم تفعيل نظام المواد والاختبارات الإلكترونية.", date: "2026" }
+    ];
 
     const DEFAULT_SUBJECTS = [
-  {
-    "id": "sub_anat_1",
-    "year": "السنة الأولى",
-    "semester": "الفصل الأول",
-    "name": "علم التشريح العام (General Anatomy)"
-  },
-  {
-    "id": "sub_phys_1",
-    "year": "السنة الأولى",
-    "semester": "الفصل الأول",
-    "name": "علم وظائف الأعضاء (Physiology)"
-  }
-];
+      { id: "sub_anat_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم التشريح العام (General Anatomy)" },
+      { id: "sub_phys_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم وظائف الأعضاء (Physiology)" }
+    ];
 
     const DEFAULT_LECTURES = [
-  {
-    "id": "lec_1",
-    "subjectId": "sub_anat_1",
-    "title": "المحاضرة 1: مقدمة في المصطلحات التشريحية",
-    "url": "https://www.youtube.com"
-  }
-];
+      { id: "lec_1", subjectId: "sub_anat_1", title: "المحاضرة 1: مقدمة في المصطلحات التشريحية", url: "https://www.youtube.com" }
+    ];
 
     const DEFAULT_FILES = [
-  {
-    "id": "file_1",
-    "subjectId": "sub_anat_1",
-    "category": "تلاخيص",
-    "title": "ملخص شامل للمحاضرة الأولى",
-    "url": "https://drive.google.com"
-  },
-  {
-    "id": "file_2",
-    "subjectId": "sub_anat_1",
-    "category": "شباتر",
-    "title": "Chapter 1 - Introduction to Anatomy",
-    "url": "https://drive.google.com"
-  },
-  {
-    "id": "file_3",
-    "subjectId": "sub_anat_1",
-    "category": "شروحات",
-    "title": "شرح تفصيلي بالصور للجهاز الهيكلي",
-    "url": "https://drive.google.com"
-  }
-];
+      { id: "file_1", subjectId: "sub_anat_1", category: "تلاخيص", title: "ملخص شامل للمحاضرة الأولى", url: "https://drive.google.com" },
+      { id: "file_2", subjectId: "sub_anat_1", category: "شباتر", title: "Chapter 1 - Introduction to Anatomy", url: "https://drive.google.com" },
+      { id: "file_3", subjectId: "sub_anat_1", category: "شروحات", title: "شرح تفصيلي بالصور للجهاز الهيكلي", url: "https://drive.google.com" }
+    ];
 
     const DEFAULT_QUESTIONS = [
-  {
-    "subjectId": "sub_anat_1",
-    "model": "Model 1 - General Anatomy",
-    "text": "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
-    "image": "",
-    "options": [
-      "Glossopharyngeal nerve (CN IX)",
-      "Vagus nerve (CN X)",
-      "Accessory nerve (CN XI)",
-      "Hypoglossal nerve (CN XII)"
-    ],
-    "correct": 1,
-    "explanation": "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
-  },
-  {
-    "subjectId": "sub_phys_1",
-    "model": "Model 1 - Cardiology",
-    "text": "What is the primary pacemaker of the normal human heart?",
-    "image": "",
-    "options": [
-      "Atrioventricular (AV) node",
-      "Bundle of His",
-      "Sinoatrial (SA) node",
-      "Purkinje fibers"
-    ],
-    "correct": 2,
-    "explanation": "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
-  }
-];
+      {
+        subjectId: "sub_anat_1",
+        model: "Model 1 - General Anatomy",
+        text: "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
+        image: "",
+        options: ["Glossopharyngeal nerve (CN IX)", "Vagus nerve (CN X)", "Accessory nerve (CN XI)", "Hypoglossal nerve (CN XII)"],
+        correct: 1,
+        explanation: "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
+      },
+      {
+        subjectId: "sub_phys_1",
+        model: "Model 1 - Cardiology",
+        text: "What is the primary pacemaker of the normal human heart?",
+        image: "",
+        options: ["Atrioventricular (AV) node", "Bundle of His", "Sinoatrial (SA) node", "Purkinje fibers"],
+        correct: 2,
+        explanation: "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
+      }
+    ];
 
-    // الحالة النشطة في الذاكرة
-    let studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
-    let announcementsList = loadLocalOrDefault("malek_announcements_v2", DEFAULT_ANNOUNCEMENTS);
-    let subjectsList = loadLocalOrDefault("malek_subjects_v2", DEFAULT_SUBJECTS);
-    let lecturesList = loadLocalOrDefault("malek_lectures_v2", DEFAULT_LECTURES);
-    let filesList = loadLocalOrDefault("malek_files_v2", DEFAULT_FILES);
-    let questions = loadLocalOrDefault("malek_questions_v2", DEFAULT_QUESTIONS);
+    let studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
+    let announcementsList = loadLocalOrDefault("malek_announcements_v3", DEFAULT_ANNOUNCEMENTS);
+    let subjectsList = loadLocalOrDefault("malek_subjects_v3", DEFAULT_SUBJECTS);
+    let lecturesList = loadLocalOrDefault("malek_lectures_v3", DEFAULT_LECTURES);
+    let filesList = loadLocalOrDefault("malek_files_v3", DEFAULT_FILES);
+    let questions = loadLocalOrDefault("malek_questions_v3", DEFAULT_QUESTIONS);
 
     let currentStudent = null;
     let selectedYear = "";
@@ -710,20 +664,20 @@
     }
 
     function saveAllLocalState() {
-      localStorage.setItem("malek_students_v2", JSON.stringify(studentsList));
-      localStorage.setItem("malek_announcements_v2", JSON.stringify(announcementsList));
-      localStorage.setItem("malek_subjects_v2", JSON.stringify(subjectsList));
-      localStorage.setItem("malek_lectures_v2", JSON.stringify(lecturesList));
-      localStorage.setItem("malek_files_v2", JSON.stringify(filesList));
-      localStorage.setItem("malek_questions_v2", JSON.stringify(questions));
+      localStorage.setItem("malek_students_v3", JSON.stringify(studentsList));
+      localStorage.setItem("malek_announcements_v3", JSON.stringify(announcementsList));
+      localStorage.setItem("malek_subjects_v3", JSON.stringify(subjectsList));
+      localStorage.setItem("malek_lectures_v3", JSON.stringify(lecturesList));
+      localStorage.setItem("malek_files_v3", JSON.stringify(filesList));
+      localStorage.setItem("malek_questions_v3", JSON.stringify(questions));
     }
 
     function getEffectiveAdminPassword() {
-      return localStorage.getItem("malek_custom_admin_pass_v2") || ADMIN_PASSWORD;
+      return localStorage.getItem("malek_custom_admin_pass_v3") || ADMIN_PASSWORD;
     }
 
     function isPlatformLocked() {
-      const localLock = localStorage.getItem("malek_platform_locked_v2");
+      const localLock = localStorage.getItem("malek_platform_locked_v3");
       return localLock !== null ? localLock === "true" : PLATFORM_LOCKED;
     }
 
@@ -733,7 +687,7 @@
       const regForm = document.getElementById("studentRegisterForm");
       const loginBtn = document.getElementById("tabCodeLoginBtn");
       const regBtn = document.getElementById("tabRegisterBtn");
-      document.getElementById("generatedCodeBox").classList.add("hidden");
+      document.getElementById("pendingApprovalNotice").classList.add("hidden");
 
       if (tab === "login") {
         loginForm.classList.remove("hidden");
@@ -757,6 +711,7 @@
       return code;
     }
 
+    // إرسال طلب تسجيل من الطالب (الكود يُحفظ سرياً ولا يظهر للطالب أبداً)
     function registerNewStudent(e) {
       e.preventDefault();
       const name = document.getElementById("regStudentName").value.trim();
@@ -764,33 +719,25 @@
       const year = document.getElementById("regStudentYear").value;
       if (!name || !studentId) return;
 
-      studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
-      const newCode = generateUniqueStudentCode();
+      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
+      const secretCode = generateUniqueStudentCode();
       const newStudent = {
         name: name,
         studentId: studentId,
         year: year,
-        code: newCode,
-        approved: false, // لا يمكنه الدخول حتى يفعله المدير
+        code: secretCode,
+        approved: false,
         results: []
       };
 
       studentsList.push(newStudent);
       saveAllLocalState();
 
-      document.getElementById("newGeneratedCodeText").textContent = newCode;
-      document.getElementById("generatedCodeBox").classList.remove("hidden");
+      document.getElementById("pendingApprovalNotice").classList.remove("hidden");
       e.target.reset();
     }
 
-    function copyGeneratedCode() {
-      const code = document.getElementById("newGeneratedCodeText").textContent;
-      navigator.clipboard.writeText(code).then(() => {
-        alert("تم نسخ كودك: " + code + "\nأرسله لإدارة منصة المالك لتفعيل حسابك.");
-      });
-    }
-
-    // التحقق من كود الطالب وحالة التفعيل
+    // التحقق الصارم من كود الطالب وحالة التفعيل
     function loginWithStudentCode(e) {
       e.preventDefault();
       if (isPlatformLocked()) {
@@ -799,16 +746,16 @@
       }
 
       const enteredCode = document.getElementById("studentCodeInput").value.trim().toUpperCase();
-      studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
+      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
       const found = studentsList.find(s => s.code === enteredCode);
 
       if (!found) {
-        alert("كود الطالب غير مسجل! تأكد من كتابة الكود الصحيح أو اطلب إنشاء حساب جديد.");
+        alert("⛔ كود الدخول غير صحيح! لا يمكنك الدخول إلا بكود مفعّل صادر من إدارة منصة المالك.");
         return;
       }
 
-      if (!found.approved) {
-        alert("⏳ حسابك مسجل ولكن لم يتم تفعيله بعد!\nيرجى التواصل مع الدكتور مالك لتفعيل دخولك.");
+      if (found.approved !== true) {
+        alert("⏳ حسابك غير مفعّل بعد! يجب أن يقوم المدير بتفعيل حسابك أولاً.");
         return;
       }
 
@@ -873,31 +820,23 @@
       }).join("");
     }
 
-    function selectYear(year) {
-      selectedYear = year;
-      showSemestersStep();
-    }
+    function selectYear(year) { selectedYear = year; showSemestersStep(); }
 
     function showSemestersStep() {
       selectedSemester = "";
       selectedSubject = null;
       updateBreadcrumb();
-
       document.getElementById("stepYearsView").classList.add("hidden");
       document.getElementById("stepSemestersView").classList.remove("hidden");
       document.getElementById("stepSubjectsView").classList.add("hidden");
       document.getElementById("stepSubjectContentView").classList.add("hidden");
     }
 
-    function selectSemester(sem) {
-      selectedSemester = sem;
-      showSubjectsStep();
-    }
+    function selectSemester(sem) { selectedSemester = sem; showSubjectsStep(); }
 
     function showSubjectsStep() {
       selectedSubject = null;
       updateBreadcrumb();
-
       document.getElementById("stepYearsView").classList.add("hidden");
       document.getElementById("stepSemestersView").classList.add("hidden");
       document.getElementById("stepSubjectsView").classList.remove("hidden");
@@ -924,11 +863,9 @@
       selectedSubject = subjectsList.find(s => s.id === subjectId);
       if (!selectedSubject) return;
       updateBreadcrumb();
-
       document.getElementById("stepSubjectsView").classList.add("hidden");
       document.getElementById("stepSubjectContentView").classList.remove("hidden");
       document.getElementById("currentSubjectTitle").textContent = selectedSubject.name;
-
       switchSubjectTab("lectures");
     }
 
@@ -975,12 +912,7 @@
 
     function filterFilesCategory(cat) {
       currentFileFilter = cat;
-      const mapBtns = {
-        "الكل": "fileCatAll",
-        "تلاخيص": "fileCatSummaries",
-        "شباتر": "fileCatChapters",
-        "شروحات": "fileCatExplanations"
-      };
+      const mapBtns = { "الكل": "fileCatAll", "تلاخيص": "fileCatSummaries", "شباتر": "fileCatChapters", "شروحات": "fileCatExplanations" };
       Object.entries(mapBtns).forEach(([k, id]) => {
         document.getElementById(id).className = (k === cat)
           ? "px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40"
@@ -1023,7 +955,6 @@
         models.map(m => `<option value="${m}">${m}</option>`).join("");
     }
 
-    // تشغيل الاختبار
     function startExam() {
       const subQuestions = questions.filter(q => q.subjectId === selectedSubject.id);
       const selectedModel = document.getElementById("modelSelect").value;
@@ -1157,7 +1088,7 @@
       const pct = Math.round((correctCount / activeQuestions.length) * 100);
 
       if (currentStudent) {
-        studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
+        studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
         const target = studentsList.find(s => s.code === currentStudent.code);
         if (target) {
           if (!target.results) target.results = [];
@@ -1195,7 +1126,7 @@
     }
 
     // ==========================================
-    // لوحة تحكم المدير (منصة المالك)
+    // لوحة تحكم المدير (الأكواد سرية وتظهر هنا فقط)
     // ==========================================
     let tapCount = 0;
     let tapTimer = null;
@@ -1270,16 +1201,16 @@
     function togglePlatformMaintenance() {
       const nextState = !isPlatformLocked();
       PLATFORM_LOCKED = nextState;
-      localStorage.setItem("malek_platform_locked_v2", String(nextState));
+      localStorage.setItem("malek_platform_locked_v3", String(nextState));
       updatePlatformLockButtonUI();
-      alert(nextState ? "تم إغلاق المنصة عن الطلاب مؤقتاً (اضغط نشر لتثبيت الإغلاق على الرابط)." : "تم فتح المنصة للطلاب.");
+      alert(nextState ? "تم إغلاق المنصة عن الطلاب مؤقتاً (اضغط نشر لتثبيت الإغلاق)." : "تم فتح المنصة للطلاب.");
     }
 
     function updateAdminPasswordLocally() {
       const newPass = document.getElementById("adminPasswordEditInput").value.trim();
       if (!newPass || newPass.length < 4) return alert("أدخل كلمة مرور من 4 أحرف على الأقل.");
       ADMIN_PASSWORD = newPass;
-      localStorage.setItem("malek_custom_admin_pass_v2", newPass);
+      localStorage.setItem("malek_custom_admin_pass_v3", newPass);
       alert("تم تحديث كلمة مرور المدير! اضغط 'نشر جميع التعديلات' لتثبيتها.");
     }
 
@@ -1292,7 +1223,7 @@
 
     function copyPlatformLink() {
       const cleanUrl = window.location.origin + window.location.pathname;
-      const text = `منصة المالك الطبية (Al-Malik Medical Platform):\n${cleanUrl}\nاطلب إنشاء حسابك وأرسل كودك لتفعيل الدخول.`;
+      const text = `منصة المالك الطبية (Al-Malik Medical Platform):\n${cleanUrl}\nأرسل طلب تسجيل حساب أو أدخل كودك المفعّل.`;
       navigator.clipboard.writeText(text).then(() => alert("تم نسخ رابط منصة المالك:\n\n" + text));
     }
 
@@ -1313,7 +1244,7 @@
     }
 
     function refreshAllAdminViews() {
-      studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
+      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
       document.getElementById("admBadgeStudents").textContent = studentsList.length;
       document.getElementById("admBadgeSubjects").textContent = subjectsList.length;
       document.getElementById("admBadgeContent").textContent = lecturesList.length + filesList.length;
@@ -1328,9 +1259,40 @@
       renderAdminAnnouncementsList();
     }
 
-    // 1. إدارة الطلاب (تفعيل / إغلاق / حذف)
+    // إنشاء طالب وتوليد كود مفعّل له مباشرة من المدير
+    function adminCreateStudentDirect(e) {
+      e.preventDefault();
+      const name = document.getElementById("admNewStuName").value.trim();
+      const studentId = document.getElementById("admNewStuId").value.trim();
+      const year = document.getElementById("admNewStuYear").value;
+      if (!name || !studentId) return;
+
+      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
+      const code = generateUniqueStudentCode();
+      studentsList.push({
+        name,
+        studentId,
+        year,
+        code,
+        approved: true,
+        results: []
+      });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      navigator.clipboard.writeText(code).catch(() => {});
+      alert(`✅ تم إنشاء حساب مفعّل للطالب (${name})\nكود الدخول الخاص به: ${code}\n(تم نسخ الكود للحافظة — اضغط الآن على 'نشر جميع التعديلات للطلاب فوراً')`);
+    }
+
+    function copyStudentCodeForAdmin(code, name) {
+      const msg = `مرحباً ${name}، تم تفعيل حسابك في منصة المالك الطبية.\nرابط المنصة: ${window.location.origin + window.location.pathname}\nكود الدخول الخاص بك: ${code}`;
+      navigator.clipboard.writeText(msg).then(() => {
+        alert("تم نسخ رسالة التفعيل مع الكود لإرسالها للطالب:\n\n" + msg);
+      });
+    }
+
     function renderAdminStudentsTable() {
-      studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
+      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
       document.getElementById("admBadgeStudents").textContent = studentsList.length;
       const tbody = document.getElementById("adminStudentsTableBody");
 
@@ -1357,7 +1319,10 @@
             <td class="py-3 px-3 font-bold text-white">${s.name}</td>
             <td class="py-3 px-3 text-slate-300">${s.studentId}</td>
             <td class="py-3 px-3 text-slate-300">${s.year || "—"}</td>
-            <td class="py-3 px-3 font-mono font-bold text-amber-400">${s.code}</td>
+            <td class="py-3 px-3 font-mono font-bold text-amber-400 flex items-center gap-1.5">
+              <span>${s.code}</span>
+              <button type="button" onclick="copyStudentCodeForAdmin('${s.code}', '${s.name}')" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-white hover:border-amber-500">نسخ</button>
+            </td>
             <td class="py-3 px-3">${statusBadge}</td>
             <td class="py-3 px-3">${resText}</td>
             <td class="py-3 px-3 flex items-center gap-1.5">
@@ -1381,14 +1346,13 @@
       renderAdminStudentsTable();
     }
 
-    // 2. إدارة المواد
+    // إدارة المواد والمحتوى والأسئلة والإعلانات
     function addSubject(e) {
       e.preventDefault();
       const year = document.getElementById("subYearInput").value;
       const semester = document.getElementById("subSemesterInput").value;
       const name = document.getElementById("subNameInput").value.trim();
       if (!name) return;
-
       subjectsList.push({ id: "sub_" + Date.now(), year, semester, name });
       saveAllLocalState();
       e.target.reset();
@@ -1421,14 +1385,12 @@
       });
     }
 
-    // 3. إدارة المحاضرات والملفات
     function addLecture(e) {
       e.preventDefault();
       const subjectId = document.getElementById("lecSubjectSelect").value;
       const title = document.getElementById("lecTitleInput").value.trim();
       const url = document.getElementById("lecUrlInput").value.trim();
       if (!subjectId) return alert("اختر المادة أولاً.");
-
       lecturesList.push({ id: "lec_" + Date.now(), subjectId, title, url });
       saveAllLocalState();
       e.target.reset();
@@ -1449,7 +1411,6 @@
       const title = document.getElementById("fileTitleInput").value.trim();
       const url = document.getElementById("fileUrlInput").value.trim();
       if (!subjectId) return alert("اختر المادة أولاً.");
-
       filesList.push({ id: "file_" + Date.now(), subjectId, category, title, url });
       saveAllLocalState();
       e.target.reset();
@@ -1491,7 +1452,6 @@
       }).join("");
     }
 
-    // 4. إدارة الأسئلة وصورها
     function handleQuestionImageUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1539,7 +1499,6 @@
       e.preventDefault();
       const subjectId = document.getElementById("qSubjectSelect").value;
       if (!subjectId) return alert("يرجى إضافة مادة أولاً.");
-
       questions.push({
         subjectId,
         model: document.getElementById("qModel").value.trim(),
@@ -1554,7 +1513,6 @@
         correct: parseInt(document.getElementById("qCorrect").value),
         explanation: document.getElementById("qExp").value.trim()
       });
-
       saveAllLocalState();
       e.target.reset();
       clearAdminQuestionImage();
@@ -1587,7 +1545,6 @@
       }).join("");
     }
 
-    // 5. إدارة الإعلانات والاستعلامات
     function addAnnouncement(e) {
       e.preventDefault();
       const text = document.getElementById("annTextInput").value.trim();
@@ -1613,9 +1570,7 @@
       `).join("");
     }
 
-    // ==========================================
     // النشر المباشر لجميع التعديلات إلى GitHub
-    // ==========================================
     async function publishDirectlyToGitHub() {
       const token = (localStorage.getItem("malek_gh_token") || document.getElementById("ghTokenInput").value).trim();
       if (!token) {
@@ -1631,7 +1586,7 @@
       status.textContent = "جاري تحديث الطلاب، المواد، المحاضرات، الملفات، والاختبارات...";
 
       try {
-        studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
+        studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
         const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
         const getRes = await fetch(apiUrl, {
           headers: {
@@ -1676,7 +1631,7 @@
         if (!putRes.ok) throw new Error("فشل رفع التحديثات إلى GitHub.");
 
         ADMIN_PASSWORD = currentAdminPass;
-        localStorage.setItem("malek_custom_admin_pass_v2", currentAdminPass);
+        localStorage.setItem("malek_custom_admin_pass_v3", currentAdminPass);
         status.className = "text-xs font-bold text-emerald-400";
         status.textContent = "✅ تم النشر بنجاح! جميع التعديلات وتفعيلات الطلاب متاحة الآن على الرابط.";
         alert("تم نشر جميع التعديلات بنجاح للطلاب!");
