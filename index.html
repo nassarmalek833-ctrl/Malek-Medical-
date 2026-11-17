@@ -3,168 +3,262 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>منصة مالك الطبية للاختبارات | Malek Medical LMS</title>
+  <title>منصة المالك الطبية | Al-Malik Medical Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Cairo', sans-serif; background-color: #0b1120; color: #f8fafc; }
-    .card { background-color: #1e293b; border: 1px solid #334155; }
-    .btn-primary { background-color: #ea580c; color: #fff; transition: 0.2s; }
-    .btn-primary:hover { background-color: #c2410c; }
-    .option-btn { transition: all 0.2s; border: 1px solid #334155; background-color: #0f172a; }
-    .option-btn:hover:not(:disabled) { border-color: #ea580c; background-color: #1e293b; }
+    body { font-family: 'Cairo', sans-serif; background-color: #070d19; color: #f8fafc; }
+    .card { background-color: #0f172a; border: 1px solid #1e293b; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); }
+    .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); }
+    .btn-gold { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #070d19; font-weight: 800; transition: 0.2s; }
+    .btn-gold:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .option-btn { transition: all 0.2s; border: 1px solid #334155; background-color: #0b1120; }
+    .option-btn:hover:not(:disabled) { border-color: #f59e0b; background-color: #1e293b; }
     .option-selected { border-color: #3b82f6 !important; background-color: #172554 !important; }
     .option-correct { border-color: #22c55e !important; background-color: #052e16 !important; color: #bbf7d0; }
     .option-wrong { border-color: #ef4444 !important; background-color: #450a0a !important; color: #fecaca; }
+    .tab-active { background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); color: #070d19; font-weight: 800; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950">
 
   <!-- الشريط العلوي -->
-  <header class="bg-[#0f172a] border-b border-slate-800 sticky top-0 z-40">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+  <header class="bg-[#0b1120]/95 backdrop-blur border-b border-amber-500/20 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <!-- الضغط 5 مرات متتالية على حرف M يفتح لوحة المدير -->
-        <button id="secretLogoBtn" type="button" onclick="handleSecretTap()" class="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center font-extrabold text-xl text-white select-none active:scale-95 transition">
-          M
+        <!-- الضغط 5 مرات متتالية على شعار المالك يفتح لوحة المدير -->
+        <button id="secretLogoBtn" type="button" onclick="handleSecretTap()" class="w-11 h-11 rounded-xl gold-gradient flex items-center justify-center font-black text-2xl text-slate-950 select-none active:scale-95 transition shadow-lg shadow-amber-500/20">
+          م
         </button>
         <div>
-          <h1 class="font-bold text-lg text-white leading-tight">منصة مالك الطبية</h1>
-          <p class="text-xs text-slate-400">نظام التقييم والاختبارات الطبية</p>
+          <h1 class="font-black text-xl text-white tracking-tight flex items-center gap-2">
+            منصة المالك
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">AL-MALIK MEDICAL</span>
+          </h1>
+          <p class="text-xs text-slate-400">الأكاديمية الطبية المتكاملة للمحاضرات والاختبارات</p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <span id="loggedStudentHeaderBadge" class="hidden text-xs font-bold text-orange-400 bg-orange-500/10 border border-orange-500/30 px-2.5 py-1 rounded-lg"></span>
-        <button type="button" onclick="resetAllToStudentLogin()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white">
-          تسجيل خروج / الرئيسية
+      <div class="flex items-center gap-2.5">
+        <span id="loggedStudentHeaderBadge" class="hidden text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-xl"></span>
+        <button type="button" onclick="resetAllToStudentLogin()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800/90 text-slate-300 border border-slate-700 hover:text-white hover:border-amber-500/40 transition">
+          تسجيل خروج
         </button>
       </div>
     </div>
   </header>
 
   <!-- المحتوى الرئيسي -->
-  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
 
-    <!-- 1. بوابة الطلاب (دخول بالكود أو إنشاء حساب جديد) -->
+    <!-- 1. بوابة الطلاب (تسجيل الدخول أو إنشاء حساب ينتظر موافقة المدير) -->
     <section id="studentLoginScreen" class="max-w-md mx-auto mt-6">
-      <div class="card rounded-2xl p-6 shadow-xl border-slate-700">
-        <div class="text-center mb-5">
-          <div class="w-14 h-14 rounded-2xl bg-orange-600/20 border border-orange-500/40 text-orange-400 flex items-center justify-center mx-auto mb-3 text-2xl font-extrabold">
+      <div class="card rounded-3xl p-7 border-amber-500/20">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 rounded-2xl gold-gradient text-slate-950 flex items-center justify-center mx-auto mb-3 text-3xl font-black shadow-lg shadow-amber-500/20">
             🩺
           </div>
-          <h2 class="text-xl font-extrabold text-white">بوابة الطلاب الإلكترونية</h2>
-          <p class="text-xs text-slate-400 mt-1">سجّل الدخول بكودك الشخصي أو أنشئ حساباً جديداً للحصول على كود</p>
+          <h2 class="text-2xl font-black text-white">بوابة طلاب منصة المالك</h2>
+          <p class="text-xs text-slate-400 mt-1">الدخول مقتصر على الحسابات المفعّلة من قبل إدارة المنصة</p>
         </div>
 
-        <!-- أزرار التبديل بين الدخول والتسجيل -->
-        <div class="grid grid-cols-2 gap-2 bg-slate-900 p-1 rounded-xl border border-slate-800 mb-5">
-          <button type="button" id="tabCodeLoginBtn" onclick="switchAuthTab('login')" class="py-2 rounded-lg text-xs font-bold bg-orange-600 text-white transition">
+        <!-- التبديل بين الدخول والتسجيل -->
+        <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 mb-6">
+          <button type="button" id="tabCodeLoginBtn" onclick="switchAuthTab('login')" class="py-2.5 rounded-xl text-xs tab-active transition">
             دخول بكود الطالب
           </button>
-          <button type="button" id="tabRegisterBtn" onclick="switchAuthTab('register')" class="py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition">
-            إنشاء حساب جديد
+          <button type="button" id="tabRegisterBtn" onclick="switchAuthTab('register')" class="py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">
+            طلب إنشاء حساب
           </button>
         </div>
 
         <!-- نموذج الدخول بالكود -->
         <form id="codeLoginForm" onsubmit="loginWithStudentCode(event)" class="space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">كود الطالب الخاص بك</label>
-            <input id="studentCodeInput" type="text" required placeholder="مثال: MED-4829" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-center font-mono uppercase tracking-widest focus:outline-none focus:border-orange-500" />
+            <label class="block text-xs font-bold text-slate-300 mb-1.5">كود الطالب الخاص بك</label>
+            <input id="studentCodeInput" type="text" required placeholder="مثال: MED-4829" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-center font-mono text-base uppercase tracking-widest focus:outline-none focus:border-amber-500" />
           </div>
-          <button type="submit" class="btn-primary w-full py-2.5 rounded-xl font-bold text-sm shadow-lg">
-            دخول إلى الاختبارات ←
+          <button type="submit" class="btn-gold w-full py-3 rounded-xl text-sm shadow-lg shadow-amber-500/20">
+            دخول إلى المنصة ←
           </button>
         </form>
 
-        <!-- نموذج إنشاء حساب طالب جديد -->
+        <!-- نموذج إنشاء حساب جديد -->
         <form id="studentRegisterForm" onsubmit="registerNewStudent(event)" class="hidden space-y-4">
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">اسم الطالب الكامل</label>
-            <input id="regStudentName" type="text" required placeholder="اكتب اسمك الثلاثي..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500" />
+            <input id="regStudentName" type="text" required placeholder="اكتب اسمك الثلاثي..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">الرقم الجامعي أو رقم الهاتف</label>
-            <input id="regStudentId" type="text" required placeholder="للتعريف في سجل الدرجات..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500" />
+            <label class="block text-xs font-bold text-slate-300 mb-1">الرقم الجامعي أو رقم الواتساب</label>
+            <input id="regStudentId" type="text" required placeholder="للتواصل وتفعيل حسابك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
           </div>
-          <button type="submit" class="w-full py-2.5 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg transition">
-            إنشاء الحساب وتوليد الكود الخاص ✨
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">السنة الدراسية</label>
+            <select id="regStudentYear" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+              <option value="السنة الأولى">السنة الأولى</option>
+              <option value="السنة الثانية">السنة الثانية</option>
+              <option value="السنة الثالثة">السنة الثالثة</option>
+              <option value="السنة الرابعة">السنة الرابعة</option>
+              <option value="السنة الخامسة">السنة الخامسة</option>
+              <option value="السنة السادسة">السنة السادسة</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full py-3 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition">
+            إنشاء الحساب وإصدار الكود ✨
           </button>
         </form>
 
-        <!-- بطاقة عرض الكود بعد إنشاء الحساب -->
-        <div id="generatedCodeBox" class="hidden mt-5 p-4 rounded-xl bg-emerald-950/60 border border-emerald-600 text-center space-y-3">
-          <p class="text-xs font-bold text-emerald-300">✅ تم إنشاء حسابك بنجاح! احتفظ بكود الدخول الخاص بك:</p>
-          <div class="bg-slate-950 border border-emerald-500/50 rounded-xl py-2.5 px-4 flex items-center justify-between">
-            <span id="newGeneratedCodeText" class="font-mono text-xl font-extrabold text-orange-400 tracking-wider">MED-0000</span>
+        <!-- بطاقة عرض الكود وحالة الانتظار بعد التسجيل -->
+        <div id="generatedCodeBox" class="hidden mt-5 p-4 rounded-2xl bg-amber-950/40 border border-amber-500/50 text-center space-y-3">
+          <p class="text-xs font-bold text-amber-300">⏳ تم تسجيل طلبك بنجاح! كودك الخاص هو:</p>
+          <div class="bg-slate-950 border border-amber-500/40 rounded-xl py-2.5 px-4 flex items-center justify-between">
+            <span id="newGeneratedCodeText" class="font-mono text-xl font-black text-amber-400 tracking-wider">MED-0000</span>
             <button type="button" onclick="copyGeneratedCode()" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white border border-slate-600">
               نسخ الكود
             </button>
           </div>
-          <button type="button" onclick="enterDirectlyAfterRegister()" class="btn-primary w-full py-2 rounded-xl font-bold text-xs">
-            الدخول الآن بهذا الكود ←
-          </button>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            حسابك الآن <strong>قيد المراجعة</strong>. أرسل كودك إلى الدكتور مالك ليقوم بتفعيل دخولك من لوحة التحكم.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- 2. واجهة الاختبارات للطلاب -->
-    <section id="studentView" class="hidden">
-      <div id="examSetupCard" class="card rounded-2xl p-6 mb-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-700 pb-4 mb-5">
+    <!-- 2. واجهة الطالب الرئيسية (بعد التفعيل) -->
+    <section id="studentView" class="hidden space-y-6">
+
+      <!-- خانة الاستعلامات والإعلانات الجديدة في الواجهة -->
+      <div class="card rounded-2xl p-5 border-amber-500/30 bg-gradient-to-l from-amber-950/20 to-slate-900">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-black border border-amber-500/30">📢 استعلامات وإعلانات جديدة</span>
+        </div>
+        <div id="studentAnnouncementsList" class="space-y-2 text-sm text-slate-200"></div>
+      </div>
+
+      <!-- شاشة التنقل الأكاديمي: سنوات -> فصول -> مواد -->
+      <div id="academicExplorerCard" class="card rounded-2xl p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-5">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded">بوابة الاختبارات الإلكترونية</span>
-            <h2 class="text-2xl font-extrabold text-white mt-2">مرحباً بك، <span id="welcomeStudentName" class="text-orange-400"></span></h2>
+            <h2 class="text-xl font-black text-white">المكتبة الأكاديمية والاختبارات</h2>
+            <p class="text-xs text-slate-400 mt-0.5">اختر السنة الدراسية ثم الفصل الدراسي لعرض المواد المتاحة</p>
           </div>
-          <div class="text-sm text-slate-300 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700">
-            إجمالي الأسئلة المتاحة: <span id="totalQuestionsBadge" class="font-bold text-orange-400">0</span>
+          <!-- مسار التنقل (Breadcrumb) -->
+          <div id="academicBreadcrumb" class="flex items-center gap-1.5 text-xs font-bold text-amber-400 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800"></div>
+        </div>
+
+        <!-- المرحلة 1: اختيار السنة الدراسية -->
+        <div id="stepYearsView" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
+
+        <!-- المرحلة 2: اختيار الفصل الدراسي -->
+        <div id="stepSemestersView" class="hidden space-y-4">
+          <button type="button" onclick="showYearsStep()" class="text-xs font-bold text-slate-400 hover:text-amber-400 flex items-center gap-1">
+            → العودة لاختيار السنة الدراسية
+          </button>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <button type="button" onclick="selectSemester('الفصل الأول')" class="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
+              <span class="text-2xl mb-2 block">📘</span>
+              <h3 class="text-lg font-extrabold text-white group-hover:text-amber-400">الفصل الدراسي الأول</h3>
+              <p class="text-xs text-slate-400 mt-1">عرض جميع مواد الفصل الأول، المحاضرات، الملفات، والاختبارات</p>
+            </button>
+            <button type="button" onclick="selectSemester('الفصل الثاني')" class="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
+              <span class="text-2xl mb-2 block">📙</span>
+              <h3 class="text-lg font-extrabold text-white group-hover:text-amber-400">الفصل الدراسي الثاني</h3>
+              <p class="text-xs text-slate-400 mt-1">عرض جميع مواد الفصل الثاني، المحاضرات، الملفات، والاختبارات</p>
+            </button>
           </div>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-4 mb-6">
-          <div>
-            <label class="block text-sm font-semibold text-slate-300 mb-2">اختر المادة / النموذج</label>
-            <select id="modelSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-orange-500"></select>
-          </div>
-          <div>
-            <label class="block text-sm font-semibold text-slate-300 mb-2">نظام الاختبار</label>
-            <select id="modeSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-orange-500">
-              <option value="practice">وضع التدريب (تصحيح وشرح فوري)</option>
-              <option value="exam">وضع الامتحان الحقيقي (النتيجة في النهاية)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-semibold text-slate-300 mb-2">مدة الاختبار (بالدقائق)</label>
-            <input id="durationInput" type="number" min="1" max="180" value="45" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-orange-500" />
-          </div>
+        <!-- المرحلة 3: اختيار المادة الدراسية -->
+        <div id="stepSubjectsView" class="hidden space-y-4">
+          <button type="button" onclick="showSemestersStep()" class="text-xs font-bold text-slate-400 hover:text-amber-400 flex items-center gap-1">
+            → العودة لاختيار الفصل الدراسي
+          </button>
+          <div id="subjectsGrid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
         </div>
 
-        <button type="button" onclick="startExam()" class="btn-primary w-full md:w-auto px-8 py-3 rounded-xl font-bold text-base shadow-lg">
-          بدء الاختبار الآن ←
-        </button>
+        <!-- المرحلة 4: داخل المادة (روابط محاضرات | ملفات مقسمة | اختبارات) -->
+        <div id="stepSubjectContentView" class="hidden space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div>
+              <button type="button" onclick="showSubjectsStep()" class="text-xs font-bold text-slate-400 hover:text-amber-400 mb-1 block">
+                → العودة لقائمة المواد
+              </button>
+              <h3 id="currentSubjectTitle" class="text-2xl font-black text-amber-400"></h3>
+            </div>
+            <!-- تبويبات المادة الثلاثة -->
+            <div class="flex flex-wrap gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+              <button type="button" id="subTabLectures" onclick="switchSubjectTab('lectures')" class="px-4 py-2 rounded-lg text-xs tab-active">
+                🎥 روابط المحاضرات
+              </button>
+              <button type="button" id="subTabFiles" onclick="switchSubjectTab('files')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                📁 الملفات (تلاخيص/شباتر/شروحات)
+              </button>
+              <button type="button" id="subTabExams" onclick="switchSubjectTab('exams')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                📝 الاختبارات
+              </button>
+            </div>
+          </div>
+
+          <!-- محتوى تبويب 1: روابط المحاضرات -->
+          <div id="subjectLecturesPane" class="space-y-3"></div>
+
+          <!-- محتوى تبويب 2: الملفات مقسمة إلى (تلاخيص | شباتر | شروحات) -->
+          <div id="subjectFilesPane" class="hidden space-y-5">
+            <div class="flex gap-2 border-b border-slate-800 pb-3">
+              <button type="button" id="fileCatAll" onclick="filterFilesCategory('الكل')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">الكل</button>
+              <button type="button" id="fileCatSummaries" onclick="filterFilesCategory('تلاخيص')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-300 border border-slate-700">تلاخيص</button>
+              <button type="button" id="fileCatChapters" onclick="filterFilesCategory('شباتر')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-300 border border-slate-700">شباتر</button>
+              <button type="button" id="fileCatExplanations" onclick="filterFilesCategory('شروحات')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-300 border border-slate-700">شروحات</button>
+            </div>
+            <div id="subjectFilesList" class="grid sm:grid-cols-2 gap-3"></div>
+          </div>
+
+          <!-- محتوى تبويب 3: اختبارات المادة -->
+          <div id="subjectExamsPane" class="hidden space-y-4">
+            <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 grid md:grid-cols-3 gap-4 items-end">
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">اختر نموذج الاختبار</label>
+                <select id="modelSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500"></select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">نظام الاختبار</label>
+                <select id="modeSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                  <option value="practice">وضع التدريب (تصحيح وشرح فوري)</option>
+                  <option value="exam">وضع الامتحان الحقيقي (النتيجة في النهاية)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">مدة الاختبار (بالدقائق)</label>
+                <input id="durationInput" type="number" min="1" max="180" value="45" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
+              </div>
+            </div>
+            <button type="button" onclick="startExam()" class="btn-gold px-8 py-3 rounded-xl text-sm shadow-lg">
+              بدء الاختبار الآن ←
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- شاشة حل الأسئلة -->
       <div id="examRunner" class="hidden">
         <div class="card rounded-2xl p-4 mb-4 flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-3">
-            <span class="bg-blue-900/60 text-blue-300 border border-blue-700 px-3 py-1 rounded-lg text-sm font-bold" id="questionProgressText">سؤال 1 من 10</span>
-            <button type="button" onclick="toggleFlag()" id="flagBtn" class="px-3 py-1 rounded-lg text-sm border border-slate-600 text-slate-300 hover:bg-slate-800">
+            <span class="bg-blue-950 text-blue-300 border border-blue-800 px-3 py-1 rounded-lg text-sm font-bold" id="questionProgressText">سؤال 1 من 10</span>
+            <button type="button" onclick="toggleFlag()" id="flagBtn" class="px-3 py-1 rounded-lg text-sm border border-slate-700 text-slate-300 hover:bg-slate-800">
               🚩 تعليم للمراجعة
             </button>
           </div>
           <div class="flex items-center gap-3">
-            <div class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg font-mono text-orange-400 font-bold" id="timerDisplay">45:00</div>
+            <div class="bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg font-mono text-amber-400 font-bold" id="timerDisplay">45:00</div>
             <button type="button" onclick="togglePause()" id="pauseBtn" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 border border-slate-700 text-slate-300">إيقاف مؤقت</button>
-            <button type="button" onclick="finishExam()" class="px-4 py-1.5 rounded-lg text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white">تسليم الاختبار</button>
+            <button type="button" onclick="finishExam()" class="px-4 py-1.5 rounded-lg text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white">تسليم الاختبار</button>
           </div>
         </div>
 
         <div id="navGrid" class="card rounded-xl p-3 mb-4 flex flex-wrap gap-1.5"></div>
 
         <div class="card rounded-2xl p-6 mb-4">
-          <p id="questionCategoryBadge" class="text-xs text-orange-400 font-bold mb-2"></p>
-          <!-- حاوية صورة السؤال (تظهر فقط إذا كان السؤال يحتوي على صورة) -->
+          <p id="questionCategoryBadge" class="text-xs text-amber-400 font-bold mb-2"></p>
           <div id="questionImageBox" class="hidden mb-4">
             <img id="questionImageDisplay" src="" alt="صورة توضيحية للسؤال" class="max-h-72 rounded-xl border border-slate-700 mx-auto object-contain bg-slate-950 p-1" />
           </div>
@@ -179,40 +273,49 @@
 
         <div class="flex items-center justify-between">
           <button type="button" onclick="prevQuestion()" id="prevBtn" class="px-5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-semibold disabled:opacity-40">السابق</button>
-          <button type="button" onclick="nextQuestion()" id="nextBtn" class="btn-primary px-6 py-2.5 rounded-xl font-bold">التالي</button>
+          <button type="button" onclick="nextQuestion()" id="nextBtn" class="btn-gold px-6 py-2.5 rounded-xl text-sm">التالي</button>
         </div>
       </div>
 
       <!-- شاشة النتيجة -->
       <div id="resultScreen" class="hidden card rounded-2xl p-6">
-        <div class="text-center border-b border-slate-700 pb-6 mb-6">
+        <div class="text-center border-b border-slate-800 pb-6 mb-6">
           <p class="text-sm text-slate-400 mb-1">انتهى الاختبار - التقييم النهائي للطالب: <span id="resultStudentName" class="text-white font-bold"></span></p>
-          <div id="scorePercentage" class="text-5xl font-extrabold text-orange-400 my-2">0%</div>
-          <div id="studentGradeLabel" class="inline-block px-4 py-1 rounded-full text-sm font-bold bg-blue-900/60 text-blue-300 border border-blue-700"></div>
+          <div id="scorePercentage" class="text-5xl font-black text-amber-400 my-2">0%</div>
+          <div id="studentGradeLabel" class="inline-block px-4 py-1 rounded-full text-sm font-bold bg-blue-950 text-blue-300 border border-blue-800"></div>
           <p id="scoreSummaryText" class="text-slate-300 mt-3 text-sm"></p>
         </div>
         <div id="reviewContainer" class="space-y-4 mb-6"></div>
-        <button type="button" onclick="resetToHome()" class="btn-primary w-full py-3 rounded-xl font-bold">العودة لقائمة الاختبارات</button>
+        <button type="button" onclick="resetToHome()" class="btn-gold w-full py-3 rounded-xl text-sm">العودة للمادة والاختبارات</button>
       </div>
     </section>
 
-    <!-- 3. لوحة تحكم المدير -->
+    <!-- 3. لوحة تحكم المدير الكاملة (منصة المالك) -->
     <section id="adminView" class="hidden space-y-6">
-      <!-- إعدادات الربط وكلمة مرور المدير -->
-      <div class="card rounded-2xl p-5 border-blue-500/40 bg-slate-900/70 space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+
+      <!-- شريط التحكم العلوي والنشر المباشر -->
+      <div class="card rounded-2xl p-6 border-amber-500/40 bg-gradient-to-l from-slate-900 to-[#0b1120] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
           <div>
-            <h3 class="text-base font-extrabold text-blue-400">⚡ إعدادات المنصة والربط المباشر</h3>
-            <p class="text-xs text-slate-400">تحكم في مفتاح النشر وكلمة مرور المدير الخاصة بك (اضغط نشر لتثبيت التعديلات للجميع).</p>
+            <h2 class="text-xl font-black text-amber-400">👑 لوحة تحكم المدير الشاملة — منصة المالك</h2>
+            <p class="text-xs text-slate-400 mt-0.5">تحكم كامل في الطلاب، المواد، المحاضرات، الملفات، الاختبارات، والإعلانات.</p>
           </div>
-          <button type="button" onclick="copyPlatformLink()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold">
-            🔗 نسخ رابط المنصة للطلاب
-          </button>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" id="togglePlatformLockBtn" onclick="togglePlatformMaintenance()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-amber-300">
+              🔓 حالة المنصة: مفتوحة للطلاب
+            </button>
+            <button type="button" onclick="copyPlatformLink()" class="px-3.5 py-2 rounded-xl bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold">
+              🔗 نسخ رابط المنصة
+            </button>
+            <button type="button" onclick="logoutAdmin()" class="px-3.5 py-2 rounded-xl bg-red-950 text-red-200 border border-red-800 text-xs font-bold">
+              خروج المدير
+            </button>
+          </div>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-3">
+        <div class="grid md:grid-cols-3 gap-3 items-end">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">مفتاح GitHub Token (للنشر الدائم بضغطة زر)</label>
+            <label class="block text-xs font-bold text-slate-300 mb-1">مفتاح GitHub Token (للنشر المباشر)</label>
             <div class="flex gap-2">
               <input id="ghTokenInput" type="password" placeholder="ghp_..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
               <button type="button" onclick="saveGithubToken()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white">
@@ -221,38 +324,65 @@
             </div>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">كلمة مرور المدير (تُعتمد فوراً وتُحفظ عند النشر)</label>
+            <label class="block text-xs font-bold text-slate-300 mb-1">تغيير كلمة مرور المدير</label>
             <div class="flex gap-2">
-              <input id="adminPasswordEditInput" type="text" placeholder="كلمة مرور المدير الجديدة..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-orange-400 font-bold text-xs" />
-              <button type="button" onclick="updateAdminPasswordLocally()" class="px-3 py-2 rounded-xl bg-orange-700 hover:bg-orange-600 text-xs font-bold text-white">
+              <input id="adminPasswordEditInput" type="text" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-amber-400 font-bold text-xs" />
+              <button type="button" onclick="updateAdminPasswordLocally()" class="px-3 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-black">
                 تحديث
               </button>
             </div>
           </div>
+          <div>
+            <button type="button" id="publishBtn" onclick="publishDirectlyToGitHub()" class="w-full py-2.5 rounded-xl font-black text-xs bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20">
+              🚀 نشر جميع التعديلات للطلاب فوراً
+            </button>
+          </div>
         </div>
+        <p id="publishStatus" class="text-xs font-bold text-slate-300"></p>
       </div>
 
-      <!-- قسم بيانات الطلاب المسجلين وأكوادهم -->
-      <div class="card rounded-2xl p-6 border-emerald-500/30">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-4 mb-4">
+      <!-- تبويبات لوحة تحكم المدير المنظمة -->
+      <div class="flex flex-wrap gap-2 bg-slate-950 p-2 rounded-2xl border border-slate-800">
+        <button type="button" id="admTabStudents" onclick="switchAdminTab('students')" class="px-4 py-2 rounded-xl text-xs tab-active">
+          👨‍⚕️ إدارة وتفعيل الطلاب (<span id="admBadgeStudents">0</span>)
+        </button>
+        <button type="button" id="admTabSubjects" onclick="switchAdminTab('subjects')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          📚 السنوات والفصول والمواد (<span id="admBadgeSubjects">0</span>)
+        </button>
+        <button type="button" id="admTabContent" onclick="switchAdminTab('content')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          🎥 المحاضرات والملفات (<span id="admBadgeContent">0</span>)
+        </button>
+        <button type="button" id="admTabQuestions" onclick="switchAdminTab('questions')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          📝 الأسئلة والاختبارات (<span id="admBadgeQuestions">0</span>)
+        </button>
+        <button type="button" id="admTabAnnouncements" onclick="switchAdminTab('announcements')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          📢 الاستعلامات والإعلانات (<span id="admBadgeAnnouncements">0</span>)
+        </button>
+      </div>
+
+      <!-- القسم 1 في المدير: إدارة الطلاب (تفعيل / إغلاق / حذف) -->
+      <div id="adminPaneStudents" class="card rounded-2xl p-6 border-emerald-500/30">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4 mb-4">
           <div>
-            <h3 class="text-lg font-extrabold text-emerald-400">👨‍⚕️ سجل الطلاب المسجلين وأكواد الدخول (<span id="adminStudentsCount">0</span>)</h3>
-            <p class="text-xs text-slate-400">تظهر هنا بيانات كل طالب أنشأ حساباً، الكود الخاص به، ونتائجه في الاختبارات.</p>
+            <h3 class="text-lg font-extrabold text-emerald-400">سجل الطلاب وطلبات تفعيل الحسابات</h3>
+            <p class="text-xs text-slate-400">أي طالب يسجل حساباً جديداً يظهر هنا بحالة "مُعلّق" حتى تضغط على زر تفعيل، وبعدها اضغط "نشر التعديلات".</p>
           </div>
-          <button type="button" onclick="syncStudentsFromCloud()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-slate-200">
-            🔄 تحديث القائمة
+          <button type="button" onclick="renderAdminStudentsTable()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-bold text-slate-200 border border-slate-700">
+            🔄 تحديث الجدول
           </button>
         </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-right text-xs border-collapse">
             <thead>
-              <tr class="border-b border-slate-700 text-slate-400">
-                <th class="py-2.5 px-3">اسم الطالب</th>
-                <th class="py-2.5 px-3">الرقم الجامعي / الهاتف</th>
-                <th class="py-2.5 px-3">كود الدخول</th>
-                <th class="py-2.5 px-3">الاختبارات والدرجات</th>
-                <th class="py-2.5 px-3">إجراء</th>
+              <tr class="border-b border-slate-800 text-slate-400">
+                <th class="py-3 px-3">اسم الطالب</th>
+                <th class="py-3 px-3">الرقم الجامعي / الهاتف</th>
+                <th class="py-3 px-3">السنة</th>
+                <th class="py-3 px-3">كود الدخول</th>
+                <th class="py-3 px-3">الحالة</th>
+                <th class="py-3 px-3">النتائج</th>
+                <th class="py-3 px-3">التحكم الكامل</th>
               </tr>
             </thead>
             <tbody id="adminStudentsTableBody" class="divide-y divide-slate-800"></tbody>
@@ -260,27 +390,117 @@
         </div>
       </div>
 
-      <!-- نموذج إضافة الأسئلة (مع إمكانية إضافة صورة) -->
-      <div class="card rounded-2xl p-6 border-orange-500/40">
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-4 mb-5">
+      <!-- القسم 2 في المدير: إضافة وحذف المواد ضمن السنوات والفصول -->
+      <div id="adminPaneSubjects" class="hidden card rounded-2xl p-6 space-y-5">
+        <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إضافة مادة جديدة (حسب السنة والفصل)</h3>
+        <form onsubmit="addSubject(event)" class="grid md:grid-cols-4 gap-3 items-end">
           <div>
-            <h2 class="text-xl font-extrabold text-orange-400">إدارة الأسئلة والنماذج الطبية</h2>
-            <p class="text-xs text-slate-400 mt-1">أضف الأسئلة (مع صورة اختيارية) ثم اضغط "نشر التعديلات للطلاب فوراً".</p>
+            <label class="block text-xs font-bold text-slate-300 mb-1">السنة الدراسية</label>
+            <select id="subYearInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs">
+              <option value="السنة الأولى">السنة الأولى</option>
+              <option value="السنة الثانية">السنة الثانية</option>
+              <option value="السنة الثالثة">السنة الثالثة</option>
+              <option value="السنة الرابعة">السنة الرابعة</option>
+              <option value="السنة الخامسة">السنة الخامسة</option>
+              <option value="السنة السادسة">السنة السادسة</option>
+            </select>
           </div>
-          <button type="button" onclick="logoutAdmin()" class="px-4 py-2 rounded-xl bg-red-900/50 text-red-200 border border-red-700 text-sm font-bold">
-            تسجيل خروج المدير
-          </button>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">الفصل الدراسي</label>
+            <select id="subSemesterInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs">
+              <option value="الفصل الأول">الفصل الأول</option>
+              <option value="الفصل الثاني">الفصل الثاني</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">اسم المادة الدراسية</label>
+            <input id="subNameInput" required placeholder="مثال: Anatomy / علم التشريح" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs" />
+          </div>
+          <button type="submit" class="btn-gold py-2.5 rounded-xl text-xs">+ إضافة المادة</button>
+        </form>
+
+        <div id="adminSubjectsList" class="grid sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2"></div>
+      </div>
+
+      <!-- القسم 3 في المدير: إضافة المحاضرات والملفات (تلاخيص / شباتر / شروحات) -->
+      <div id="adminPaneContent" class="hidden card rounded-2xl p-6 space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- نموذج إضافة رابط محاضرة -->
+          <form onsubmit="addLecture(event)" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+            <h4 class="font-extrabold text-amber-400 text-sm">🎥 إضافة رابط محاضرة لمادة</h4>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">اختر المادة</label>
+              <select id="lecSubjectSelect" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">عنوان المحاضرة</label>
+              <input id="lecTitleInput" required placeholder="مثال: المحاضرة الأولى - مقدمة في الجهاز العصبي" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">رابط المحاضرة (YouTube / Drive / Zoom...)</label>
+              <input id="lecUrlInput" type="url" required placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            </div>
+            <button type="submit" class="btn-gold w-full py-2 rounded-xl text-xs">+ إضافة رابط المحاضرة</button>
+          </form>
+
+          <!-- نموذج إضافة ملف (تلاخيص / شباتر / شروحات) -->
+          <form onsubmit="addStudyFile(event)" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+            <h4 class="font-extrabold text-emerald-400 text-sm">📁 إضافة ملف لمادة (تلاخيص / شباتر / شروحات)</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">اختر المادة</label>
+                <select id="fileSubjectSelect" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs"></select>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">تصنيف الملف</label>
+                <select id="fileCategorySelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs">
+                  <option value="تلاخيص">تلاخيص</option>
+                  <option value="شباتر">شباتر</option>
+                  <option value="شروحات">شروحات</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">اسم الملف</label>
+              <input id="fileTitleInput" required placeholder="مثال: تلخيص شابتر 3 كامل PDF" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">رابط الملف (Google Drive / Telegram / PDF URL)</label>
+              <input id="fileUrlInput" type="url" required placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            </div>
+            <button type="submit" class="w-full py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white">+ إضافة الملف</button>
+          </form>
         </div>
 
+        <!-- عرض المحاضرات والملفات المضافة للحذف -->
+        <div class="grid md:grid-cols-2 gap-6 pt-2">
+          <div>
+            <h4 class="font-bold text-sm text-white mb-2">روابط المحاضرات الحالية</h4>
+            <div id="adminLecturesList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+          </div>
+          <div>
+            <h4 class="font-bold text-sm text-white mb-2">الملفات الحالية (تلاخيص / شباتر / شروحات)</h4>
+            <div id="adminFilesList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- القسم 4 في المدير: إضافة وحذف أسئلة الاختبارات -->
+      <div id="adminPaneQuestions" class="hidden card rounded-2xl p-6 space-y-5">
+        <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إضافة سؤال اختبار لمادة</h3>
         <form onsubmit="addQuestion(event)" class="space-y-4">
-          <div class="grid md:grid-cols-2 gap-4">
+          <div class="grid md:grid-cols-3 gap-4">
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1">اسم المادة / النموذج</label>
-              <input id="qModel" required placeholder="مثال: Anatomy - Model 1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm" />
+              <label class="block text-xs font-bold text-slate-300 mb-1">المادة التابع لها السؤال</label>
+              <select id="qSubjectSelect" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs"></select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">اسم النموذج (Model)</label>
+              <input id="qModel" required placeholder="مثال: Midterm Model 1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-300 mb-1">الإجابة الصحيحة</label>
-              <select id="qCorrect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
+              <select id="qCorrect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs">
                 <option value="0">الخيار الأول (A)</option>
                 <option value="1">الخيار الثاني (B)</option>
                 <option value="2">الخيار الثالث (C)</option>
@@ -291,68 +511,66 @@
 
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">نص السؤال</label>
-            <textarea id="qText" required rows="2" placeholder="اكتب السؤال الطبي هنا..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm"></textarea>
+            <textarea id="qText" required rows="2" placeholder="اكتب السؤال الطبي هنا..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm"></textarea>
           </div>
 
-          <!-- قسم إضافة صورة للسؤال (اختياري) -->
-          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-700 space-y-3">
-            <label class="block text-xs font-bold text-orange-400">🖼️ إضافة صورة توضيحية للسؤال (اختياري)</label>
-            <div class="grid md:grid-cols-2 gap-3 items-center">
-              <div>
-                <span class="block text-[11px] text-slate-400 mb-1">اختر صورة من جهازك (تُضغط وتُحفظ تلقائياً):</span>
-                <input id="qImageFile" type="file" accept="image/*" onchange="handleQuestionImageUpload(event)" class="w-full text-xs text-slate-300 file:ml-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-orange-400 hover:file:bg-slate-700" />
-              </div>
-              <div>
-                <span class="block text-[11px] text-slate-400 mb-1">أو الصق رابط صورة مباشر (URL):</span>
-                <input id="qImageUrl" type="url" oninput="previewImageUrlInput()" placeholder="https://..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-white text-xs" />
-              </div>
+          <!-- إضافة صورة للسؤال -->
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <label class="block text-xs font-bold text-amber-400">🖼️ صورة توضيحية للسؤال (اختياري)</label>
+            <div class="grid md:grid-cols-2 gap-3">
+              <input id="qImageFile" type="file" accept="image/*" onchange="handleQuestionImageUpload(event)" class="w-full text-xs text-slate-300 file:ml-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400" />
+              <input id="qImageUrl" type="url" oninput="previewImageUrlInput()" placeholder="أو رابط صورة مباشر https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-white text-xs" />
             </div>
-            <div id="adminImagePreviewBox" class="hidden flex items-center gap-3 pt-2 border-t border-slate-800">
-              <img id="adminImagePreview" src="" alt="معاينة" class="h-16 w-24 object-cover rounded-lg border border-slate-600" />
-              <button type="button" onclick="clearAdminQuestionImage()" class="text-xs px-2.5 py-1 rounded bg-red-900/60 text-red-200 hover:bg-red-800">إزالة الصورة</button>
+            <div id="adminImagePreviewBox" class="hidden flex items-center gap-3 pt-2">
+              <img id="adminImagePreview" src="" class="h-14 w-20 object-cover rounded-lg border border-slate-600" />
+              <button type="button" onclick="clearAdminQuestionImage()" class="text-xs px-2.5 py-1 rounded bg-red-900/60 text-red-200">إزالة الصورة</button>
             </div>
           </div>
 
           <div class="grid md:grid-cols-2 gap-3">
-            <input id="opt0" required placeholder="الخيار A" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm" />
-            <input id="opt1" required placeholder="الخيار B" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm" />
-            <input id="opt2" required placeholder="الخيار C" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm" />
-            <input id="opt3" required placeholder="الخيار D" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm" />
+            <input id="opt0" required placeholder="الخيار A" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <input id="opt1" required placeholder="الخيار B" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <input id="opt2" required placeholder="الخيار C" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <input id="opt3" required placeholder="الخيار D" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
           </div>
 
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">التفسير العلمي للإجابة</label>
-            <textarea id="qExp" required rows="2" placeholder="اشرح لماذا هذه الإجابة صحيحة..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm"></textarea>
+            <textarea id="qExp" required rows="2" placeholder="اشرح لماذا هذه الإجابة صحيحة..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs"></textarea>
           </div>
 
-          <div class="flex flex-wrap gap-3 pt-2">
-            <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl font-bold text-sm">+ إضافة السؤال للقائمة</button>
-            <button type="button" id="publishBtn" onclick="publishDirectlyToGitHub()" class="px-6 py-2.5 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg">
-              🚀 نشر التعديلات للطلاب فوراً
-            </button>
-          </div>
-          <p id="publishStatus" class="text-xs font-semibold text-slate-300 mt-1"></p>
+          <button type="submit" class="btn-gold px-6 py-2.5 rounded-xl text-xs">+ إضافة السؤال للقائمة</button>
         </form>
+
+        <div class="pt-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white mb-3">الأسئلة الحالية (<span id="adminQCount">0</span>)</h4>
+          <div id="adminQuestionsList" class="space-y-2.5 max-h-80 overflow-y-auto"></div>
+        </div>
       </div>
 
-      <!-- قائمة الأسئلة الحالية -->
-      <div class="card rounded-2xl p-6">
-        <h3 class="font-bold text-lg text-white mb-4">الأسئلة الحالية في المنصة (<span id="adminQCount">0</span>)</h3>
-        <div id="adminQuestionsList" class="space-y-3"></div>
+      <!-- القسم 5 في المدير: إدارة الاستعلامات والإعلانات الجديدة -->
+      <div id="adminPaneAnnouncements" class="hidden card rounded-2xl p-6 space-y-5">
+        <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إدارة خانة الاستعلامات والإعلانات في الواجهة</h3>
+        <form onsubmit="addAnnouncement(event)" class="flex flex-col sm:flex-row gap-3">
+          <input id="annTextInput" required placeholder="اكتب الإعلان أو الاستعلام الجديد ليظهر في واجهة الطلاب..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-xs" />
+          <button type="submit" class="btn-gold px-6 py-2.5 rounded-xl text-xs shrink-0">+ نشر الإعلان</button>
+        </form>
+        <div id="adminAnnouncementsList" class="space-y-2"></div>
       </div>
+
     </section>
 
   </main>
 
   <!-- نافذة كلمة مرور المدير -->
-  <div id="adminModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-    <div class="card rounded-2xl p-6 max-w-sm w-full">
-      <h3 class="text-lg font-bold text-white mb-2">دخول المدير</h3>
-      <p class="text-xs text-slate-400 mb-4">أدخل كلمة مرور المدير لفتح لوحة التحكم:</p>
-      <input id="adminPassInput" type="password" placeholder="كلمة مرور المدير" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white mb-4" />
+  <div id="adminModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="card rounded-2xl p-6 max-w-sm w-full border-amber-500/30">
+      <h3 class="text-lg font-black text-amber-400 mb-1">دخول إدارة منصة المالك</h3>
+      <p class="text-xs text-slate-400 mb-4">أدخل كلمة مرور المدير لفتح لوحة التحكم الكاملة:</p>
+      <input id="adminPassInput" type="password" placeholder="كلمة مرور المدير" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white mb-4 focus:outline-none focus:border-amber-500" />
       <div class="flex gap-2">
-        <button type="button" onclick="checkAdminLogin()" class="btn-primary flex-1 py-2 rounded-xl font-bold text-sm">دخول</button>
-        <button type="button" onclick="closeAdminModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm">إلغاء</button>
+        <button type="button" onclick="checkAdminLogin()" class="btn-gold flex-1 py-2.5 rounded-xl text-xs">دخول</button>
+        <button type="button" onclick="closeAdminModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">إلغاء</button>
       </div>
     </div>
   </div>
@@ -360,153 +578,69 @@
   <script>
     // إعدادات المدير والمستودع
     let ADMIN_PASSWORD = "malek2026";
+    let PLATFORM_LOCKED = false;
     const GITHUB_OWNER = "nassarmalek833-ctrl";
     const GITHUB_REPO = "Malek-Medical-";
     const GITHUB_FILE_PATH = "index.html";
 
-    // قاعدة بيانات الطلاب المنشورة
+    // بيانات المنصة المنشورة (تُحدّث تلقائياً عند الضغط على زر النشر)
     const DEFAULT_STUDENTS = [];
 
-    // قاعدة بيانات الأسئلة المنشورة للطلاب
-    const DEFAULT_QUESTIONS = [
-  {
-    "model": "Biology",
-    "text": "Which two properties of water are of crucial importance to the structure and function of\nbiomolecules?",
-    "image": "",
-    "options": [
-      "A) Its high density as a solid and its low heat of vaporization",
-      "B) Cohesion of its molecules and a slight tendency to ionize",
-      "C) Its nonpolar bonds and its ability to dissolve lipids readily",
-      "D) Its linear shape and the great strength of its hydrogen bonds"
-    ],
-    "correct": 1,
-    "explanation": "The attractive forces (cohesion) between water molecules and the slight tendency of water to ionize\nunderlie the behaviour of biomolecules. Every other option names properties water does not have; for example,\nice is less dense than the liquid and hydrogen bonds are relatively weak."
-  },
-  {
-    "model": "Biology",
-    "text": "Suppose oxygen and hydrogen had equal electronegativity. Which consequence for water\nwould follow?",
-    "image": "",
-    "options": [
-      "A) Its H-O-H bond angle would widen to exactly 180°",
-      "B) Each of its hydrogen atoms would carry a δ− charge",
-      "C) Water would become a far better solvent for NaCl",
-      "D) Its molecules could no longer form hydrogen bonds"
-    ],
-    "correct": 3,
-    "explanation": "The partial charges exist only because oxygen is more electronegative and pulls the shared\nelectrons toward itself. With equal sharing the O-H bonds would be nonpolar, leaving no δ+ and δ− regions to\nattract neighbouring molecules, so cohesion and the ability to hydrate ions would be lost."
-  },
-  {
-    "model": "Biology",
-    "text": "In which of the following molecules are the electrons of every covalent bond shared\nequally between the bonded atoms?",
-    "image": "",
-    "options": [
-      "H2O",
-      "CO2",
-      "O2",
-      "NH3"
-    ],
-    "correct": 2,
-    "explanation": "التفسير العلمي : In O2, as in N2, the two bonded atoms are identical, so electrons are shared equally and the bond\nis nonpolar. In CO2 each C=O bond is polar; the molecule is nonpolar only because the two dipoles cancel. The\nbonds of H2O and NH3 are polar"
-  },
-  {
-    "model": "Biology",
-    "text": "A hydrogen bond results from the attraction between a hydrogen atom covalently bonded\nto a very electronegative atom and another very electronegative atom. Which group lists\natoms of this kind",
-    "image": "",
-    "options": [
-      "N, O and F",
-      "C, H and P",
-      "Na, K and Ca",
-      "C, Na and H"
-    ],
-    "correct": 0,
-    "explanation": "Hydrogen bonds form when H is covalently attached to a very electronegative atom such as N, O or\nF and is attracted to another such atom. Carbon is only slightly more electronegative than hydrogen, so options\ncontaining C cannot supply these atoms."
-  },
-  {
-    "model": "Biology",
-    "text": "A central water molecule can be hydrogen-bonded to four neighbouring water molecules.\nWhich feature of the central molecule makes this possible?",
-    "image": "",
-    "options": [
-      "Its oxygen shares electrons equally with both of its hydrogens",
-      "Its two hydrogens form covalent bonds with neighbouring oxygens",
-      "Its δ+ oxygen atom attracts δ− hydrogens on all four neighbours",
-      "Its δ− oxygen and two δ+ hydrogens each attract opposite charges"
-    ],
-    "correct": 3,
-    "explanation": "The molecule is polar: its δ− oxygen attracts the δ+ hydrogens of two neighbours, while each of its\nδ+ hydrogens attracts the δ− oxygen of another neighbour, giving four hydrogen bonds. Hydrogen bonds are\nelectrostatic attractions, not covalent bonds"
-  },
-  {
-    "model": "Biology",
-    "text": "A student draws two neighbouring water molecules with the hydrogen atoms of one\npointing directly at the hydrogen atoms of the other. Why is this arrangement unlikely?",
-    "image": "",
-    "options": [
-      "Hydrogen atoms can never take part in weak attractions",
-      "The facing δ+ hydrogen atoms repel each other",
-      "The facing hydrogens would form a covalent H-H bond",
-      "Both oxygen atoms carry δ+ charges and repel each other"
-    ],
-    "correct": 1,
-    "explanation": "Like partial charges repel; a hydrogen bond requires the δ+ hydrogen of one molecule to face the\nδ− oxygen of the other. Oxygen is the δ− region of water, not δ+."
-  },
-  {
-    "model": "Biology",
-    "text": "How does a water molecule at the air-water surface differ from a water molecule in the\ninterior of the liquid?",
-    "image": "",
-    "options": [
-      "It forms more hydrogen bonds than an interior molecule",
-      "It is hydrogen-bonded to gas molecules in the air above",
-      "C) It is pulled equally in all directions by its neighbours",
-      "It lacks partners above, so it is pulled toward the interior"
-    ],
-    "correct": 3,
-    "explanation": "A surface molecule is hydrogen-bonded to its neighbours and to the water below but not to the air\nabove. The unbalanced cohesive forces give a net force directed into the liquid, producing water's high surface\ntension."
-  },
-  {
-    "model": "Biology",
-    "text": "An insect stands on the surface of a pond without breaking through it. Which property of\nwater chiefly makes this possible?",
-    "image": "",
-    "options": [
-      "High surface tension resulting from cohesion",
-      "High heat of vaporization of liquid water",
-      "C) Lower density of ice than of liquid water",
-      "Lower freezing point of water containing solutes"
-    ],
-    "correct": 0,
-    "explanation": ": Hydrogen-bonded molecules at the surface form an ordered layer that resists being stretched or\nbroken, so the surface behaves like an invisible film able to support the insect."
-  },
-  {
-    "model": "Biology",
-    "text": "In the water-conducting cells of a tree, what is the specific contribution of adhesion",
-    "image": "",
-    "options": [
-      "A) It holds water molecules together as an unbroken column",
-      "B) It pulls water upward by evaporation from the leaves",
-      "C) It binds water to the cell walls, helping resist gravity",
-      "D) It lowers the freezing point of the water in the stem"
-    ],
-    "correct": 2,
-    "explanation": "Adhesion of water to the cell walls by hydrogen bonds helps resist the downward pull of gravity.\nCohesion holds the column together, and evaporation from the leaves provides the upward pull."
-  },
-  {
-    "model": "Biology",
-    "text": "Which of the following common solvents has the weakest attractive forces between its\nmolecules in the liquid phase (lowest heat of vaporization: 247 J/g)?",
-    "image": "",
-    "options": [
-      "A) Water (2,260 J/g)",
-      "B) Methanol (1,100 J/g)",
-      "C) Hexane (423 J/g)",
-      "D) Chloroform (247 J/g)"
-    ],
-    "correct": 3,
-    "explanation": "Heat of vaporization is a direct measure of the energy needed to overcome attractive forces\nbetween molecules in the liquid, and chloroform has the lowest value (247 J/g). Water, at 2,260 J/g, has the\nstrongest internal cohesion because of its extensive hydrogen bonding."
-  }
-];
+    const DEFAULT_ANNOUNCEMENTS = [
+      { id: "ann1", text: "أهلاً بكم في منصة المالك الطبية! تم تفعيل نظام المواد والاختبارات الإلكترونية.", date: "2026" }
+    ];
 
-    let studentsList = loadMergedStudents();
+    const DEFAULT_SUBJECTS = [
+      { id: "sub_anat_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم التشريح العام (General Anatomy)" },
+      { id: "sub_phys_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم وظائف الأعضاء (Physiology)" }
+    ];
+
+    const DEFAULT_LECTURES = [
+      { id: "lec_1", subjectId: "sub_anat_1", title: "المحاضرة 1: مقدمة في المصطلحات التشريحية", url: "https://www.youtube.com" }
+    ];
+
+    const DEFAULT_FILES = [
+      { id: "file_1", subjectId: "sub_anat_1", category: "تلاخيص", title: "ملخص شامل للمحاضرة الأولى", url: "https://drive.google.com" },
+      { id: "file_2", subjectId: "sub_anat_1", category: "شباتر", title: "Chapter 1 - Introduction to Anatomy", url: "https://drive.google.com" },
+      { id: "file_3", subjectId: "sub_anat_1", category: "شروحات", title: "شرح تفصيلي بالصور للجهاز الهيكلي", url: "https://drive.google.com" }
+    ];
+
+    const DEFAULT_QUESTIONS = [
+      {
+        subjectId: "sub_anat_1",
+        model: "Model 1 - General Anatomy",
+        text: "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
+        image: "",
+        options: ["Glossopharyngeal nerve (CN IX)", "Vagus nerve (CN X)", "Accessory nerve (CN XI)", "Hypoglossal nerve (CN XII)"],
+        correct: 1,
+        explanation: "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
+      },
+      {
+        subjectId: "sub_phys_1",
+        model: "Model 1 - Cardiology",
+        text: "What is the primary pacemaker of the normal human heart?",
+        image: "",
+        options: ["Atrioventricular (AV) node", "Bundle of His", "Sinoatrial (SA) node", "Purkinje fibers"],
+        correct: 2,
+        explanation: "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
+      }
+    ];
+
+    // الحالة النشطة في الذاكرة
+    let studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
+    let announcementsList = loadLocalOrDefault("malek_announcements_v2", DEFAULT_ANNOUNCEMENTS);
+    let subjectsList = loadLocalOrDefault("malek_subjects_v2", DEFAULT_SUBJECTS);
+    let lecturesList = loadLocalOrDefault("malek_lectures_v2", DEFAULT_LECTURES);
+    let filesList = loadLocalOrDefault("malek_files_v2", DEFAULT_FILES);
+    let questions = loadLocalOrDefault("malek_questions_v2", DEFAULT_QUESTIONS);
+
     let currentStudent = null;
-    let lastRegisteredStudent = null;
+    let selectedYear = "";
+    let selectedSemester = "";
+    let selectedSubject = null;
+    let currentFileFilter = "الكل";
     let pendingQuestionImageData = "";
 
-    let questions = [...DEFAULT_QUESTIONS];
     let activeQuestions = [];
     let currentIdx = 0;
     let userAnswers = {};
@@ -516,34 +650,37 @@
     let isPaused = false;
     let currentMode = "practice";
 
-    // قراءة كلمة مرور المدير المحفوظة محلياً إن وُجدت
-    function getEffectiveAdminPassword() {
-      return localStorage.getItem("malek_custom_admin_pass") || ADMIN_PASSWORD;
+    function loadLocalOrDefault(key, defVal) {
+      const saved = localStorage.getItem(key);
+      return saved ? JSON.parse(saved) : [...defVal];
     }
 
-    function updateAdminPasswordLocally() {
-      const newPass = document.getElementById("adminPasswordEditInput").value.trim();
-      if (!newPass || newPass.length < 4) {
-        alert("يرجى إدخال كلمة مرور مكونة من 4 أحرف أو أرقام على الأقل.");
-        return;
-      }
-      ADMIN_PASSWORD = newPass;
-      localStorage.setItem("malek_custom_admin_pass", newPass);
-      alert("تم تحديث كلمة مرور المدير بنجاح! اضغط على 'نشر التعديلات للطلاب فوراً' لتثبيتها في الكود بشكل دائم.");
-    }
-
-    // دمج الطلاب المحفوظين محلياً مع المنشورين في الكود
-    function loadMergedStudents() {
-      const localData = JSON.parse(localStorage.getItem("malek_students_registry") || "[]");
+    function loadMergedArray(key, defVal, uniqueProp) {
+      const localData = JSON.parse(localStorage.getItem(key) || "[]");
       const map = new Map();
-      [...DEFAULT_STUDENTS, ...localData].forEach(s => map.set(s.code, s));
+      [...defVal, ...localData].forEach(item => map.set(item[uniqueProp], item));
       return Array.from(map.values());
     }
 
-    function saveStudentsLocally() {
-      localStorage.setItem("malek_students_registry", JSON.stringify(studentsList));
+    function saveAllLocalState() {
+      localStorage.setItem("malek_students_v2", JSON.stringify(studentsList));
+      localStorage.setItem("malek_announcements_v2", JSON.stringify(announcementsList));
+      localStorage.setItem("malek_subjects_v2", JSON.stringify(subjectsList));
+      localStorage.setItem("malek_lectures_v2", JSON.stringify(lecturesList));
+      localStorage.setItem("malek_files_v2", JSON.stringify(filesList));
+      localStorage.setItem("malek_questions_v2", JSON.stringify(questions));
     }
 
+    function getEffectiveAdminPassword() {
+      return localStorage.getItem("malek_custom_admin_pass_v2") || ADMIN_PASSWORD;
+    }
+
+    function isPlatformLocked() {
+      const localLock = localStorage.getItem("malek_platform_locked_v2");
+      return localLock !== null ? localLock === "true" : PLATFORM_LOCKED;
+    }
+
+    // بوابة الطلاب: التبديل بين الدخول والتسجيل
     function switchAuthTab(tab) {
       const loginForm = document.getElementById("codeLoginForm");
       const regForm = document.getElementById("studentRegisterForm");
@@ -554,13 +691,13 @@
       if (tab === "login") {
         loginForm.classList.remove("hidden");
         regForm.classList.add("hidden");
-        loginBtn.className = "py-2 rounded-lg text-xs font-bold bg-orange-600 text-white transition";
-        regBtn.className = "py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition";
+        loginBtn.className = "py-2.5 rounded-xl text-xs tab-active transition";
+        regBtn.className = "py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
       } else {
         loginForm.classList.add("hidden");
         regForm.classList.remove("hidden");
-        regBtn.className = "py-2 rounded-lg text-xs font-bold bg-emerald-600 text-white transition";
-        loginBtn.className = "py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition";
+        regBtn.className = "py-2.5 rounded-xl text-xs font-bold bg-emerald-600 text-white transition";
+        loginBtn.className = "py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
       }
     }
 
@@ -577,21 +714,22 @@
       e.preventDefault();
       const name = document.getElementById("regStudentName").value.trim();
       const studentId = document.getElementById("regStudentId").value.trim();
+      const year = document.getElementById("regStudentYear").value;
       if (!name || !studentId) return;
 
-      studentsList = loadMergedStudents();
+      studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
       const newCode = generateUniqueStudentCode();
       const newStudent = {
         name: name,
         studentId: studentId,
+        year: year,
         code: newCode,
-        createdAt: new Date().toLocaleDateString("ar-EG"),
+        approved: false, // لا يمكنه الدخول حتى يفعله المدير
         results: []
       };
 
       studentsList.push(newStudent);
-      saveStudentsLocally();
-      lastRegisteredStudent = newStudent;
+      saveAllLocalState();
 
       document.getElementById("newGeneratedCodeText").textContent = newCode;
       document.getElementById("generatedCodeBox").classList.remove("hidden");
@@ -601,316 +739,263 @@
     function copyGeneratedCode() {
       const code = document.getElementById("newGeneratedCodeText").textContent;
       navigator.clipboard.writeText(code).then(() => {
-        alert("تم نسخ كود الدخول الخاص بك: " + code + "\nاحتفظ به للدخول في أي وقت.");
+        alert("تم نسخ كودك: " + code + "\nأرسله لإدارة منصة المالك لتفعيل حسابك.");
       });
     }
 
-    function enterDirectlyAfterRegister() {
-      if (!lastRegisteredStudent) return;
-      openStudentPortal(lastRegisteredStudent);
-    }
-
+    // التحقق من كود الطالب وحالة التفعيل
     function loginWithStudentCode(e) {
       e.preventDefault();
+      if (isPlatformLocked()) {
+        alert("⛔ المنصة مغلقة مؤقتاً للصيانة والتحديث من قبل الإدارة.");
+        return;
+      }
+
       const enteredCode = document.getElementById("studentCodeInput").value.trim().toUpperCase();
-      studentsList = loadMergedStudents();
+      studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
       const found = studentsList.find(s => s.code === enteredCode);
 
-      if (found) {
-        openStudentPortal(found);
-      } else {
-        alert("كود الطالب غير صحيح أو غير مسجل! تأكد من الكود أو أنشئ حساباً جديداً.");
+      if (!found) {
+        alert("كود الطالب غير مسجل! تأكد من كتابة الكود الصحيح أو اطلب إنشاء حساب جديد.");
+        return;
       }
-    }
 
-    function openStudentPortal(studentObj) {
-      currentStudent = studentObj;
-      questions = [...DEFAULT_QUESTIONS];
+      if (!found.approved) {
+        alert("⏳ حسابك مسجل ولكن لم يتم تفعيله بعد!\nيرجى التواصل مع الدكتور مالك لتفعيل دخولك.");
+        return;
+      }
 
+      currentStudent = found;
       document.getElementById("studentLoginScreen").classList.add("hidden");
       document.getElementById("adminView").classList.add("hidden");
       document.getElementById("studentView").classList.remove("hidden");
 
-      document.getElementById("welcomeStudentName").textContent = currentStudent.name;
-      const headerBadge = document.getElementById("loggedStudentHeaderBadge");
-      headerBadge.textContent = `${currentStudent.name} (${currentStudent.code})`;
-      headerBadge.classList.remove("hidden");
+      const badge = document.getElementById("loggedStudentHeaderBadge");
+      badge.textContent = `${found.name} | ${found.code}`;
+      badge.classList.remove("hidden");
 
-      populateModels();
+      renderStudentAnnouncements();
+      showYearsStep();
     }
 
-    // بوابة المدير السرية (5 ضغطات على M)
-    let tapCount = 0;
-    let tapTimer = null;
-
-    function handleSecretTap() {
-      tapCount++;
-      clearTimeout(tapTimer);
-      if (tapCount >= 5) {
-        tapCount = 0;
-        openAdminModal();
-      } else {
-        tapTimer = setTimeout(() => { tapCount = 0; }, 2000);
-      }
-    }
-
-    function openAdminModal() {
-      document.getElementById("adminPassInput").value = "";
-      document.getElementById("adminModal").classList.remove("hidden");
-    }
-
-    function closeAdminModal() {
-      document.getElementById("adminModal").classList.add("hidden");
-    }
-
-    function checkAdminLogin() {
-      const pass = document.getElementById("adminPassInput").value.trim();
-      if (pass === getEffectiveAdminPassword()) {
-        closeAdminModal();
-        const savedDraft = localStorage.getItem("malek_admin_draft_questions");
-        if (savedDraft) questions = JSON.parse(savedDraft);
-        const savedToken = localStorage.getItem("malek_gh_token");
-        if (savedToken) document.getElementById("ghTokenInput").value = savedToken;
-        document.getElementById("adminPasswordEditInput").value = getEffectiveAdminPassword();
-
-        studentsList = loadMergedStudents();
-        document.getElementById("studentLoginScreen").classList.add("hidden");
-        document.getElementById("studentView").classList.add("hidden");
-        document.getElementById("loggedStudentHeaderBadge").classList.add("hidden");
-        document.getElementById("adminView").classList.remove("hidden");
-
-        renderAdminList();
-        renderAdminStudentsTable();
-      } else {
-        alert("كلمة مرور المدير غير صحيحة!");
-      }
-    }
-
-    function logoutAdmin() {
-      questions = [...DEFAULT_QUESTIONS];
-      document.getElementById("adminView").classList.add("hidden");
-      document.getElementById("studentView").classList.add("hidden");
-      document.getElementById("studentLoginScreen").classList.remove("hidden");
-    }
-
-    function resetAllToStudentLogin() {
-      clearInterval(timerInterval);
-      currentStudent = null;
-      document.getElementById("loggedStudentHeaderBadge").classList.add("hidden");
-      document.getElementById("adminView").classList.add("hidden");
-      document.getElementById("studentView").classList.add("hidden");
-      document.getElementById("studentLoginScreen").classList.remove("hidden");
-    }
-
-    function copyPlatformLink() {
-      const cleanUrl = window.location.origin + window.location.pathname;
-      const text = `منصة مالك الطبية للاختبارات الإلكترونية:\n${cleanUrl}\nأنشئ حسابك للحصول على كود الدخول الخاص بك وابدأ الاختبار.`;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("تم نسخ رابط المنصة لمشاركته مع الطلاب:\n\n" + text);
-      });
-    }
-
-    function saveGithubToken() {
-      const token = document.getElementById("ghTokenInput").value.trim();
-      if (!token) return alert("يرجى إدخال المفتاح أولاً.");
-      localStorage.setItem("malek_gh_token", token);
-      alert("تم حفظ المفتاح في متصفحك بنجاح!");
-    }
-
-    // معالجة وضغط صورة السؤال المرفوعة من الجهاز
-    function handleQuestionImageUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement("canvas");
-          const maxWidth = 800;
-          const scale = img.width > maxWidth ? maxWidth / img.width : 1;
-          canvas.width = img.width * scale;
-          canvas.height = img.height * scale;
-
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          pendingQuestionImageData = canvas.toDataURL("image/jpeg", 0.75);
-
-          document.getElementById("qImageUrl").value = "";
-          document.getElementById("adminImagePreview").src = pendingQuestionImageData;
-          document.getElementById("adminImagePreviewBox").classList.remove("hidden");
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function previewImageUrlInput() {
-      const url = document.getElementById("qImageUrl").value.trim();
-      if (url) {
-        pendingQuestionImageData = url;
-        document.getElementById("qImageFile").value = "";
-        document.getElementById("adminImagePreview").src = url;
-        document.getElementById("adminImagePreviewBox").classList.remove("hidden");
-      } else {
-        clearAdminQuestionImage();
-      }
-    }
-
-    function clearAdminQuestionImage() {
-      pendingQuestionImageData = "";
-      document.getElementById("qImageFile").value = "";
-      document.getElementById("qImageUrl").value = "";
-      document.getElementById("adminImagePreview").src = "";
-      document.getElementById("adminImagePreviewBox").classList.add("hidden");
-    }
-
-    async function publishDirectlyToGitHub() {
-      const token = (localStorage.getItem("malek_gh_token") || document.getElementById("ghTokenInput").value).trim();
-      if (!token) {
-        alert("يرجى لصق مفتاح GitHub Token في الخانة بالأعلى أولاً ثم الضغط على حفظ.");
+    function renderStudentAnnouncements() {
+      const box = document.getElementById("studentAnnouncementsList");
+      if (announcementsList.length === 0) {
+        box.innerHTML = `<p class="text-xs text-slate-400">لا توجد استعلامات أو إعلانات جديدة حالياً.</p>`;
         return;
       }
-
-      const currentAdminPass = document.getElementById("adminPasswordEditInput").value.trim() || getEffectiveAdminPassword();
-      const btn = document.getElementById("publishBtn");
-      const status = document.getElementById("publishStatus");
-      btn.disabled = true;
-      btn.textContent = "⏳ جاري النشر للطلاب...";
-      status.textContent = "جاري تحديث الأسئلة والصور وكلمة المرور على GitHub...";
-
-      try {
-        studentsList = loadMergedStudents();
-        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
-        const getRes = await fetch(apiUrl, {
-          headers: {
-            "Authorization": `token ${token}`,
-            "Accept": "application/vnd.github.v3+json"
-          }
-        });
-
-        if (!getRes.ok) {
-          const errData = await getRes.json().catch(() => ({}));
-          throw new Error(`(${getRes.status}) ${errData.message || "تأكد من صحة مفتاح GitHub Token وصلاحياته (repo)."}`);
-        }
-        const fileData = await getRes.json();
-
-        const currentContent = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ""))));
-        let updatedContent = currentContent.replace(
-          /const DEFAULT_QUESTIONS = \[[\s\S]*?\];/,
-          `const DEFAULT_QUESTIONS = ${JSON.stringify(questions, null, 2)};`
-        );
-        updatedContent = updatedContent.replace(
-          /const DEFAULT_STUDENTS = \[[\s\S]*?\];/,
-          `const DEFAULT_STUDENTS = ${JSON.stringify(studentsList, null, 2)};`
-        );
-        updatedContent = updatedContent.replace(
-          /let ADMIN_PASSWORD = ".*?";/,
-          `let ADMIN_PASSWORD = ${JSON.stringify(currentAdminPass)};`
-        );
-
-        const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
-
-        const putRes = await fetch(apiUrl, {
-          method: "PUT",
-          headers: {
-            "Authorization": `token ${token}`,
-            "Accept": "application/vnd.github.v3+json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: "Publish exam, images & admin settings from Malek LMS",
-            content: encodedContent,
-            sha: fileData.sha
-          })
-        });
-
-        if (!putRes.ok) throw new Error("فشل رفع التحديثات إلى GitHub.");
-
-        ADMIN_PASSWORD = currentAdminPass;
-        localStorage.setItem("malek_custom_admin_pass", currentAdminPass);
-        localStorage.removeItem("malek_admin_draft_questions");
-        status.className = "text-xs font-bold text-emerald-400 mt-2";
-        status.textContent = "✅ تم النشر بنجاح! الأسئلة والصور وكلمة المرور محدثة الآن.";
-        alert("تم نشر التعديلات بنجاح للطلاب!");
-      } catch (err) {
-        status.className = "text-xs font-bold text-red-400 mt-2";
-        status.textContent = "❌ خطأ: " + err.message;
-        alert("خطأ أثناء النشر: " + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "🚀 نشر التعديلات للطلاب فوراً";
-      }
+      box.innerHTML = announcementsList.map(a => `
+        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start gap-2.5">
+          <span class="text-amber-400 font-bold">•</span>
+          <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${a.text}</p>
+        </div>
+      `).join("");
     }
 
-    // عرض جدول الطلاب في لوحة المدير
-    function renderAdminStudentsTable() {
-      studentsList = loadMergedStudents();
-      document.getElementById("adminStudentsCount").textContent = studentsList.length;
-      const tbody = document.getElementById("adminStudentsTableBody");
+    // التنقل الأكاديمي للطلاب: سنوات -> فصول -> مواد -> محتوى
+    function updateBreadcrumb() {
+      const bc = document.getElementById("academicBreadcrumb");
+      let parts = ["السنوات الدراسية"];
+      if (selectedYear) parts.push(selectedYear);
+      if (selectedSemester) parts.push(selectedSemester);
+      if (selectedSubject) parts.push(selectedSubject.name);
+      bc.textContent = parts.join("  /  ");
+    }
 
-      if (studentsList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">لا يوجد طلاب مسجلون بعد.</td></tr>`;
-        return;
-      }
+    function showYearsStep() {
+      selectedYear = "";
+      selectedSemester = "";
+      selectedSubject = null;
+      updateBreadcrumb();
 
-      tbody.innerHTML = studentsList.map((s, idx) => {
-        const resultsText = (s.results && s.results.length > 0)
-          ? s.results.map(r => `<span class="inline-block bg-slate-800 border border-slate-700 rounded px-2 py-0.5 ml-1 mb-1 text-emerald-300">${r.model}: ${r.score}%</span>`).join("")
-          : `<span class="text-slate-500">لم يحل اختبارات بعد</span>`;
+      document.getElementById("stepYearsView").classList.remove("hidden");
+      document.getElementById("stepSemestersView").classList.add("hidden");
+      document.getElementById("stepSubjectsView").classList.add("hidden");
+      document.getElementById("stepSubjectContentView").classList.add("hidden");
 
+      const years = ["السنة الأولى", "السنة الثانية", "السنة الثالثة", "السنة الرابعة", "السنة الخامسة", "السنة السادسة"];
+      document.getElementById("stepYearsView").innerHTML = years.map((y, idx) => {
+        const count = subjectsList.filter(s => s.year === y).length;
         return `
-          <tr class="hover:bg-slate-900/50">
-            <td class="py-3 px-3 font-bold text-white">${s.name}</td>
-            <td class="py-3 px-3 text-slate-300">${s.studentId}</td>
-            <td class="py-3 px-3 font-mono font-bold text-orange-400">${s.code}</td>
-            <td class="py-3 px-3">${resultsText}</td>
-            <td class="py-3 px-3">
-              <button type="button" onclick="deleteStudentRecord(${idx})" class="px-2 py-1 rounded bg-red-900/60 text-red-200 hover:bg-red-800">حذف</button>
-            </td>
-          </tr>
+          <button type="button" onclick="selectYear('${y}')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
+            <span class="text-xs font-black text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg">المستوى ${idx + 1}</span>
+            <h3 class="text-lg font-extrabold text-white mt-3 group-hover:text-amber-400">${y}</h3>
+            <p class="text-xs text-slate-400 mt-1">عدد المواد المتاحة: ${count}</p>
+          </button>
         `;
       }).join("");
     }
 
-    function syncStudentsFromCloud() {
-      renderAdminStudentsTable();
-      alert("تم تحديث قائمة الطلاب المسجلين.");
+    function selectYear(year) {
+      selectedYear = year;
+      showSemestersStep();
     }
 
-    function deleteStudentRecord(idx) {
-      studentsList.splice(idx, 1);
-      saveStudentsLocally();
-      renderAdminStudentsTable();
+    function showSemestersStep() {
+      selectedSemester = "";
+      selectedSubject = null;
+      updateBreadcrumb();
+
+      document.getElementById("stepYearsView").classList.add("hidden");
+      document.getElementById("stepSemestersView").classList.remove("hidden");
+      document.getElementById("stepSubjectsView").classList.add("hidden");
+      document.getElementById("stepSubjectContentView").classList.add("hidden");
     }
 
-    // إدارة الاختبارات للطلاب
-    function populateModels() {
-      const models = [...new Set(questions.map(q => q.model))];
-      const select = document.getElementById("modelSelect");
-      select.innerHTML = `<option value="ALL">جميع النماذج (${questions.length} سؤال)</option>` +
-        models.map(m => `<option value="${m}">${m}</option>`).join("");
-      document.getElementById("totalQuestionsBadge").textContent = questions.length;
+    function selectSemester(sem) {
+      selectedSemester = sem;
+      showSubjectsStep();
     }
 
-    function startExam() {
-      const selectedModel = document.getElementById("modelSelect").value;
-      currentMode = document.getElementById("modeSelect").value;
-      const mins = parseInt(document.getElementById("durationInput").value) || 45;
+    function showSubjectsStep() {
+      selectedSubject = null;
+      updateBreadcrumb();
 
-      activeQuestions = selectedModel === "ALL" ? [...questions] : questions.filter(q => q.model === selectedModel);
-      if (activeQuestions.length === 0) {
-        alert("لا توجد أسئلة في هذا النموذج حالياً.");
+      document.getElementById("stepYearsView").classList.add("hidden");
+      document.getElementById("stepSemestersView").classList.add("hidden");
+      document.getElementById("stepSubjectsView").classList.remove("hidden");
+      document.getElementById("stepSubjectContentView").classList.add("hidden");
+
+      const filtered = subjectsList.filter(s => s.year === selectedYear && s.semester === selectedSemester);
+      const grid = document.getElementById("subjectsGrid");
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full p-6 text-center rounded-2xl bg-slate-950 border border-slate-800 text-slate-400 text-sm">لم يتم إضافة مواد لهذا الفصل بعد.</div>`;
         return;
       }
 
+      grid.innerHTML = filtered.map(sub => `
+        <button type="button" onclick="openSubject('${sub.id}')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
+          <span class="text-2xl mb-2 block">🧬</span>
+          <h4 class="text-base font-extrabold text-white group-hover:text-amber-400">${sub.name}</h4>
+          <p class="text-xs text-slate-400 mt-1">اضغط لفتح المحاضرات والملفات والاختبارات</p>
+        </button>
+      `).join("");
+    }
+
+    function openSubject(subjectId) {
+      selectedSubject = subjectsList.find(s => s.id === subjectId);
+      if (!selectedSubject) return;
+      updateBreadcrumb();
+
+      document.getElementById("stepSubjectsView").classList.add("hidden");
+      document.getElementById("stepSubjectContentView").classList.remove("hidden");
+      document.getElementById("currentSubjectTitle").textContent = selectedSubject.name;
+
+      switchSubjectTab("lectures");
+    }
+
+    function switchSubjectTab(tab) {
+      const panes = ["subjectLecturesPane", "subjectFilesPane", "subjectExamsPane"];
+      const btns = ["subTabLectures", "subTabFiles", "subTabExams"];
+      panes.forEach(p => document.getElementById(p).classList.add("hidden"));
+      btns.forEach(b => document.getElementById(b).className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white");
+
+      if (tab === "lectures") {
+        document.getElementById("subjectLecturesPane").classList.remove("hidden");
+        document.getElementById("subTabLectures").className = "px-4 py-2 rounded-lg text-xs tab-active";
+        renderSubjectLectures();
+      } else if (tab === "files") {
+        document.getElementById("subjectFilesPane").classList.remove("hidden");
+        document.getElementById("subTabFiles").className = "px-4 py-2 rounded-lg text-xs tab-active";
+        filterFilesCategory("الكل");
+      } else {
+        document.getElementById("subjectExamsPane").classList.remove("hidden");
+        document.getElementById("subTabExams").className = "px-4 py-2 rounded-lg text-xs tab-active";
+        populateSubjectExamModels();
+      }
+    }
+
+    function renderSubjectLectures() {
+      const list = lecturesList.filter(l => l.subjectId === selectedSubject.id);
+      const container = document.getElementById("subjectLecturesPane");
+      if (list.length === 0) {
+        container.innerHTML = `<p class="p-5 text-center rounded-xl bg-slate-950 border border-slate-800 text-slate-400 text-xs">لا توجد محاضرات مضافة لهذه المادة بعد.</p>`;
+        return;
+      }
+      container.innerHTML = list.map((lec, i) => `
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-bold text-amber-400">محاضرة ${i + 1}</span>
+            <h4 class="text-sm font-bold text-white mt-0.5">${lec.title}</h4>
+          </div>
+          <a href="${lec.url}" target="_blank" rel="noopener" class="btn-gold px-4 py-2 rounded-xl text-xs">
+            مشاهدة المحاضرة ↗
+          </a>
+        </div>
+      `).join("");
+    }
+
+    function filterFilesCategory(cat) {
+      currentFileFilter = cat;
+      const mapBtns = {
+        "الكل": "fileCatAll",
+        "تلاخيص": "fileCatSummaries",
+        "شباتر": "fileCatChapters",
+        "شروحات": "fileCatExplanations"
+      };
+      Object.entries(mapBtns).forEach(([k, id]) => {
+        document.getElementById(id).className = (k === cat)
+          ? "px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40"
+          : "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-300 border border-slate-700";
+      });
+
+      let list = filesList.filter(f => f.subjectId === selectedSubject.id);
+      if (cat !== "الكل") list = list.filter(f => f.category === cat);
+
+      const container = document.getElementById("subjectFilesList");
+      if (list.length === 0) {
+        container.innerHTML = `<p class="col-span-full p-5 text-center rounded-xl bg-slate-950 border border-slate-800 text-slate-400 text-xs">لا توجد ملفات في هذا القسم حالياً.</p>`;
+        return;
+      }
+
+      container.innerHTML = list.map(f => `
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3">
+          <div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">${f.category}</span>
+            <h4 class="text-sm font-bold text-white mt-1.5">${f.title}</h4>
+          </div>
+          <a href="${f.url}" target="_blank" rel="noopener" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-700 shrink-0">
+            فتح الملف 📥
+          </a>
+        </div>
+      `).join("");
+    }
+
+    function populateSubjectExamModels() {
+      const subQuestions = questions.filter(q => q.subjectId === selectedSubject.id);
+      const models = [...new Set(subQuestions.map(q => q.model))];
+      const select = document.getElementById("modelSelect");
+
+      if (subQuestions.length === 0) {
+        select.innerHTML = `<option value="">لا توجد اختبارات مضافة لهذه المادة بعد</option>`;
+        return;
+      }
+
+      select.innerHTML = `<option value="ALL">جميع أسئلة المادة (${subQuestions.length} سؤال)</option>` +
+        models.map(m => `<option value="${m}">${m}</option>`).join("");
+    }
+
+    // تشغيل الاختبار
+    function startExam() {
+      const subQuestions = questions.filter(q => q.subjectId === selectedSubject.id);
+      const selectedModel = document.getElementById("modelSelect").value;
+      if (!selectedModel || subQuestions.length === 0) {
+        alert("لا توجد أسئلة متاحة في هذه المادة حالياً.");
+        return;
+      }
+
+      currentMode = document.getElementById("modeSelect").value;
+      const mins = parseInt(document.getElementById("durationInput").value) || 45;
+
+      activeQuestions = selectedModel === "ALL" ? [...subQuestions] : subQuestions.filter(q => q.model === selectedModel);
       currentIdx = 0;
       userAnswers = {};
       flaggedSet.clear();
       remainingSeconds = mins * 60;
       isPaused = false;
 
-      document.getElementById("examSetupCard").classList.add("hidden");
+      document.getElementById("academicExplorerCard").classList.add("hidden");
       document.getElementById("resultScreen").classList.add("hidden");
       document.getElementById("examRunner").classList.remove("hidden");
 
@@ -947,10 +1032,9 @@
     function renderQuestion() {
       const q = activeQuestions[currentIdx];
       document.getElementById("questionProgressText").textContent = `سؤال ${currentIdx + 1} من ${activeQuestions.length}`;
-      document.getElementById("questionCategoryBadge").textContent = q.model;
+      document.getElementById("questionCategoryBadge").textContent = `${selectedSubject.name} — ${q.model}`;
       document.getElementById("questionText").textContent = q.text;
 
-      // عرض صورة السؤال إن وُجدت
       const imgBox = document.getElementById("questionImageBox");
       const imgEl = document.getElementById("questionImageDisplay");
       if (q.image && q.image.trim() !== "") {
@@ -980,7 +1064,7 @@
         }
         return `
           <button type="button" onclick="selectOption(${idx})" ${showInstant ? "disabled" : ""} class="${cls}">
-            <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-sm font-bold text-orange-400 shrink-0">${letters[idx]}</span>
+            <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-sm font-bold text-amber-400 shrink-0">${letters[idx]}</span>
             <span>${opt}</span>
           </button>
         `;
@@ -1005,28 +1089,16 @@
         let bg = "bg-slate-800 text-slate-300 border-slate-700";
         if (flaggedSet.has(i)) bg = "bg-amber-600 text-white border-amber-500";
         else if (userAnswers[i] !== undefined) bg = "bg-blue-700 text-white border-blue-500";
-        if (i === currentIdx) bg += " ring-2 ring-orange-400";
+        if (i === currentIdx) bg += " ring-2 ring-amber-400";
         return `<button type="button" onclick="jumpTo(${i})" class="w-8 h-8 rounded-lg border text-xs font-bold ${bg}">${i + 1}</button>`;
       }).join("");
     }
 
-    function selectOption(idx) {
-      userAnswers[currentIdx] = idx;
-      renderQuestion();
-    }
-
-    function toggleFlag() {
-      if (flaggedSet.has(currentIdx)) flaggedSet.delete(currentIdx);
-      else flaggedSet.add(currentIdx);
-      renderQuestion();
-    }
-
+    function selectOption(idx) { userAnswers[currentIdx] = idx; renderQuestion(); }
+    function toggleFlag() { flaggedSet.has(currentIdx) ? flaggedSet.delete(currentIdx) : flaggedSet.add(currentIdx); renderQuestion(); }
     function jumpTo(i) { currentIdx = i; renderQuestion(); }
     function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
-    function nextQuestion() {
-      if (currentIdx < activeQuestions.length - 1) { currentIdx++; renderQuestion(); }
-      else finishExam();
-    }
+    function nextQuestion() { currentIdx < activeQuestions.length - 1 ? (currentIdx++, renderQuestion()) : finishExam(); }
 
     function finishExam() {
       clearInterval(timerInterval);
@@ -1036,15 +1108,14 @@
       let correctCount = 0;
       activeQuestions.forEach((q, i) => { if (userAnswers[i] === q.correct) correctCount++; });
       const pct = Math.round((correctCount / activeQuestions.length) * 100);
-      const selectedModel = document.getElementById("modelSelect").value;
 
       if (currentStudent) {
-        studentsList = loadMergedStudents();
+        studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
         const target = studentsList.find(s => s.code === currentStudent.code);
         if (target) {
           if (!target.results) target.results = [];
-          target.results.push({ model: selectedModel === "ALL" ? "اختبار شامل" : selectedModel, score: pct });
-          saveStudentsLocally();
+          target.results.push({ subject: selectedSubject.name, score: pct });
+          saveAllLocalState();
         }
       }
 
@@ -1058,9 +1129,7 @@
       document.getElementById("reviewContainer").innerHTML = activeQuestions.map((q, i) => {
         const chosen = userAnswers[i];
         const isRight = chosen === q.correct;
-        const imgTag = (q.image && q.image.trim() !== "")
-          ? `<img src="${q.image}" class="max-h-44 rounded-lg border border-slate-700 my-2 object-contain bg-slate-950 p-1" />`
-          : "";
+        const imgTag = (q.image && q.image.trim() !== "") ? `<img src="${q.image}" class="max-h-44 rounded-lg border border-slate-700 my-2 object-contain bg-slate-950 p-1" />` : "";
         return `
           <div class="p-4 rounded-xl border ${isRight ? "border-emerald-700 bg-emerald-950/30" : "border-red-800 bg-red-950/30"}">
             <p class="font-bold text-white mb-2">${i + 1}. ${q.text}</p>
@@ -1075,13 +1144,357 @@
 
     function resetToHome() {
       document.getElementById("resultScreen").classList.add("hidden");
-      document.getElementById("examSetupCard").classList.remove("hidden");
+      document.getElementById("academicExplorerCard").classList.remove("hidden");
     }
 
-    // وظائف المدير للأسئلة
+    // ==========================================
+    // لوحة تحكم المدير (منصة المالك)
+    // ==========================================
+    let tapCount = 0;
+    let tapTimer = null;
+
+    function handleSecretTap() {
+      tapCount++;
+      clearTimeout(tapTimer);
+      if (tapCount >= 5) {
+        tapCount = 0;
+        openAdminModal();
+      } else {
+        tapTimer = setTimeout(() => { tapCount = 0; }, 2000);
+      }
+    }
+
+    function openAdminModal() {
+      document.getElementById("adminPassInput").value = "";
+      document.getElementById("adminModal").classList.remove("hidden");
+    }
+
+    function closeAdminModal() {
+      document.getElementById("adminModal").classList.add("hidden");
+    }
+
+    function checkAdminLogin() {
+      const pass = document.getElementById("adminPassInput").value.trim();
+      if (pass === getEffectiveAdminPassword()) {
+        closeAdminModal();
+        const savedToken = localStorage.getItem("malek_gh_token");
+        if (savedToken) document.getElementById("ghTokenInput").value = savedToken;
+        document.getElementById("adminPasswordEditInput").value = getEffectiveAdminPassword();
+        updatePlatformLockButtonUI();
+
+        document.getElementById("studentLoginScreen").classList.add("hidden");
+        document.getElementById("studentView").classList.add("hidden");
+        document.getElementById("loggedStudentHeaderBadge").classList.add("hidden");
+        document.getElementById("adminView").classList.remove("hidden");
+
+        refreshAllAdminViews();
+        switchAdminTab("students");
+      } else {
+        alert("كلمة مرور المدير غير صحيحة!");
+      }
+    }
+
+    function logoutAdmin() {
+      document.getElementById("adminView").classList.add("hidden");
+      document.getElementById("studentView").classList.add("hidden");
+      document.getElementById("studentLoginScreen").classList.remove("hidden");
+    }
+
+    function resetAllToStudentLogin() {
+      clearInterval(timerInterval);
+      currentStudent = null;
+      document.getElementById("loggedStudentHeaderBadge").classList.add("hidden");
+      document.getElementById("adminView").classList.add("hidden");
+      document.getElementById("studentView").classList.add("hidden");
+      document.getElementById("studentLoginScreen").classList.remove("hidden");
+    }
+
+    function updatePlatformLockButtonUI() {
+      const btn = document.getElementById("togglePlatformLockBtn");
+      if (isPlatformLocked()) {
+        btn.textContent = "🔒 حالة المنصة: مغلقة عن الطلاب";
+        btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-red-950 border border-red-700 text-red-300";
+      } else {
+        btn.textContent = "🔓 حالة المنصة: مفتوحة للطلاب";
+        btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-emerald-400";
+      }
+    }
+
+    function togglePlatformMaintenance() {
+      const nextState = !isPlatformLocked();
+      PLATFORM_LOCKED = nextState;
+      localStorage.setItem("malek_platform_locked_v2", String(nextState));
+      updatePlatformLockButtonUI();
+      alert(nextState ? "تم إغلاق المنصة عن الطلاب مؤقتاً (اضغط نشر لتثبيت الإغلاق على الرابط)." : "تم فتح المنصة للطلاب.");
+    }
+
+    function updateAdminPasswordLocally() {
+      const newPass = document.getElementById("adminPasswordEditInput").value.trim();
+      if (!newPass || newPass.length < 4) return alert("أدخل كلمة مرور من 4 أحرف على الأقل.");
+      ADMIN_PASSWORD = newPass;
+      localStorage.setItem("malek_custom_admin_pass_v2", newPass);
+      alert("تم تحديث كلمة مرور المدير! اضغط 'نشر جميع التعديلات' لتثبيتها.");
+    }
+
+    function saveGithubToken() {
+      const token = document.getElementById("ghTokenInput").value.trim();
+      if (!token) return alert("يرجى إدخال المفتاح أولاً.");
+      localStorage.setItem("malek_gh_token", token);
+      alert("تم حفظ المفتاح بنجاح!");
+    }
+
+    function copyPlatformLink() {
+      const cleanUrl = window.location.origin + window.location.pathname;
+      const text = `منصة المالك الطبية (Al-Malik Medical Platform):\n${cleanUrl}\nاطلب إنشاء حسابك وأرسل كودك لتفعيل الدخول.`;
+      navigator.clipboard.writeText(text).then(() => alert("تم نسخ رابط منصة المالك:\n\n" + text));
+    }
+
+    function switchAdminTab(tab) {
+      const tabs = {
+        students: ["admTabStudents", "adminPaneStudents"],
+        subjects: ["admTabSubjects", "adminPaneSubjects"],
+        content: ["admTabContent", "adminPaneContent"],
+        questions: ["admTabQuestions", "adminPaneQuestions"],
+        announcements: ["admTabAnnouncements", "adminPaneAnnouncements"]
+      };
+      Object.entries(tabs).forEach(([k, [btnId, paneId]]) => {
+        document.getElementById(paneId).classList.toggle("hidden", k !== tab);
+        document.getElementById(btnId).className = (k === tab)
+          ? "px-4 py-2 rounded-xl text-xs tab-active"
+          : "px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white";
+      });
+    }
+
+    function refreshAllAdminViews() {
+      studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
+      document.getElementById("admBadgeStudents").textContent = studentsList.length;
+      document.getElementById("admBadgeSubjects").textContent = subjectsList.length;
+      document.getElementById("admBadgeContent").textContent = lecturesList.length + filesList.length;
+      document.getElementById("admBadgeQuestions").textContent = questions.length;
+      document.getElementById("admBadgeAnnouncements").textContent = announcementsList.length;
+
+      renderAdminStudentsTable();
+      renderAdminSubjectsList();
+      populateAdminSubjectSelects();
+      renderAdminContentLists();
+      renderAdminQuestionsList();
+      renderAdminAnnouncementsList();
+    }
+
+    // 1. إدارة الطلاب (تفعيل / إغلاق / حذف)
+    function renderAdminStudentsTable() {
+      studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
+      document.getElementById("admBadgeStudents").textContent = studentsList.length;
+      const tbody = document.getElementById("adminStudentsTableBody");
+
+      if (studentsList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-5 text-center text-slate-400">لا يوجد طلاب مسجلون بعد.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = studentsList.map((s, idx) => {
+        const statusBadge = s.approved
+          ? `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">مُفعّل ✅</span>`
+          : `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold">بانتظار التفعيل ⏳</span>`;
+
+        const toggleBtn = s.approved
+          ? `<button type="button" onclick="toggleStudentApproval(${idx}, false)" class="px-2.5 py-1 rounded-lg bg-amber-900/60 text-amber-200 hover:bg-amber-800 font-bold">🔒 إغلاق</button>`
+          : `<button type="button" onclick="toggleStudentApproval(${idx}, true)" class="px-2.5 py-1 rounded-lg bg-emerald-700 text-white hover:bg-emerald-600 font-bold">✅ تفعيل</button>`;
+
+        const resText = (s.results && s.results.length > 0)
+          ? s.results.map(r => `<span class="inline-block bg-slate-800 px-1.5 py-0.5 rounded ml-1 text-emerald-300">${r.subject}: ${r.score}%</span>`).join("")
+          : `<span class="text-slate-500">—</span>`;
+
+        return `
+          <tr class="hover:bg-slate-900/60">
+            <td class="py-3 px-3 font-bold text-white">${s.name}</td>
+            <td class="py-3 px-3 text-slate-300">${s.studentId}</td>
+            <td class="py-3 px-3 text-slate-300">${s.year || "—"}</td>
+            <td class="py-3 px-3 font-mono font-bold text-amber-400">${s.code}</td>
+            <td class="py-3 px-3">${statusBadge}</td>
+            <td class="py-3 px-3">${resText}</td>
+            <td class="py-3 px-3 flex items-center gap-1.5">
+              ${toggleBtn}
+              <button type="button" onclick="deleteStudentRecord(${idx})" class="px-2.5 py-1 rounded-lg bg-red-900/60 text-red-200 hover:bg-red-800 font-bold">حذف</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function toggleStudentApproval(idx, state) {
+      studentsList[idx].approved = state;
+      saveAllLocalState();
+      renderAdminStudentsTable();
+    }
+
+    function deleteStudentRecord(idx) {
+      studentsList.splice(idx, 1);
+      saveAllLocalState();
+      renderAdminStudentsTable();
+    }
+
+    // 2. إدارة المواد
+    function addSubject(e) {
+      e.preventDefault();
+      const year = document.getElementById("subYearInput").value;
+      const semester = document.getElementById("subSemesterInput").value;
+      const name = document.getElementById("subNameInput").value.trim();
+      if (!name) return;
+
+      subjectsList.push({ id: "sub_" + Date.now(), year, semester, name });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      alert("تمت إضافة المادة بنجاح!");
+    }
+
+    function deleteSubject(id) {
+      subjectsList = subjectsList.filter(s => s.id !== id);
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    function renderAdminSubjectsList() {
+      document.getElementById("adminSubjectsList").innerHTML = subjectsList.map(s => `
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
+          <div>
+            <span class="text-[11px] font-bold text-amber-400">${s.year} • ${s.semester}</span>
+            <p class="text-sm font-bold text-white mt-0.5">${s.name}</p>
+          </div>
+          <button type="button" onclick="deleteSubject('${s.id}')" class="px-2.5 py-1 rounded bg-red-900/60 text-red-200 text-xs">حذف</button>
+        </div>
+      `).join("");
+    }
+
+    function populateAdminSubjectSelects() {
+      const optionsHtml = subjectsList.map(s => `<option value="${s.id}">${s.year} (${s.semester}) — ${s.name}</option>`).join("");
+      ["lecSubjectSelect", "fileSubjectSelect", "qSubjectSelect"].forEach(id => {
+        document.getElementById(id).innerHTML = optionsHtml || `<option value="">أضف مادة أولاً</option>`;
+      });
+    }
+
+    // 3. إدارة المحاضرات والملفات
+    function addLecture(e) {
+      e.preventDefault();
+      const subjectId = document.getElementById("lecSubjectSelect").value;
+      const title = document.getElementById("lecTitleInput").value.trim();
+      const url = document.getElementById("lecUrlInput").value.trim();
+      if (!subjectId) return alert("اختر المادة أولاً.");
+
+      lecturesList.push({ id: "lec_" + Date.now(), subjectId, title, url });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      alert("تمت إضافة رابط المحاضرة!");
+    }
+
+    function deleteLecture(id) {
+      lecturesList = lecturesList.filter(l => l.id !== id);
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    function addStudyFile(e) {
+      e.preventDefault();
+      const subjectId = document.getElementById("fileSubjectSelect").value;
+      const category = document.getElementById("fileCategorySelect").value;
+      const title = document.getElementById("fileTitleInput").value.trim();
+      const url = document.getElementById("fileUrlInput").value.trim();
+      if (!subjectId) return alert("اختر المادة أولاً.");
+
+      filesList.push({ id: "file_" + Date.now(), subjectId, category, title, url });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      alert("تمت إضافة الملف بنجاح!");
+    }
+
+    function deleteStudyFile(id) {
+      filesList = filesList.filter(f => f.id !== id);
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    function renderAdminContentLists() {
+      document.getElementById("adminLecturesList").innerHTML = lecturesList.map(l => {
+        const sub = subjectsList.find(s => s.id === l.subjectId);
+        return `
+          <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2 text-xs">
+            <div>
+              <span class="text-amber-400 font-bold">${sub ? sub.name : "مادة"}</span>
+              <p class="text-white font-semibold">${l.title}</p>
+            </div>
+            <button type="button" onclick="deleteLecture('${l.id}')" class="px-2 py-1 rounded bg-red-900/60 text-red-200">حذف</button>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("adminFilesList").innerHTML = filesList.map(f => {
+        const sub = subjectsList.find(s => s.id === f.subjectId);
+        return `
+          <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2 text-xs">
+            <div>
+              <span class="text-emerald-400 font-bold">[${f.category}] ${sub ? sub.name : ""}</span>
+              <p class="text-white font-semibold">${f.title}</p>
+            </div>
+            <button type="button" onclick="deleteStudyFile('${f.id}')" class="px-2 py-1 rounded bg-red-900/60 text-red-200">حذف</button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // 4. إدارة الأسئلة وصورها
+    function handleQuestionImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const maxWidth = 800;
+          const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+          pendingQuestionImageData = canvas.toDataURL("image/jpeg", 0.75);
+          document.getElementById("qImageUrl").value = "";
+          document.getElementById("adminImagePreview").src = pendingQuestionImageData;
+          document.getElementById("adminImagePreviewBox").classList.remove("hidden");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewImageUrlInput() {
+      const url = document.getElementById("qImageUrl").value.trim();
+      if (url) {
+        pendingQuestionImageData = url;
+        document.getElementById("qImageFile").value = "";
+        document.getElementById("adminImagePreview").src = url;
+        document.getElementById("adminImagePreviewBox").classList.remove("hidden");
+      } else {
+        clearAdminQuestionImage();
+      }
+    }
+
+    function clearAdminQuestionImage() {
+      pendingQuestionImageData = "";
+      document.getElementById("qImageFile").value = "";
+      document.getElementById("qImageUrl").value = "";
+      document.getElementById("adminImagePreview").src = "";
+      document.getElementById("adminImagePreviewBox").classList.add("hidden");
+    }
+
     function addQuestion(e) {
       e.preventDefault();
-      const newQ = {
+      const subjectId = document.getElementById("qSubjectSelect").value;
+      if (!subjectId) return alert("يرجى إضافة مادة أولاً.");
+
+      questions.push({
+        subjectId,
         model: document.getElementById("qModel").value.trim(),
         text: document.getElementById("qText").value.trim(),
         image: pendingQuestionImageData || "",
@@ -1093,35 +1506,141 @@
         ],
         correct: parseInt(document.getElementById("qCorrect").value),
         explanation: document.getElementById("qExp").value.trim()
-      };
-      questions.push(newQ);
-      localStorage.setItem("malek_admin_draft_questions", JSON.stringify(questions));
+      });
+
+      saveAllLocalState();
       e.target.reset();
       clearAdminQuestionImage();
-      renderAdminList();
-      alert("تمت إضافة السؤال للقائمة! اضغط الآن على 'نشر التعديلات للطلاب فوراً'.");
+      refreshAllAdminViews();
+      alert("تمت إضافة السؤال! اضغط 'نشر جميع التعديلات للطلاب فوراً'.");
     }
 
     function deleteQuestion(idx) {
       questions.splice(idx, 1);
-      localStorage.setItem("malek_admin_draft_questions", JSON.stringify(questions));
-      renderAdminList();
+      saveAllLocalState();
+      refreshAllAdminViews();
     }
 
-    function renderAdminList() {
+    function renderAdminQuestionsList() {
       document.getElementById("adminQCount").textContent = questions.length;
-      document.getElementById("adminQuestionsList").innerHTML = questions.map((q, i) => `
-        <div class="p-3 rounded-xl bg-slate-900 border border-slate-700 flex items-start justify-between gap-3">
-          <div class="flex items-start gap-3">
-            ${q.image ? `<img src="${q.image}" class="w-14 h-14 rounded-lg object-cover border border-slate-700 shrink-0" />` : ""}
-            <div>
-              <span class="text-xs text-orange-400 font-bold">${q.model}</span>
-              <p class="text-sm font-semibold text-white mt-1">${i + 1}. ${q.text}</p>
+      document.getElementById("adminQuestionsList").innerHTML = questions.map((q, i) => {
+        const sub = subjectsList.find(s => s.id === q.subjectId);
+        return `
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between gap-3">
+            <div class="flex items-start gap-3">
+              ${q.image ? `<img src="${q.image}" class="w-12 h-12 rounded-lg object-cover border border-slate-700 shrink-0" />` : ""}
+              <div>
+                <span class="text-xs text-amber-400 font-bold">${sub ? sub.name : ""} • ${q.model}</span>
+                <p class="text-xs font-semibold text-white mt-1">${i + 1}. ${q.text}</p>
+              </div>
             </div>
+            <button type="button" onclick="deleteQuestion(${i})" class="text-xs px-2.5 py-1 rounded bg-red-900/60 text-red-200 shrink-0">حذف</button>
           </div>
-          <button type="button" onclick="deleteQuestion(${i})" class="text-xs px-2.5 py-1 rounded bg-red-900/60 text-red-200 hover:bg-red-800 shrink-0">حذف</button>
+        `;
+      }).join("");
+    }
+
+    // 5. إدارة الإعلانات والاستعلامات
+    function addAnnouncement(e) {
+      e.preventDefault();
+      const text = document.getElementById("annTextInput").value.trim();
+      if (!text) return;
+      announcementsList.unshift({ id: "ann_" + Date.now(), text, date: new Date().toLocaleDateString("ar-EG") });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+    }
+
+    function deleteAnnouncement(id) {
+      announcementsList = announcementsList.filter(a => a.id !== id);
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    function renderAdminAnnouncementsList() {
+      document.getElementById("adminAnnouncementsList").innerHTML = announcementsList.map(a => `
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3 text-xs">
+          <p class="text-slate-200">${a.text}</p>
+          <button type="button" onclick="deleteAnnouncement('${a.id}')" class="px-2.5 py-1 rounded bg-red-900/60 text-red-200 shrink-0">حذف</button>
         </div>
       `).join("");
+    }
+
+    // ==========================================
+    // النشر المباشر لجميع التعديلات إلى GitHub
+    // ==========================================
+    async function publishDirectlyToGitHub() {
+      const token = (localStorage.getItem("malek_gh_token") || document.getElementById("ghTokenInput").value).trim();
+      if (!token) {
+        alert("يرجى لصق مفتاح GitHub Token في الخانة بالأعلى أولاً ثم الضغط على حفظ.");
+        return;
+      }
+
+      const currentAdminPass = document.getElementById("adminPasswordEditInput").value.trim() || getEffectiveAdminPassword();
+      const btn = document.getElementById("publishBtn");
+      const status = document.getElementById("publishStatus");
+      btn.disabled = true;
+      btn.textContent = "⏳ جاري النشر للطلاب...";
+      status.textContent = "جاري تحديث الطلاب، المواد، المحاضرات، الملفات، والاختبارات...";
+
+      try {
+        studentsList = loadMergedArray("malek_students_v2", DEFAULT_STUDENTS, "code");
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
+        const getRes = await fetch(apiUrl, {
+          headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+
+        if (!getRes.ok) {
+          const errData = await getRes.json().catch(() => ({}));
+          throw new Error(`(${getRes.status}) ${errData.message || "تأكد من صحة مفتاح GitHub Token وصلاحياته (repo)."}`);
+        }
+        const fileData = await getRes.json();
+
+        const currentContent = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ""))));
+        let updatedContent = currentContent
+          .replace(/let ADMIN_PASSWORD = ".*?";/, `let ADMIN_PASSWORD = ${JSON.stringify(currentAdminPass)};`)
+          .replace(/let PLATFORM_LOCKED = (true|false);/, `let PLATFORM_LOCKED = ${isPlatformLocked()};`)
+          .replace(/const DEFAULT_STUDENTS = \[[\s\S]*?\];/, `const DEFAULT_STUDENTS = ${JSON.stringify(studentsList, null, 2)};`)
+          .replace(/const DEFAULT_ANNOUNCEMENTS = \[[\s\S]*?\];/, `const DEFAULT_ANNOUNCEMENTS = ${JSON.stringify(announcementsList, null, 2)};`)
+          .replace(/const DEFAULT_SUBJECTS = \[[\s\S]*?\];/, `const DEFAULT_SUBJECTS = ${JSON.stringify(subjectsList, null, 2)};`)
+          .replace(/const DEFAULT_LECTURES = \[[\s\S]*?\];/, `const DEFAULT_LECTURES = ${JSON.stringify(lecturesList, null, 2)};`)
+          .replace(/const DEFAULT_FILES = \[[\s\S]*?\];/, `const DEFAULT_FILES = ${JSON.stringify(filesList, null, 2)};`)
+          .replace(/const DEFAULT_QUESTIONS = \[[\s\S]*?\];/, `const DEFAULT_QUESTIONS = ${JSON.stringify(questions, null, 2)};`);
+
+        const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
+
+        const putRes = await fetch(apiUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: "Publish full updates from Al-Malik Medical Platform",
+            content: encodedContent,
+            sha: fileData.sha
+          })
+        });
+
+        if (!putRes.ok) throw new Error("فشل رفع التحديثات إلى GitHub.");
+
+        ADMIN_PASSWORD = currentAdminPass;
+        localStorage.setItem("malek_custom_admin_pass_v2", currentAdminPass);
+        status.className = "text-xs font-bold text-emerald-400";
+        status.textContent = "✅ تم النشر بنجاح! جميع التعديلات وتفعيلات الطلاب متاحة الآن على الرابط.";
+        alert("تم نشر جميع التعديلات بنجاح للطلاب!");
+      } catch (err) {
+        status.className = "text-xs font-bold text-red-400";
+        status.textContent = "❌ خطأ: " + err.message;
+        alert("خطأ أثناء النشر: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "🚀 نشر جميع التعديلات للطلاب فوراً";
+      }
     }
   </script>
 </body>
