@@ -586,47 +586,103 @@
     const GITHUB_FILE_PATH = "index.html";
 
     // بيانات المنصة المنشورة
-    const DEFAULT_STUDENTS = [];
+    const DEFAULT_STUDENTS = [
+  {
+    "name": "صلاح صالح سحويل",
+    "studentId": "+972 56-703-9951",
+    "year": "السنة الأولى",
+    "code": "MED-7259",
+    "approved": true,
+    "results": []
+  }
+];
 
     const DEFAULT_ANNOUNCEMENTS = [
-      { id: "ann1", text: "أهلاً بكم في منصة المالك الطبية! تم تفعيل نظام المواد والاختبارات الإلكترونية.", date: "2026" }
-    ];
+  {
+    "id": "ann1",
+    "text": "أهلاً بكم في منصة المالك الطبية! تم تفعيل نظام المواد والاختبارات الإلكترونية.",
+    "date": "2026"
+  }
+];
 
     const DEFAULT_SUBJECTS = [
-      { id: "sub_anat_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم التشريح العام (General Anatomy)" },
-      { id: "sub_phys_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم وظائف الأعضاء (Physiology)" }
-    ];
+  {
+    "id": "sub_anat_1",
+    "year": "السنة الأولى",
+    "semester": "الفصل الأول",
+    "name": "علم التشريح العام (General Anatomy)"
+  },
+  {
+    "id": "sub_phys_1",
+    "year": "السنة الأولى",
+    "semester": "الفصل الأول",
+    "name": "علم وظائف الأعضاء (Physiology)"
+  }
+];
 
     const DEFAULT_LECTURES = [
-      { id: "lec_1", subjectId: "sub_anat_1", title: "المحاضرة 1: مقدمة في المصطلحات التشريحية", url: "https://www.youtube.com" }
-    ];
+  {
+    "id": "lec_1",
+    "subjectId": "sub_anat_1",
+    "title": "المحاضرة 1: مقدمة في المصطلحات التشريحية",
+    "url": "https://www.youtube.com"
+  }
+];
 
     const DEFAULT_FILES = [
-      { id: "file_1", subjectId: "sub_anat_1", category: "تلاخيص", title: "ملخص شامل للمحاضرة الأولى", url: "https://drive.google.com" },
-      { id: "file_2", subjectId: "sub_anat_1", category: "شباتر", title: "Chapter 1 - Introduction to Anatomy", url: "https://drive.google.com" },
-      { id: "file_3", subjectId: "sub_anat_1", category: "شروحات", title: "شرح تفصيلي بالصور للجهاز الهيكلي", url: "https://drive.google.com" }
-    ];
+  {
+    "id": "file_1",
+    "subjectId": "sub_anat_1",
+    "category": "تلاخيص",
+    "title": "ملخص شامل للمحاضرة الأولى",
+    "url": "https://drive.google.com"
+  },
+  {
+    "id": "file_2",
+    "subjectId": "sub_anat_1",
+    "category": "شباتر",
+    "title": "Chapter 1 - Introduction to Anatomy",
+    "url": "https://drive.google.com"
+  },
+  {
+    "id": "file_3",
+    "subjectId": "sub_anat_1",
+    "category": "شروحات",
+    "title": "شرح تفصيلي بالصور للجهاز الهيكلي",
+    "url": "https://drive.google.com"
+  }
+];
 
     const DEFAULT_QUESTIONS = [
-      {
-        subjectId: "sub_anat_1",
-        model: "Model 1 - General Anatomy",
-        text: "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
-        image: "",
-        options: ["Glossopharyngeal nerve (CN IX)", "Vagus nerve (CN X)", "Accessory nerve (CN XI)", "Hypoglossal nerve (CN XII)"],
-        correct: 1,
-        explanation: "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
-      },
-      {
-        subjectId: "sub_phys_1",
-        model: "Model 1 - Cardiology",
-        text: "What is the primary pacemaker of the normal human heart?",
-        image: "",
-        options: ["Atrioventricular (AV) node", "Bundle of His", "Sinoatrial (SA) node", "Purkinje fibers"],
-        correct: 2,
-        explanation: "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
-      }
-    ];
+  {
+    "subjectId": "sub_anat_1",
+    "model": "Model 1 - General Anatomy",
+    "text": "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
+    "image": "",
+    "options": [
+      "Glossopharyngeal nerve (CN IX)",
+      "Vagus nerve (CN X)",
+      "Accessory nerve (CN XI)",
+      "Hypoglossal nerve (CN XII)"
+    ],
+    "correct": 1,
+    "explanation": "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
+  },
+  {
+    "subjectId": "sub_phys_1",
+    "model": "Model 1 - Cardiology",
+    "text": "What is the primary pacemaker of the normal human heart?",
+    "image": "",
+    "options": [
+      "Atrioventricular (AV) node",
+      "Bundle of His",
+      "Sinoatrial (SA) node",
+      "Purkinje fibers"
+    ],
+    "correct": 2,
+    "explanation": "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
+  }
+];
 
     let studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
     let announcementsList = loadLocalOrDefault("malek_announcements_v3", DEFAULT_ANNOUNCEMENTS);
