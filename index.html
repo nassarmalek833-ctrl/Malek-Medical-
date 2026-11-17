@@ -164,6 +164,10 @@
 
         <div class="card rounded-2xl p-6 mb-4">
           <p id="questionCategoryBadge" class="text-xs text-orange-400 font-bold mb-2"></p>
+          <!-- حاوية صورة السؤال (تظهر فقط إذا كان السؤال يحتوي على صورة) -->
+          <div id="questionImageBox" class="hidden mb-4">
+            <img id="questionImageDisplay" src="" alt="صورة توضيحية للسؤال" class="max-h-72 rounded-xl border border-slate-700 mx-auto object-contain bg-slate-950 p-1" />
+          </div>
           <h3 id="questionText" class="text-xl font-bold text-white leading-relaxed mb-6"></h3>
           <div id="optionsContainer" class="space-y-3"></div>
 
@@ -194,23 +198,37 @@
 
     <!-- 3. لوحة تحكم المدير -->
     <section id="adminView" class="hidden space-y-6">
-      <!-- إعدادات الربط والنشر المباشر -->
+      <!-- إعدادات الربط وكلمة مرور المدير -->
       <div class="card rounded-2xl p-5 border-blue-500/40 bg-slate-900/70 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 class="text-base font-extrabold text-blue-400">⚡ الربط والنشر المباشر على GitHub</h3>
-            <p class="text-xs text-slate-400">احفظ مفتاح الربط مرة واحدة لتحديث الأسئلة وبيانات الطلاب للجميع بضغطة زر.</p>
+            <h3 class="text-base font-extrabold text-blue-400">⚡ إعدادات المنصة والربط المباشر</h3>
+            <p class="text-xs text-slate-400">تحكم في مفتاح النشر وكلمة مرور المدير الخاصة بك (اضغط نشر لتثبيت التعديلات للجميع).</p>
           </div>
           <button type="button" onclick="copyPlatformLink()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold">
             🔗 نسخ رابط المنصة للطلاب
           </button>
         </div>
 
-        <div class="flex gap-2">
-          <input id="ghTokenInput" type="password" placeholder="الصق مفتاح GitHub Token هنا (ghp_...)" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
-          <button type="button" onclick="saveGithubToken()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white">
-            حفظ المفتاح
-          </button>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">مفتاح GitHub Token (للنشر الدائم بضغطة زر)</label>
+            <div class="flex gap-2">
+              <input id="ghTokenInput" type="password" placeholder="ghp_..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+              <button type="button" onclick="saveGithubToken()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white">
+                حفظ
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">كلمة مرور المدير (تُعتمد فوراً وتُحفظ عند النشر)</label>
+            <div class="flex gap-2">
+              <input id="adminPasswordEditInput" type="text" placeholder="كلمة مرور المدير الجديدة..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-orange-400 font-bold text-xs" />
+              <button type="button" onclick="updateAdminPasswordLocally()" class="px-3 py-2 rounded-xl bg-orange-700 hover:bg-orange-600 text-xs font-bold text-white">
+                تحديث
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -242,12 +260,12 @@
         </div>
       </div>
 
-      <!-- نموذج إضافة الأسئلة -->
+      <!-- نموذج إضافة الأسئلة (مع إمكانية إضافة صورة) -->
       <div class="card rounded-2xl p-6 border-orange-500/40">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-4 mb-5">
           <div>
             <h2 class="text-xl font-extrabold text-orange-400">إدارة الأسئلة والنماذج الطبية</h2>
-            <p class="text-xs text-slate-400 mt-1">أضف الأسئلة هنا ثم اضغط "نشر التعديلات للطلاب فوراً".</p>
+            <p class="text-xs text-slate-400 mt-1">أضف الأسئلة (مع صورة اختيارية) ثم اضغط "نشر التعديلات للطلاب فوراً".</p>
           </div>
           <button type="button" onclick="logoutAdmin()" class="px-4 py-2 rounded-xl bg-red-900/50 text-red-200 border border-red-700 text-sm font-bold">
             تسجيل خروج المدير
@@ -274,6 +292,25 @@
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">نص السؤال</label>
             <textarea id="qText" required rows="2" placeholder="اكتب السؤال الطبي هنا..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm"></textarea>
+          </div>
+
+          <!-- قسم إضافة صورة للسؤال (اختياري) -->
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-700 space-y-3">
+            <label class="block text-xs font-bold text-orange-400">🖼️ إضافة صورة توضيحية للسؤال (اختياري)</label>
+            <div class="grid md:grid-cols-2 gap-3 items-center">
+              <div>
+                <span class="block text-[11px] text-slate-400 mb-1">اختر صورة من جهازك (تُضغط وتُحفظ تلقائياً):</span>
+                <input id="qImageFile" type="file" accept="image/*" onchange="handleQuestionImageUpload(event)" class="w-full text-xs text-slate-300 file:ml-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-orange-400 hover:file:bg-slate-700" />
+              </div>
+              <div>
+                <span class="block text-[11px] text-slate-400 mb-1">أو الصق رابط صورة مباشر (URL):</span>
+                <input id="qImageUrl" type="url" oninput="previewImageUrlInput()" placeholder="https://..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-white text-xs" />
+              </div>
+            </div>
+            <div id="adminImagePreviewBox" class="hidden flex items-center gap-3 pt-2 border-t border-slate-800">
+              <img id="adminImagePreview" src="" alt="معاينة" class="h-16 w-24 object-cover rounded-lg border border-slate-600" />
+              <button type="button" onclick="clearAdminQuestionImage()" class="text-xs px-2.5 py-1 rounded bg-red-900/60 text-red-200 hover:bg-red-800">إزالة الصورة</button>
+            </div>
           </div>
 
           <div class="grid md:grid-cols-2 gap-3">
@@ -322,7 +359,7 @@
 
   <script>
     // إعدادات المدير والمستودع
-    const ADMIN_PASSWORD = "malek2026";
+    let ADMIN_PASSWORD = "malek2026";
     const GITHUB_OWNER = "nassarmalek833-ctrl";
     const GITHUB_REPO = "Malek-Medical-";
     const GITHUB_FILE_PATH = "index.html";
@@ -335,6 +372,7 @@
       {
         model: "General Medicine - Model 1",
         text: "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
+        image: "",
         options: ["Glossopharyngeal nerve (CN IX)", "Vagus nerve (CN X)", "Accessory nerve (CN XI)", "Hypoglossal nerve (CN XII)"],
         correct: 1,
         explanation: "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
@@ -342,6 +380,7 @@
       {
         model: "General Medicine - Model 1",
         text: "What is the primary pacemaker of the normal human heart?",
+        image: "",
         options: ["Atrioventricular (AV) node", "Bundle of His", "Sinoatrial (SA) node", "Purkinje fibers"],
         correct: 2,
         explanation: "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
@@ -351,6 +390,7 @@
     let studentsList = loadMergedStudents();
     let currentStudent = null;
     let lastRegisteredStudent = null;
+    let pendingQuestionImageData = "";
 
     let questions = [...DEFAULT_QUESTIONS];
     let activeQuestions = [];
@@ -361,6 +401,22 @@
     let remainingSeconds = 2700;
     let isPaused = false;
     let currentMode = "practice";
+
+    // قراءة كلمة مرور المدير المحفوظة محلياً إن وُجدت
+    function getEffectiveAdminPassword() {
+      return localStorage.getItem("malek_custom_admin_pass") || ADMIN_PASSWORD;
+    }
+
+    function updateAdminPasswordLocally() {
+      const newPass = document.getElementById("adminPasswordEditInput").value.trim();
+      if (!newPass || newPass.length < 4) {
+        alert("يرجى إدخال كلمة مرور مكونة من 4 أحرف أو أرقام على الأقل.");
+        return;
+      }
+      ADMIN_PASSWORD = newPass;
+      localStorage.setItem("malek_custom_admin_pass", newPass);
+      alert("تم تحديث كلمة مرور المدير بنجاح! اضغط على 'نشر التعديلات للطلاب فوراً' لتثبيتها في الكود بشكل دائم.");
+    }
 
     // دمج الطلاب المحفوظين محلياً مع المنشورين في الكود
     function loadMergedStudents() {
@@ -374,7 +430,6 @@
       localStorage.setItem("malek_students_registry", JSON.stringify(studentsList));
     }
 
-    // التبديل بين تبويب الدخول بالكود وإنشاء حساب جديد
     function switchAuthTab(tab) {
       const loginForm = document.getElementById("codeLoginForm");
       const regForm = document.getElementById("studentRegisterForm");
@@ -395,7 +450,6 @@
       }
     }
 
-    // توليد كود فريد للطالب
     function generateUniqueStudentCode() {
       let code = "";
       do {
@@ -405,7 +459,6 @@
       return code;
     }
 
-    // إنشاء حساب طالب جديد
     function registerNewStudent(e) {
       e.preventDefault();
       const name = document.getElementById("regStudentName").value.trim();
@@ -443,7 +496,6 @@
       openStudentPortal(lastRegisteredStudent);
     }
 
-    // الدخول بالكود الشخصي
     function loginWithStudentCode(e) {
       e.preventDefault();
       const enteredCode = document.getElementById("studentCodeInput").value.trim().toUpperCase();
@@ -499,12 +551,13 @@
 
     function checkAdminLogin() {
       const pass = document.getElementById("adminPassInput").value.trim();
-      if (pass === ADMIN_PASSWORD) {
+      if (pass === getEffectiveAdminPassword()) {
         closeAdminModal();
         const savedDraft = localStorage.getItem("malek_admin_draft_questions");
         if (savedDraft) questions = JSON.parse(savedDraft);
         const savedToken = localStorage.getItem("malek_gh_token");
         if (savedToken) document.getElementById("ghTokenInput").value = savedToken;
+        document.getElementById("adminPasswordEditInput").value = getEffectiveAdminPassword();
 
         studentsList = loadMergedStudents();
         document.getElementById("studentLoginScreen").classList.add("hidden");
@@ -550,6 +603,54 @@
       alert("تم حفظ المفتاح في متصفحك بنجاح!");
     }
 
+    // معالجة وضغط صورة السؤال المرفوعة من الجهاز
+    function handleQuestionImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const maxWidth = 800;
+          const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          pendingQuestionImageData = canvas.toDataURL("image/jpeg", 0.75);
+
+          document.getElementById("qImageUrl").value = "";
+          document.getElementById("adminImagePreview").src = pendingQuestionImageData;
+          document.getElementById("adminImagePreviewBox").classList.remove("hidden");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewImageUrlInput() {
+      const url = document.getElementById("qImageUrl").value.trim();
+      if (url) {
+        pendingQuestionImageData = url;
+        document.getElementById("qImageFile").value = "";
+        document.getElementById("adminImagePreview").src = url;
+        document.getElementById("adminImagePreviewBox").classList.remove("hidden");
+      } else {
+        clearAdminQuestionImage();
+      }
+    }
+
+    function clearAdminQuestionImage() {
+      pendingQuestionImageData = "";
+      document.getElementById("qImageFile").value = "";
+      document.getElementById("qImageUrl").value = "";
+      document.getElementById("adminImagePreview").src = "";
+      document.getElementById("adminImagePreviewBox").classList.add("hidden");
+    }
+
     async function publishDirectlyToGitHub() {
       const token = (localStorage.getItem("malek_gh_token") || document.getElementById("ghTokenInput").value).trim();
       if (!token) {
@@ -557,11 +658,12 @@
         return;
       }
 
+      const currentAdminPass = document.getElementById("adminPasswordEditInput").value.trim() || getEffectiveAdminPassword();
       const btn = document.getElementById("publishBtn");
       const status = document.getElementById("publishStatus");
       btn.disabled = true;
       btn.textContent = "⏳ جاري النشر للطلاب...";
-      status.textContent = "جاري تحديث الأسئلة وبيانات الطلاب على GitHub...";
+      status.textContent = "جاري تحديث الأسئلة والصور وكلمة المرور على GitHub...";
 
       try {
         studentsList = loadMergedStudents();
@@ -588,6 +690,10 @@
           /const DEFAULT_STUDENTS = \[[\s\S]*?\];/,
           `const DEFAULT_STUDENTS = ${JSON.stringify(studentsList, null, 2)};`
         );
+        updatedContent = updatedContent.replace(
+          /let ADMIN_PASSWORD = ".*?";/,
+          `let ADMIN_PASSWORD = ${JSON.stringify(currentAdminPass)};`
+        );
 
         const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
 
@@ -599,7 +705,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            message: "Publish exam & students updates from Malek LMS",
+            message: "Publish exam, images & admin settings from Malek LMS",
             content: encodedContent,
             sha: fileData.sha
           })
@@ -607,9 +713,11 @@
 
         if (!putRes.ok) throw new Error("فشل رفع التحديثات إلى GitHub.");
 
+        ADMIN_PASSWORD = currentAdminPass;
+        localStorage.setItem("malek_custom_admin_pass", currentAdminPass);
         localStorage.removeItem("malek_admin_draft_questions");
         status.className = "text-xs font-bold text-emerald-400 mt-2";
-        status.textContent = "✅ تم النشر بنجاح! الأسئلة وبيانات الطلاب محدثة الآن.";
+        status.textContent = "✅ تم النشر بنجاح! الأسئلة والصور وكلمة المرور محدثة الآن.";
         alert("تم نشر التعديلات بنجاح للطلاب!");
       } catch (err) {
         status.className = "text-xs font-bold text-red-400 mt-2";
@@ -728,6 +836,17 @@
       document.getElementById("questionCategoryBadge").textContent = q.model;
       document.getElementById("questionText").textContent = q.text;
 
+      // عرض صورة السؤال إن وُجدت
+      const imgBox = document.getElementById("questionImageBox");
+      const imgEl = document.getElementById("questionImageDisplay");
+      if (q.image && q.image.trim() !== "") {
+        imgEl.src = q.image;
+        imgBox.classList.remove("hidden");
+      } else {
+        imgEl.src = "";
+        imgBox.classList.add("hidden");
+      }
+
       const flagBtn = document.getElementById("flagBtn");
       flagBtn.classList.toggle("bg-amber-600", flaggedSet.has(currentIdx));
       flagBtn.classList.toggle("text-white", flaggedSet.has(currentIdx));
@@ -805,7 +924,6 @@
       const pct = Math.round((correctCount / activeQuestions.length) * 100);
       const selectedModel = document.getElementById("modelSelect").value;
 
-      // حفظ نتيجة الطالب في سجله
       if (currentStudent) {
         studentsList = loadMergedStudents();
         const target = studentsList.find(s => s.code === currentStudent.code);
@@ -826,9 +944,13 @@
       document.getElementById("reviewContainer").innerHTML = activeQuestions.map((q, i) => {
         const chosen = userAnswers[i];
         const isRight = chosen === q.correct;
+        const imgTag = (q.image && q.image.trim() !== "")
+          ? `<img src="${q.image}" class="max-h-44 rounded-lg border border-slate-700 my-2 object-contain bg-slate-950 p-1" />`
+          : "";
         return `
           <div class="p-4 rounded-xl border ${isRight ? "border-emerald-700 bg-emerald-950/30" : "border-red-800 bg-red-950/30"}">
             <p class="font-bold text-white mb-2">${i + 1}. ${q.text}</p>
+            ${imgTag}
             <p class="text-xs text-slate-300">إجابتك: <span class="font-bold">${chosen !== undefined ? letters[chosen] + " - " + q.options[chosen] : "لم تتم الإجابة"}</span></p>
             <p class="text-xs text-emerald-400 mt-1">الإجابة الصحيحة: <span class="font-bold">${letters[q.correct]} - ${q.options[q.correct]}</span></p>
             <p class="text-xs text-blue-300 mt-2 bg-slate-900/80 p-2.5 rounded-lg">💡 ${q.explanation}</p>
@@ -848,6 +970,7 @@
       const newQ = {
         model: document.getElementById("qModel").value.trim(),
         text: document.getElementById("qText").value.trim(),
+        image: pendingQuestionImageData || "",
         options: [
           document.getElementById("opt0").value.trim(),
           document.getElementById("opt1").value.trim(),
@@ -860,6 +983,7 @@
       questions.push(newQ);
       localStorage.setItem("malek_admin_draft_questions", JSON.stringify(questions));
       e.target.reset();
+      clearAdminQuestionImage();
       renderAdminList();
       alert("تمت إضافة السؤال للقائمة! اضغط الآن على 'نشر التعديلات للطلاب فوراً'.");
     }
@@ -874,9 +998,12 @@
       document.getElementById("adminQCount").textContent = questions.length;
       document.getElementById("adminQuestionsList").innerHTML = questions.map((q, i) => `
         <div class="p-3 rounded-xl bg-slate-900 border border-slate-700 flex items-start justify-between gap-3">
-          <div>
-            <span class="text-xs text-orange-400 font-bold">${q.model}</span>
-            <p class="text-sm font-semibold text-white mt-1">${i + 1}. ${q.text}</p>
+          <div class="flex items-start gap-3">
+            ${q.image ? `<img src="${q.image}" class="w-14 h-14 rounded-lg object-cover border border-slate-700 shrink-0" />` : ""}
+            <div>
+              <span class="text-xs text-orange-400 font-bold">${q.model}</span>
+              <p class="text-sm font-semibold text-white mt-1">${i + 1}. ${q.text}</p>
+            </div>
           </div>
           <button type="button" onclick="deleteQuestion(${i})" class="text-xs px-2.5 py-1 rounded bg-red-900/60 text-red-200 hover:bg-red-800 shrink-0">حذف</button>
         </div>
