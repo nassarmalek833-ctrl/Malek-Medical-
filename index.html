@@ -20,9 +20,11 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
+  <!-- الشريط العلوي -->
   <header class="bg-[#0f172a] border-b border-slate-800 sticky top-0 z-40">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
+        <!-- الضغط 5 مرات متتالية على حرف M يفتح لوحة المدير -->
         <button id="secretLogoBtn" type="button" onclick="handleSecretTap()" class="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center font-extrabold text-xl text-white select-none active:scale-95 transition">
           M
         </button>
@@ -31,33 +33,78 @@
           <p class="text-xs text-slate-400">نظام التقييم والاختبارات الطبية</p>
         </div>
       </div>
-      <div>
+      <div class="flex items-center gap-2">
+        <span id="loggedStudentHeaderBadge" class="hidden text-xs font-bold text-orange-400 bg-orange-500/10 border border-orange-500/30 px-2.5 py-1 rounded-lg"></span>
         <button type="button" onclick="resetAllToStudentLogin()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white">
-          الرئيسية
+          تسجيل خروج / الرئيسية
         </button>
       </div>
     </div>
   </header>
 
+  <!-- المحتوى الرئيسي -->
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
 
-    <!-- 1. شاشة تسجيل دخول الطلاب -->
-    <section id="studentLoginScreen" class="max-w-md mx-auto mt-8">
-      <div class="card rounded-2xl p-6 text-center shadow-xl border-slate-700">
-        <div class="w-14 h-14 rounded-2xl bg-orange-600/20 border border-orange-500/40 text-orange-400 flex items-center justify-center mx-auto mb-4 text-2xl font-extrabold">
-          🔒
+    <!-- 1. بوابة الطلاب (دخول بالكود أو إنشاء حساب جديد) -->
+    <section id="studentLoginScreen" class="max-w-md mx-auto mt-6">
+      <div class="card rounded-2xl p-6 shadow-xl border-slate-700">
+        <div class="text-center mb-5">
+          <div class="w-14 h-14 rounded-2xl bg-orange-600/20 border border-orange-500/40 text-orange-400 flex items-center justify-center mx-auto mb-3 text-2xl font-extrabold">
+            🩺
+          </div>
+          <h2 class="text-xl font-extrabold text-white">بوابة الطلاب الإلكترونية</h2>
+          <p class="text-xs text-slate-400 mt-1">سجّل الدخول بكودك الشخصي أو أنشئ حساباً جديداً للحصول على كود</p>
         </div>
-        <h2 class="text-xl font-extrabold text-white mb-1">بوابة دخول الطلاب</h2>
-        <p class="text-xs text-slate-400 mb-5">أدخل كلمة المرور الخاصة بالطلاب للوصول إلى الاختبارات</p>
-        <form onsubmit="checkStudentLogin(event)" class="space-y-4 text-right">
+
+        <!-- أزرار التبديل بين الدخول والتسجيل -->
+        <div class="grid grid-cols-2 gap-2 bg-slate-900 p-1 rounded-xl border border-slate-800 mb-5">
+          <button type="button" id="tabCodeLoginBtn" onclick="switchAuthTab('login')" class="py-2 rounded-lg text-xs font-bold bg-orange-600 text-white transition">
+            دخول بكود الطالب
+          </button>
+          <button type="button" id="tabRegisterBtn" onclick="switchAuthTab('register')" class="py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition">
+            إنشاء حساب جديد
+          </button>
+        </div>
+
+        <!-- نموذج الدخول بالكود -->
+        <form id="codeLoginForm" onsubmit="loginWithStudentCode(event)" class="space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">كلمة مرور الطلاب</label>
-            <input id="studentPassInput" type="password" required placeholder="أدخل كلمة المرور..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-center tracking-widest focus:outline-none focus:border-orange-500" />
+            <label class="block text-xs font-bold text-slate-300 mb-1">كود الطالب الخاص بك</label>
+            <input id="studentCodeInput" type="text" required placeholder="مثال: MED-4829" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-center font-mono uppercase tracking-widest focus:outline-none focus:border-orange-500" />
           </div>
           <button type="submit" class="btn-primary w-full py-2.5 rounded-xl font-bold text-sm shadow-lg">
             دخول إلى الاختبارات ←
           </button>
         </form>
+
+        <!-- نموذج إنشاء حساب طالب جديد -->
+        <form id="studentRegisterForm" onsubmit="registerNewStudent(event)" class="hidden space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">اسم الطالب الكامل</label>
+            <input id="regStudentName" type="text" required placeholder="اكتب اسمك الثلاثي..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">الرقم الجامعي أو رقم الهاتف</label>
+            <input id="regStudentId" type="text" required placeholder="للتعريف في سجل الدرجات..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500" />
+          </div>
+          <button type="submit" class="w-full py-2.5 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg transition">
+            إنشاء الحساب وتوليد الكود الخاص ✨
+          </button>
+        </form>
+
+        <!-- بطاقة عرض الكود بعد إنشاء الحساب -->
+        <div id="generatedCodeBox" class="hidden mt-5 p-4 rounded-xl bg-emerald-950/60 border border-emerald-600 text-center space-y-3">
+          <p class="text-xs font-bold text-emerald-300">✅ تم إنشاء حسابك بنجاح! احتفظ بكود الدخول الخاص بك:</p>
+          <div class="bg-slate-950 border border-emerald-500/50 rounded-xl py-2.5 px-4 flex items-center justify-between">
+            <span id="newGeneratedCodeText" class="font-mono text-xl font-extrabold text-orange-400 tracking-wider">MED-0000</span>
+            <button type="button" onclick="copyGeneratedCode()" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white border border-slate-600">
+              نسخ الكود
+            </button>
+          </div>
+          <button type="button" onclick="enterDirectlyAfterRegister()" class="btn-primary w-full py-2 rounded-xl font-bold text-xs">
+            الدخول الآن بهذا الكود ←
+          </button>
+        </div>
       </div>
     </section>
 
@@ -67,7 +114,7 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-700 pb-4 mb-5">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded">بوابة الاختبارات الإلكترونية</span>
-            <h2 class="text-2xl font-extrabold text-white mt-2">اختر نموذج الاختبار ونظام الحل</h2>
+            <h2 class="text-2xl font-extrabold text-white mt-2">مرحباً بك، <span id="welcomeStudentName" class="text-orange-400"></span></h2>
           </div>
           <div class="text-sm text-slate-300 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700">
             إجمالي الأسئلة المتاحة: <span id="totalQuestionsBadge" class="font-bold text-orange-400">0</span>
@@ -135,7 +182,7 @@
       <!-- شاشة النتيجة -->
       <div id="resultScreen" class="hidden card rounded-2xl p-6">
         <div class="text-center border-b border-slate-700 pb-6 mb-6">
-          <p class="text-sm text-slate-400 mb-1">انتهى الاختبار - التقييم النهائي</p>
+          <p class="text-sm text-slate-400 mb-1">انتهى الاختبار - التقييم النهائي للطالب: <span id="resultStudentName" class="text-white font-bold"></span></p>
           <div id="scorePercentage" class="text-5xl font-extrabold text-orange-400 my-2">0%</div>
           <div id="studentGradeLabel" class="inline-block px-4 py-1 rounded-full text-sm font-bold bg-blue-900/60 text-blue-300 border border-blue-700"></div>
           <p id="scoreSummaryText" class="text-slate-300 mt-3 text-sm"></p>
@@ -146,40 +193,60 @@
     </section>
 
     <!-- 3. لوحة تحكم المدير -->
-    <section id="adminView" class="hidden">
-      <div class="card rounded-2xl p-5 mb-6 border-blue-500/40 bg-slate-900/70 space-y-4">
+    <section id="adminView" class="hidden space-y-6">
+      <!-- إعدادات الربط والنشر المباشر -->
+      <div class="card rounded-2xl p-5 border-blue-500/40 bg-slate-900/70 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 class="text-base font-extrabold text-blue-400">⚡ النشر المباشر من المنصة وإدارة كلمات المرور</h3>
-            <p class="text-xs text-slate-400">انشر أسئلتك للطلاب مباشرة دون الرجوع لموقع GitHub.</p>
+            <h3 class="text-base font-extrabold text-blue-400">⚡ الربط والنشر المباشر على GitHub</h3>
+            <p class="text-xs text-slate-400">احفظ مفتاح الربط مرة واحدة لتحديث الأسئلة وبيانات الطلاب للجميع بضغطة زر.</p>
           </div>
-          <button type="button" onclick="copyStudentShareMessage()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold">
-            🔗 نسخ رابط الطلاب + كلمة السر
+          <button type="button" onclick="copyPlatformLink()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold">
+            🔗 نسخ رابط المنصة للطلاب
           </button>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-3">
+        <div class="flex gap-2">
+          <input id="ghTokenInput" type="password" placeholder="الصق مفتاح GitHub Token هنا (ghp_...)" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+          <button type="button" onclick="saveGithubToken()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white">
+            حفظ المفتاح
+          </button>
+        </div>
+      </div>
+
+      <!-- قسم بيانات الطلاب المسجلين وأكوادهم -->
+      <div class="card rounded-2xl p-6 border-emerald-500/30">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-4 mb-4">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">مفتاح GitHub Token (للنشر الدائم بضغطة زر)</label>
-            <div class="flex gap-2">
-              <input id="ghTokenInput" type="password" placeholder="ghp_..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
-              <button type="button" onclick="saveGithubToken()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white">
-                حفظ
-              </button>
-            </div>
+            <h3 class="text-lg font-extrabold text-emerald-400">👨‍⚕️ سجل الطلاب المسجلين وأكواد الدخول (<span id="adminStudentsCount">0</span>)</h3>
+            <p class="text-xs text-slate-400">تظهر هنا بيانات كل طالب أنشأ حساباً، الكود الخاص به، ونتائجه في الاختبارات.</p>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">كلمة مرور الطلاب (تُحفظ عند النشر)</label>
-            <input id="adminStudentPassEdit" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-orange-400 font-bold text-xs" />
-          </div>
+          <button type="button" onclick="syncStudentsFromCloud()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-slate-200">
+            🔄 تحديث القائمة
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-700 text-slate-400">
+                <th class="py-2.5 px-3">اسم الطالب</th>
+                <th class="py-2.5 px-3">الرقم الجامعي / الهاتف</th>
+                <th class="py-2.5 px-3">كود الدخول</th>
+                <th class="py-2.5 px-3">الاختبارات والدرجات</th>
+                <th class="py-2.5 px-3">إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="adminStudentsTableBody" class="divide-y divide-slate-800"></tbody>
+          </table>
         </div>
       </div>
 
       <!-- نموذج إضافة الأسئلة -->
-      <div class="card rounded-2xl p-6 mb-6 border-orange-500/40">
+      <div class="card rounded-2xl p-6 border-orange-500/40">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-4 mb-5">
           <div>
-            <h2 class="text-xl font-extrabold text-orange-400">لوحة تحكم المدير (إضافة وتنزيل الأسئلة)</h2>
+            <h2 class="text-xl font-extrabold text-orange-400">إدارة الأسئلة والنماذج الطبية</h2>
             <p class="text-xs text-slate-400 mt-1">أضف الأسئلة هنا ثم اضغط "نشر التعديلات للطلاب فوراً".</p>
           </div>
           <button type="button" onclick="logoutAdmin()" class="px-4 py-2 rounded-xl bg-red-900/50 text-red-200 border border-red-700 text-sm font-bold">
@@ -231,6 +298,7 @@
         </form>
       </div>
 
+      <!-- قائمة الأسئلة الحالية -->
       <div class="card rounded-2xl p-6">
         <h3 class="font-bold text-lg text-white mb-4">الأسئلة الحالية في المنصة (<span id="adminQCount">0</span>)</h3>
         <div id="adminQuestionsList" class="space-y-3"></div>
@@ -253,136 +321,36 @@
   </div>
 
   <script>
-    // كلمات المرور وإعدادات المستودع (مضبوطة على Malek-Medical-)
+    // إعدادات المدير والمستودع
     const ADMIN_PASSWORD = "malek2026";
-    let STUDENT_PASSWORD = "med2026";
     const GITHUB_OWNER = "nassarmalek833-ctrl";
     const GITHUB_REPO = "Malek-Medical-";
     const GITHUB_FILE_PATH = "index.html";
 
+    // قاعدة بيانات الطلاب المنشورة
+    const DEFAULT_STUDENTS = [];
+
     // قاعدة بيانات الأسئلة المنشورة للطلاب
     const DEFAULT_QUESTIONS = [
-  {
-    "model": "Biology [water&life]",
-    "text": "A hydrogen bond results from the attraction between a hydrogen atom covalently bonded to a very electronegative atom and another very electronegative atom. Which group lists atoms of this kind?",
-    "options": [
-      "N, O and F",
-      "C, H and P",
-      "Na, K and Ca",
-      "C, Na and H"
-    ],
-    "correct": 0,
-    "explanation": "Hydrogen bonds form when H is covalently attached to a very electronegative atom such as N, O or F and is attracted to another such atom. Carbon is only slightly more electronegative than hydrogen, so options containing C cannot supply these atoms"
-  },
-  {
-    "model": "Biology [water&life]",
-    "text": "An insect stands on the surface of a pond without breaking through it. Which property of water chiefly makes this possible?",
-    "options": [
-      "High surface tension resulting from cohesion",
-      "High heat of vaporization of liquid water",
-      "Lower density of ice than of liquid water",
-      "Lower freezing point of water containing solutes"
-    ],
-    "correct": 0,
-    "explanation": "​التفسير العلمي: Hydrogen-bonded molecules at the surface form an ordered layer that resists being stretched or broken, so the surface behaves like an invisible film able to support the insect."
-  },
-  {
-    "model": "Biology [water&life]",
-    "text": "In the water-conducting cells of a tree, what is the specific contribution of adhesion?",
-    "options": [
-      "It holds water molecules together as an unbroken column",
-      "It pulls water upward by evaporation from the leaves",
-      "It binds water to the cell walls, helping resist gravity",
-      "It lowers the freezing point of the water in the stem"
-    ],
-    "correct": 2,
-    "explanation": "Adhesion of water to the cell walls by hydrogen bonds helps resist the downward pull of gravity. Cohesion holds the column together, and evaporation from the leaves provides the upward pull"
-  },
-  {
-    "model": "Biology [water&life]",
-    "text": "Which two properties of water are of crucial importance to the structure and function of biomolecules?",
-    "options": [
-      "A) Its high density as a solid and its low heat of vaporization",
-      "B) Cohesion of its molecules and a slight tendency to ionize",
-      "C) Its nonpolar bonds and its ability to dissolve lipids readily D) Its linear shape and the great strength of its hydroge",
-      "Its linear shape and the great strength of its hydrogen bonds"
-    ],
-    "correct": 1,
-    "explanation": "The attractive forces (cohesion) between water molecules and the slight tendency of water to ionize underlie the behaviour of biomolecules. Every other option names properties water does not have; for example, ice is less dense than the liquid and hydrogen bonds are relatively weak."
-  },
-  {
-    "model": "Biology [water&life]",
-    "text": "Suppose oxygen and hydrogen had equal electronegativity. Which consequence for water would follow",
-    "options": [
-      "Its H-O-H bond angle would widen to exactly 180°",
-      "Each of its hydrogen atoms would carry a δ− charge",
-      "Water would become a far better solvent for NaCl",
-      "Its molecules could no longer form hydrogen bonds"
-    ],
-    "correct": 3,
-    "explanation": "The partial charges exist only because oxygen is more electronegative and pulls the shared electrons toward itself. With equal sharing the O-H bonds would be nonpolar, leaving no δ+ and δ− regions to\nattract neighbouring molecules, so cohesion and the ability to hydrate ions would be lost."
-  },
-  {
-    "model": "Biology [water&life]",
-    "text": "In which of the following molecules are the electrons of every covalent bond shared equally between the bonded atoms?",
-    "options": [
-      "H2O",
-      "CO2",
-      "O2",
-      "NH3"
-    ],
-    "correct": 0,
-    "explanation": "In O2, as in N2, the two bonded atoms are identical, so electrons are shared equally and the bond\nis nonpolar. In CO2 each C=O bond is polar; the molecule is nonpolar only because the two dipoles cancel. The bonds of H2O and NH3 are polar."
-  },
-  {
-    "model": "Biology [water&life]",
-    "text": "Hydrogen bonds between complementary bases in DNA, such as adenine and thymine, hold the two bases in a precise geometric arrangement. Which property of hydrogen bonds makes this possible?",
-    "options": [
-      "Their bond energy, which exceeds that of covalent bonds",
-      "Their high directionality",
-      "Their lifetime of several seconds",
-      "Their restriction to water molecules"
-    ],
-    "correct": 1,
-    "explanation": "Because a hydrogen bond is strongest when donor, hydrogen and acceptor lie in line, hydrogen bonds are highly directional and can hold two hydrogen-bonded groups in a specific geometric arrangement, as between complementary bases."
-  },
-  {
-    "model": "Biology [water&life]",
-    "text": "Compounds that dissolve easily in water are described as:",
-    "options": [
-      "hydrophilic",
-      "hydrophobic",
-      "amphipathic",
-      "nonpolar"
-    ],
-    "correct": 0,
-    "explanation": "Hydrophilic (\"water-loving\") compounds dissolve easily in water; they are generally charged or polar. Hydrophobic compounds are nonpolar, and amphipathic compounds contain both polar and nonpolar regions."
-  },
-  {
-    "model": "Biology [water&life]",
-    "text": "Which of the following is a hydrophobic material?",
-    "options": [
-      "Glucose",
-      "Sodium chloride",
-      "Wax",
-      "Glycerol"
-    ],
-    "correct": 2,
-    "explanation": "Waxes, like other lipids, are nonpolar (hydrophobic) and dissolve in nonpolar solvents such as chloroform and benzene. Glucose and glycerol are polar and NaCl is ionic, so all of them dissolve readily in water."
-  },
-  {
-    "model": "Biology [water&life]",
-    "text": "Which of the following molecules is amphipathic?",
-    "options": [
-      "Glucose",
-      "Glycine",
-      "Glycerol",
-      "Phenylalanine"
-    ],
-    "correct": 3,
-    "explanation": "Phenylalanine carries charged polar groups (−NH3+ and −COO−) and a nonpolar benzene ring in the same molecule, so it is amphipathic. Glucose, glycine and glycerol are polar throughout."
-  }
-];
+      {
+        model: "General Medicine - Model 1",
+        text: "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
+        options: ["Glossopharyngeal nerve (CN IX)", "Vagus nerve (CN X)", "Accessory nerve (CN XI)", "Hypoglossal nerve (CN XII)"],
+        correct: 1,
+        explanation: "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
+      },
+      {
+        model: "General Medicine - Model 1",
+        text: "What is the primary pacemaker of the normal human heart?",
+        options: ["Atrioventricular (AV) node", "Bundle of His", "Sinoatrial (SA) node", "Purkinje fibers"],
+        correct: 2,
+        explanation: "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
+      }
+    ];
+
+    let studentsList = loadMergedStudents();
+    let currentStudent = null;
+    let lastRegisteredStudent = null;
 
     let questions = [...DEFAULT_QUESTIONS];
     let activeQuestions = [];
@@ -394,6 +362,118 @@
     let isPaused = false;
     let currentMode = "practice";
 
+    // دمج الطلاب المحفوظين محلياً مع المنشورين في الكود
+    function loadMergedStudents() {
+      const localData = JSON.parse(localStorage.getItem("malek_students_registry") || "[]");
+      const map = new Map();
+      [...DEFAULT_STUDENTS, ...localData].forEach(s => map.set(s.code, s));
+      return Array.from(map.values());
+    }
+
+    function saveStudentsLocally() {
+      localStorage.setItem("malek_students_registry", JSON.stringify(studentsList));
+    }
+
+    // التبديل بين تبويب الدخول بالكود وإنشاء حساب جديد
+    function switchAuthTab(tab) {
+      const loginForm = document.getElementById("codeLoginForm");
+      const regForm = document.getElementById("studentRegisterForm");
+      const loginBtn = document.getElementById("tabCodeLoginBtn");
+      const regBtn = document.getElementById("tabRegisterBtn");
+      document.getElementById("generatedCodeBox").classList.add("hidden");
+
+      if (tab === "login") {
+        loginForm.classList.remove("hidden");
+        regForm.classList.add("hidden");
+        loginBtn.className = "py-2 rounded-lg text-xs font-bold bg-orange-600 text-white transition";
+        regBtn.className = "py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition";
+      } else {
+        loginForm.classList.add("hidden");
+        regForm.classList.remove("hidden");
+        regBtn.className = "py-2 rounded-lg text-xs font-bold bg-emerald-600 text-white transition";
+        loginBtn.className = "py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition";
+      }
+    }
+
+    // توليد كود فريد للطالب
+    function generateUniqueStudentCode() {
+      let code = "";
+      do {
+        const num = Math.floor(1000 + Math.random() * 9000);
+        code = "MED-" + num;
+      } while (studentsList.some(s => s.code === code));
+      return code;
+    }
+
+    // إنشاء حساب طالب جديد
+    function registerNewStudent(e) {
+      e.preventDefault();
+      const name = document.getElementById("regStudentName").value.trim();
+      const studentId = document.getElementById("regStudentId").value.trim();
+      if (!name || !studentId) return;
+
+      studentsList = loadMergedStudents();
+      const newCode = generateUniqueStudentCode();
+      const newStudent = {
+        name: name,
+        studentId: studentId,
+        code: newCode,
+        createdAt: new Date().toLocaleDateString("ar-EG"),
+        results: []
+      };
+
+      studentsList.push(newStudent);
+      saveStudentsLocally();
+      lastRegisteredStudent = newStudent;
+
+      document.getElementById("newGeneratedCodeText").textContent = newCode;
+      document.getElementById("generatedCodeBox").classList.remove("hidden");
+      e.target.reset();
+    }
+
+    function copyGeneratedCode() {
+      const code = document.getElementById("newGeneratedCodeText").textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        alert("تم نسخ كود الدخول الخاص بك: " + code + "\nاحتفظ به للدخول في أي وقت.");
+      });
+    }
+
+    function enterDirectlyAfterRegister() {
+      if (!lastRegisteredStudent) return;
+      openStudentPortal(lastRegisteredStudent);
+    }
+
+    // الدخول بالكود الشخصي
+    function loginWithStudentCode(e) {
+      e.preventDefault();
+      const enteredCode = document.getElementById("studentCodeInput").value.trim().toUpperCase();
+      studentsList = loadMergedStudents();
+      const found = studentsList.find(s => s.code === enteredCode);
+
+      if (found) {
+        openStudentPortal(found);
+      } else {
+        alert("كود الطالب غير صحيح أو غير مسجل! تأكد من الكود أو أنشئ حساباً جديداً.");
+      }
+    }
+
+    function openStudentPortal(studentObj) {
+      currentStudent = studentObj;
+      questions = [...DEFAULT_QUESTIONS];
+
+      document.getElementById("studentLoginScreen").classList.add("hidden");
+      document.getElementById("adminView").classList.add("hidden");
+      document.getElementById("studentView").classList.remove("hidden");
+
+      document.getElementById("welcomeStudentName").textContent = currentStudent.name;
+      const headerBadge = document.getElementById("loggedStudentHeaderBadge");
+      headerBadge.textContent = `${currentStudent.name} (${currentStudent.code})`;
+      headerBadge.classList.remove("hidden");
+
+      populateModels();
+    }
+
+    // بوابة المدير السرية (5 ضغطات على M)
     let tapCount = 0;
     let tapTimer = null;
 
@@ -425,12 +505,15 @@
         if (savedDraft) questions = JSON.parse(savedDraft);
         const savedToken = localStorage.getItem("malek_gh_token");
         if (savedToken) document.getElementById("ghTokenInput").value = savedToken;
-        document.getElementById("adminStudentPassEdit").value = STUDENT_PASSWORD;
 
+        studentsList = loadMergedStudents();
         document.getElementById("studentLoginScreen").classList.add("hidden");
         document.getElementById("studentView").classList.add("hidden");
+        document.getElementById("loggedStudentHeaderBadge").classList.add("hidden");
         document.getElementById("adminView").classList.remove("hidden");
+
         renderAdminList();
+        renderAdminStudentsTable();
       } else {
         alert("كلمة مرور المدير غير صحيحة!");
       }
@@ -443,33 +526,20 @@
       document.getElementById("studentLoginScreen").classList.remove("hidden");
     }
 
-    function checkStudentLogin(e) {
-      e.preventDefault();
-      const pass = document.getElementById("studentPassInput").value.trim();
-      if (pass === STUDENT_PASSWORD) {
-        questions = [...DEFAULT_QUESTIONS];
-        document.getElementById("studentLoginScreen").classList.add("hidden");
-        document.getElementById("adminView").classList.add("hidden");
-        document.getElementById("studentView").classList.remove("hidden");
-        populateModels();
-      } else {
-        alert("كلمة مرور الطلاب غير صحيحة! حاول مرة أخرى.");
-      }
-    }
-
     function resetAllToStudentLogin() {
       clearInterval(timerInterval);
+      currentStudent = null;
+      document.getElementById("loggedStudentHeaderBadge").classList.add("hidden");
       document.getElementById("adminView").classList.add("hidden");
       document.getElementById("studentView").classList.add("hidden");
       document.getElementById("studentLoginScreen").classList.remove("hidden");
     }
 
-    function copyStudentShareMessage() {
+    function copyPlatformLink() {
       const cleanUrl = window.location.origin + window.location.pathname;
-      const currentStudentPass = document.getElementById("adminStudentPassEdit").value.trim() || STUDENT_PASSWORD;
-      const text = `منصة مالك الطبية للاختبارات:\n${cleanUrl}\nكلمة مرور الطلاب: ${currentStudentPass}`;
+      const text = `منصة مالك الطبية للاختبارات الإلكترونية:\n${cleanUrl}\nأنشئ حسابك للحصول على كود الدخول الخاص بك وابدأ الاختبار.`;
       navigator.clipboard.writeText(text).then(() => {
-        alert("تم نسخ الرابط مع كلمة مرور الطلاب:\n\n" + text);
+        alert("تم نسخ رابط المنصة لمشاركته مع الطلاب:\n\n" + text);
       });
     }
 
@@ -487,14 +557,14 @@
         return;
       }
 
-      const newStudentPass = document.getElementById("adminStudentPassEdit").value.trim() || STUDENT_PASSWORD;
       const btn = document.getElementById("publishBtn");
       const status = document.getElementById("publishStatus");
       btn.disabled = true;
       btn.textContent = "⏳ جاري النشر للطلاب...";
-      status.textContent = "جاري تحديث الأسئلة وكلمة مرور الطلاب...";
+      status.textContent = "جاري تحديث الأسئلة وبيانات الطلاب على GitHub...";
 
       try {
+        studentsList = loadMergedStudents();
         const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
         const getRes = await fetch(apiUrl, {
           headers: {
@@ -515,8 +585,8 @@
           `const DEFAULT_QUESTIONS = ${JSON.stringify(questions, null, 2)};`
         );
         updatedContent = updatedContent.replace(
-          /let STUDENT_PASSWORD = ".*?";/,
-          `let STUDENT_PASSWORD = ${JSON.stringify(newStudentPass)};`
+          /const DEFAULT_STUDENTS = \[[\s\S]*?\];/,
+          `const DEFAULT_STUDENTS = ${JSON.stringify(studentsList, null, 2)};`
         );
 
         const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
@@ -529,7 +599,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            message: "Publish exam updates from Malek LMS",
+            message: "Publish exam & students updates from Malek LMS",
             content: encodedContent,
             sha: fileData.sha
           })
@@ -537,11 +607,10 @@
 
         if (!putRes.ok) throw new Error("فشل رفع التحديثات إلى GitHub.");
 
-        STUDENT_PASSWORD = newStudentPass;
         localStorage.removeItem("malek_admin_draft_questions");
         status.className = "text-xs font-bold text-emerald-400 mt-2";
-        status.textContent = "✅ تم النشر بنجاح! التحديث متاح الآن على رابط الطلاب.";
-        alert("تم نشر الأسئلة وكلمة المرور بنجاح للطلاب!");
+        status.textContent = "✅ تم النشر بنجاح! الأسئلة وبيانات الطلاب محدثة الآن.";
+        alert("تم نشر التعديلات بنجاح للطلاب!");
       } catch (err) {
         status.className = "text-xs font-bold text-red-400 mt-2";
         status.textContent = "❌ خطأ: " + err.message;
@@ -552,6 +621,48 @@
       }
     }
 
+    // عرض جدول الطلاب في لوحة المدير
+    function renderAdminStudentsTable() {
+      studentsList = loadMergedStudents();
+      document.getElementById("adminStudentsCount").textContent = studentsList.length;
+      const tbody = document.getElementById("adminStudentsTableBody");
+
+      if (studentsList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">لا يوجد طلاب مسجلون بعد.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = studentsList.map((s, idx) => {
+        const resultsText = (s.results && s.results.length > 0)
+          ? s.results.map(r => `<span class="inline-block bg-slate-800 border border-slate-700 rounded px-2 py-0.5 ml-1 mb-1 text-emerald-300">${r.model}: ${r.score}%</span>`).join("")
+          : `<span class="text-slate-500">لم يحل اختبارات بعد</span>`;
+
+        return `
+          <tr class="hover:bg-slate-900/50">
+            <td class="py-3 px-3 font-bold text-white">${s.name}</td>
+            <td class="py-3 px-3 text-slate-300">${s.studentId}</td>
+            <td class="py-3 px-3 font-mono font-bold text-orange-400">${s.code}</td>
+            <td class="py-3 px-3">${resultsText}</td>
+            <td class="py-3 px-3">
+              <button type="button" onclick="deleteStudentRecord(${idx})" class="px-2 py-1 rounded bg-red-900/60 text-red-200 hover:bg-red-800">حذف</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function syncStudentsFromCloud() {
+      renderAdminStudentsTable();
+      alert("تم تحديث قائمة الطلاب المسجلين.");
+    }
+
+    function deleteStudentRecord(idx) {
+      studentsList.splice(idx, 1);
+      saveStudentsLocally();
+      renderAdminStudentsTable();
+    }
+
+    // إدارة الاختبارات للطلاب
     function populateModels() {
       const models = [...new Set(questions.map(q => q.model))];
       const select = document.getElementById("modelSelect");
@@ -692,7 +803,20 @@
       let correctCount = 0;
       activeQuestions.forEach((q, i) => { if (userAnswers[i] === q.correct) correctCount++; });
       const pct = Math.round((correctCount / activeQuestions.length) * 100);
+      const selectedModel = document.getElementById("modelSelect").value;
 
+      // حفظ نتيجة الطالب في سجله
+      if (currentStudent) {
+        studentsList = loadMergedStudents();
+        const target = studentsList.find(s => s.code === currentStudent.code);
+        if (target) {
+          if (!target.results) target.results = [];
+          target.results.push({ model: selectedModel === "ALL" ? "اختبار شامل" : selectedModel, score: pct });
+          saveStudentsLocally();
+        }
+      }
+
+      document.getElementById("resultStudentName").textContent = currentStudent ? currentStudent.name : "";
       document.getElementById("scorePercentage").textContent = `${pct}%`;
       document.getElementById("scoreSummaryText").textContent = `أجبت بشكل صحيح على ${correctCount} من أصل ${activeQuestions.length} سؤال`;
       document.getElementById("studentGradeLabel").textContent =
@@ -718,6 +842,7 @@
       document.getElementById("examSetupCard").classList.remove("hidden");
     }
 
+    // وظائف المدير للأسئلة
     function addQuestion(e) {
       e.preventDefault();
       const newQ = {
