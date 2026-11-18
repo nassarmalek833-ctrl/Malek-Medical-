@@ -41,7 +41,7 @@
       <div class="flex items-center gap-2.5">
         <span id="loggedStudentHeaderBadge" class="hidden text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-xl"></span>
         <button type="button" onclick="resetAllToStudentLogin()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800/90 text-slate-300 border border-slate-700 hover:text-white hover:border-amber-500/40 transition">
-          تسجيل خروج
+          الرئيسية / خروج
         </button>
       </div>
     </div>
@@ -50,77 +50,141 @@
   <!-- المحتوى الرئيسي -->
   <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
 
-    <!-- 1. بوابة الطلاب (دخول بالكود المعطى من المدير أو إرسال طلب تسجيل بدون إظهار الكود) -->
-    <section id="studentLoginScreen" class="max-w-md mx-auto mt-6">
-      <div class="card rounded-3xl p-7 border-amber-500/20">
-        <div class="text-center mb-6">
-          <div class="w-16 h-16 rounded-2xl gold-gradient text-slate-950 flex items-center justify-center mx-auto mb-3 text-3xl font-black shadow-lg shadow-amber-500/20">
-            🩺
+    <!-- 1. البوابة الرئيسية (واجهة التجربة المجانية + واجهة المدفوع وبيانات البنك) -->
+    <section id="studentLoginScreen" class="max-w-5xl mx-auto mt-4 space-y-6">
+
+      <!-- البطاقتان الرئيسيتان: التجربة المجانية vs الدخول المدفوع -->
+      <div class="grid md:grid-cols-2 gap-6 items-start">
+
+        <!-- البطاقة اليمنى: واجهة الدخول المدفوع للمشتركين -->
+        <div class="card rounded-3xl p-7 border-amber-500/30">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl gold-gradient text-slate-950 flex items-center justify-center text-2xl font-black shadow-lg">
+                👑
+              </div>
+              <div>
+                <h2 class="text-xl font-black text-white">بوابة المشتركين (المدفوع)</h2>
+                <p class="text-xs text-amber-400">للوصول الكامل لجميع المواد والاختبارات</p>
+              </div>
+            </div>
           </div>
-          <h2 class="text-2xl font-black text-white">بوابة طلاب منصة المالك</h2>
-          <p class="text-xs text-slate-400 mt-1">الدخول مقتصر على الطلاب الحاصلين على كود مفعّل من الإدارة</p>
+
+          <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 mb-5">
+            <button type="button" id="tabCodeLoginBtn" onclick="switchAuthTab('login')" class="py-2 rounded-xl text-xs tab-active transition">
+              دخول بكود الاشتراك
+            </button>
+            <button type="button" id="tabRegisterBtn" onclick="switchAuthTab('register')" class="py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">
+              طلب اشتراك جديد
+            </button>
+          </div>
+
+          <form id="codeLoginForm" onsubmit="loginWithStudentCode(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">كود الدخول الخاص بك</label>
+              <input id="studentCodeInput" type="text" required placeholder="أدخل الكود الممنوح لك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-center font-mono text-base uppercase tracking-widest focus:outline-none focus:border-amber-500" />
+            </div>
+            <button type="submit" class="btn-gold w-full py-3 rounded-xl text-sm shadow-lg shadow-amber-500/20">
+              دخول إلى المنصة الكاملة ←
+            </button>
+          </form>
+
+          <form id="studentRegisterForm" onsubmit="registerNewStudent(event)" class="hidden space-y-3.5">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">اسم الطالب الكامل</label>
+              <input id="regStudentName" type="text" required placeholder="اكتب اسمك الثلاثي..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">الرقم الجامعي أو رقم الواتساب</label>
+              <input id="regStudentId" type="text" required placeholder="لإرسال كود الاشتراك إليك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">السنة الدراسية</label>
+              <select id="regStudentYear" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                <option value="السنة الأولى">السنة الأولى</option>
+                <option value="السنة الثانية">السنة الثانية</option>
+                <option value="السنة الثالثة">السنة الثالثة</option>
+                <option value="السنة الرابعة">السنة الرابعة</option>
+                <option value="السنة الخامسة">السنة الخامسة</option>
+                <option value="السنة السادسة">السنة السادسة</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition">
+              إرسال طلب الاشتراك للإدارة 📩
+            </button>
+          </form>
+
+          <div id="pendingApprovalNotice" class="hidden mt-4 p-4 rounded-2xl bg-amber-950/40 border border-amber-500/50 text-center space-y-1.5">
+            <p class="text-sm font-black text-amber-400">⏳ تم إرسال طلبك بنجاح!</p>
+            <p class="text-xs text-slate-200 leading-relaxed">
+              حسابك قيد المراجعة. أتمم التحويل عبر بيانات الدفع وتواصل مع الدكتور مالك لتفعيل حسابك وتزويدك بالكود.
+            </p>
+          </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 mb-6">
-          <button type="button" id="tabCodeLoginBtn" onclick="switchAuthTab('login')" class="py-2.5 rounded-xl text-xs tab-active transition">
-            دخول بكود الطالب
-          </button>
-          <button type="button" id="tabRegisterBtn" onclick="switchAuthTab('register')" class="py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">
-            طلب تسجيل حساب
-          </button>
+        <!-- البطاقة اليسرى: واجهة التجربة المجانية + معلومات البنك والدفع -->
+        <div class="space-y-6">
+          <!-- قسم التجربة المجانية -->
+          <div class="card rounded-3xl p-6 border-emerald-500/30 bg-gradient-to-br from-emerald-950/30 to-slate-900">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-2xl">
+                🎁
+              </div>
+              <div>
+                <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">مجاني بالكامل بدون كود</span>
+                <h2 class="text-xl font-black text-white mt-0.5">التجربة المجانية للمنصة</h2>
+              </div>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+              جرّب نظام الشرح، التلاخيص، والاختبارات التفاعلية مجاناً قبل الاشتراك الكامل في موادك الدراسية.
+            </p>
+            <button type="button" onclick="enterFreeTrialMode()" class="w-full py-3 rounded-xl font-black text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20 transition">
+              🚀 ابدأ التجربة المجانية الآن ←
+            </button>
+          </div>
+
+          <!-- بطاقة بيانات البنك وأرقام الدفع -->
+          <div class="card rounded-3xl p-6 border-blue-500/30 bg-slate-900/90 space-y-3">
+            <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+              <span class="text-xl">💳</span>
+              <div>
+                <h3 class="text-base font-black text-white">بيانات الدفع والاشتراك الرسمي</h3>
+                <p class="text-[11px] text-slate-400">للاشتراك وتفعيل المواد، يمكنك التحويل عبر البيانات التالية:</p>
+              </div>
+            </div>
+            <div id="publicPaymentInfoBox" class="space-y-2 text-xs"></div>
+          </div>
         </div>
 
-        <form id="codeLoginForm" onsubmit="loginWithStudentCode(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1.5">كود الدخول الخاص بك</label>
-            <input id="studentCodeInput" type="text" required placeholder="أدخل الكود الممنوح لك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-center font-mono text-base uppercase tracking-widest focus:outline-none focus:border-amber-500" />
-          </div>
-          <button type="submit" class="btn-gold w-full py-3 rounded-xl text-sm shadow-lg shadow-amber-500/20">
-            دخول إلى المنصة ←
-          </button>
-        </form>
-
-        <form id="studentRegisterForm" onsubmit="registerNewStudent(event)" class="hidden space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">اسم الطالب الكامل</label>
-            <input id="regStudentName" type="text" required placeholder="اكتب اسمك الثلاثي..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">الرقم الجامعي أو رقم الواتساب</label>
-            <input id="regStudentId" type="text" required placeholder="لإرسال كود الدخول إليك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">السنة الدراسية</label>
-            <select id="regStudentYear" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-              <option value="السنة الأولى">السنة الأولى</option>
-              <option value="السنة الثانية">السنة الثانية</option>
-              <option value="السنة الثالثة">السنة الثالثة</option>
-              <option value="السنة الرابعة">السنة الرابعة</option>
-              <option value="السنة الخامسة">السنة الخامسة</option>
-              <option value="السنة السادسة">السنة السادسة</option>
-            </select>
-          </div>
-          <button type="submit" class="w-full py-3 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition">
-            إرسال طلب التسجيل للإدارة 📩
-          </button>
-        </form>
-
-        <div id="pendingApprovalNotice" class="hidden mt-5 p-4 rounded-2xl bg-amber-950/40 border border-amber-500/50 text-center space-y-2">
-          <p class="text-sm font-black text-amber-400">⏳ تم إرسال طلبك بنجاح!</p>
-          <p class="text-xs text-slate-200 leading-relaxed">
-            حسابك الآن <strong>قيد المراجعة لدى إدارة منصة المالك</strong>. تواصل مع الدكتور مالك ليقوم بتفعيل حسابك وتزويدك بكود الدخول الخاص بك.
-          </p>
-        </div>
       </div>
     </section>
 
-    <!-- 2. واجهة الطالب الرئيسية -->
+    <!-- 2. واجهة الطالب الرئيسية (تعمل للمشترك المدفوع وللتجربة المجانية) -->
     <section id="studentView" class="hidden space-y-6">
 
-      <!-- خانة الاستعلامات والإعلانات الجديدة -->
-      <div class="card rounded-2xl p-5 border-amber-500/30 bg-gradient-to-l from-amber-950/20 to-slate-900">
-        <div class="flex items-center gap-2 mb-3">
+      <!-- شريط تنبيه التجربة المجانية (يظهر فقط في وضع التجربة المجانية) -->
+      <div id="freeTrialBanner" class="hidden p-4 rounded-2xl bg-emerald-950/50 border border-emerald-500/40 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">🎁</span>
+          <div>
+            <p class="text-sm font-black text-emerald-300">أنت تتصفح الآن وضع التجربة المجانية</p>
+            <p class="text-xs text-slate-300">لفتح جميع المواد والشباتر وبنوك الأسئلة الكاملة، اطلب كود الاشتراك المدفوع.</p>
+          </div>
+        </div>
+        <button type="button" onclick="resetAllToStudentLogin()" class="btn-gold px-4 py-2 rounded-xl text-xs">
+          الانتقال للاشتراك المدفوع 👑
+        </button>
+      </div>
+
+      <!-- خانة الاستعلامات والإعلانات الجديدة + رابط قناة الواتساب في المدفوع -->
+      <div class="card rounded-2xl p-5 border-amber-500/30 bg-gradient-to-l from-amber-950/20 to-slate-900 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-black border border-amber-500/30">📢 استعلامات وإعلانات جديدة</span>
+          <!-- زر قناة الواتساب (يظهر حصراً في الواجهة المدفوعة إذا تم وضع الرابط) -->
+          <a id="paidWhatsappChannelBtn" href="#" target="_blank" rel="noopener" class="hidden px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black flex items-center gap-1.5 shadow-md">
+            <span>📲</span>
+            <span>قناة الواتساب الرسمية للمشتركين ↗</span>
+          </a>
         </div>
         <div id="studentAnnouncementsList" class="space-y-2 text-sm text-slate-200"></div>
       </div>
@@ -129,8 +193,8 @@
       <div id="academicExplorerCard" class="card rounded-2xl p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-5">
           <div>
-            <h2 class="text-xl font-black text-white">المكتبة الأكاديمية والاختبارات</h2>
-            <p class="text-xs text-slate-400 mt-0.5">اختر السنة الدراسية ثم الفصل الدراسي لعرض المواد المتاحة</p>
+            <h2 id="academicExplorerTitle" class="text-xl font-black text-white">المكتبة الأكاديمية والاختبارات</h2>
+            <p id="academicExplorerSubtitle" class="text-xs text-slate-400 mt-0.5">اختر السنة الدراسية ثم الفصل الدراسي</p>
           </div>
           <div id="academicBreadcrumb" class="flex items-center gap-1.5 text-xs font-bold text-amber-400 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800"></div>
         </div>
@@ -145,12 +209,12 @@
             <button type="button" onclick="selectSemester('الفصل الأول')" class="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
               <span class="text-2xl mb-2 block">📘</span>
               <h3 class="text-lg font-extrabold text-white group-hover:text-amber-400">الفصل الدراسي الأول</h3>
-              <p class="text-xs text-slate-400 mt-1">عرض جميع مواد الفصل الأول، المحاضرات، الملفات، والاختبارات</p>
+              <p class="text-xs text-slate-400 mt-1">عرض مواد الفصل الأول المتاحة لك</p>
             </button>
             <button type="button" onclick="selectSemester('الفصل الثاني')" class="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
               <span class="text-2xl mb-2 block">📙</span>
               <h3 class="text-lg font-extrabold text-white group-hover:text-amber-400">الفصل الدراسي الثاني</h3>
-              <p class="text-xs text-slate-400 mt-1">عرض جميع مواد الفصل الثاني، المحاضرات، الملفات، والاختبارات</p>
+              <p class="text-xs text-slate-400 mt-1">عرض مواد الفصل الثاني المتاحة لك</p>
             </button>
           </div>
         </div>
@@ -279,7 +343,7 @@
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
           <div>
             <h2 class="text-xl font-black text-amber-400">👑 لوحة تحكم المدير الشاملة — منصة المالك</h2>
-            <p class="text-xs text-slate-400 mt-0.5">التغذية الذكية السريعة، إدارة الطلاب، المحتوى، والنشر المباشر.</p>
+            <p class="text-xs text-slate-400 mt-0.5">إدارة الاشتراكات، قفل/فتح المواد، بيانات الدفع والبنك، وقناة الواتساب.</p>
           </div>
           <div class="flex flex-wrap gap-2">
             <button type="button" id="togglePlatformLockBtn" onclick="togglePlatformMaintenance()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-amber-300">
@@ -324,14 +388,17 @@
 
       <!-- تبويبات لوحة تحكم المدير -->
       <div class="flex flex-wrap gap-2 bg-slate-950 p-2 rounded-2xl border border-slate-800">
-        <button type="button" id="admTabSmartFeed" onclick="switchAdminTab('smartfeed')" class="px-4 py-2 rounded-xl text-xs tab-active">
-          ⚡ التغذية الذكية السريعة (ملفات + أسئلة)
+        <button type="button" id="admTabSubjects" onclick="switchAdminTab('subjects')" class="px-4 py-2 rounded-xl text-xs tab-active">
+          📚 المواد وقفلها/فتحها (<span id="admBadgeSubjects">0</span>)
         </button>
         <button type="button" id="admTabStudents" onclick="switchAdminTab('students')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
-          👨‍⚕️ إدارة الطلاب (<span id="admBadgeStudents">0</span>)
+          👨‍⚕️ الطلاب (<span id="admBadgeStudents">0</span>)
         </button>
-        <button type="button" id="admTabSubjects" onclick="switchAdminTab('subjects')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
-          📚 المواد (<span id="admBadgeSubjects">0</span>)
+        <button type="button" id="admTabPayment" onclick="switchAdminTab('payment')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          💳 البنك والدفع وقناة الواتس
+        </button>
+        <button type="button" id="admTabSmartFeed" onclick="switchAdminTab('smartfeed')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          ⚡ التغذية الذكية السريعة
         </button>
         <button type="button" id="admTabContent" onclick="switchAdminTab('content')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
           🎥 المحاضرات والملفات (<span id="admBadgeContent">0</span>)
@@ -344,108 +411,10 @@
         </button>
       </div>
 
-      <!-- القسم 0 في المدير: التغذية الذكية السريعة (مربع لصق + سحب من رابط URL) -->
-      <div id="adminPaneSmartFeed" class="card rounded-2xl p-6 border-amber-500/40 space-y-6">
-        <div class="border-b border-slate-800 pb-4">
-          <h3 class="text-lg font-black text-amber-400">⚡ التغذية الذكية السريعة دفعة واحدة (Bulk Feed)</h3>
-          <p class="text-xs text-slate-400 mt-1">أرسل ملفاتك أو صور أسئلتك للمساعد الذكي ليجهز لك الحزمة، ثم الصقها هنا (أو ضع رابطها) لتُضاف للمنصة في ثانية واحدة.</p>
-        </div>
-
-        <!-- 1. التغذية عبر رابط خارجي مباشر URL -->
-        <div class="p-4 rounded-2xl bg-slate-950 border border-blue-500/30 space-y-3">
-          <h4 class="text-sm font-extrabold text-blue-400">🌐 استيراد وتغذية تلقائية من رابط خارجي (URL)</h4>
-          <p class="text-xs text-slate-400">ضع رابط ملف التغذية الجاهز (JSON Raw URL) وسيقوم النظام بسحب جميع المواد والملفات والمحاضرات والأسئلة منه فوراً:</p>
-          <div class="flex flex-col sm:flex-row gap-2">
-            <input id="smartFeedUrlInput" type="url" placeholder="https://raw.githubusercontent.com/.../feed.json" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs" />
-            <button type="button" onclick="importFromRemoteFeedUrl()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shrink-0">
-              📥 سحب وتغذية المنصة الآن
-            </button>
-          </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-6">
-          <!-- 2. مربع لصق حزمة الملفات والمحاضرات والمواد -->
-          <div class="p-4 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-3">
-            <h4 class="text-sm font-extrabold text-emerald-400">📁 تغذية سريعة بالمواد والمحاضرات والملفات</h4>
-            <p class="text-xs text-slate-400">الصق هنا كود حزمة الملفات والمحاضرات المجهز بتصنيفاتها (تلاخيص / شباتر / شروحات):</p>
-            <textarea id="bulkContentJsonInput" rows="6" placeholder='الصق كود حزمة الملفات والمحاضرات هنا...' class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-emerald-500"></textarea>
-            <button type="button" onclick="processBulkContentFeed()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black">
-              ⚡ إضافة جميع المواد والملفات والمحاضرات فوراً
-            </button>
-          </div>
-
-          <!-- 3. مربع لصق حزمة الأسئلة -->
-          <div class="p-4 rounded-2xl bg-slate-950 border border-amber-500/30 space-y-3">
-            <h4 class="text-sm font-extrabold text-amber-400">📝 تغذية سريعة بأسئلة الاختبارات</h4>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block text-[11px] text-slate-400 mb-1">المادة المستهدفة (اختياري إذا كانت محددة بالكود)</label>
-                <select id="bulkQSubjectSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white text-xs"></select>
-              </div>
-              <div>
-                <label class="block text-[11px] text-slate-400 mb-1">اسم النموذج الافتراضي</label>
-                <input id="bulkQDefaultModel" placeholder="مثال: Model 1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white text-xs" />
-              </div>
-            </div>
-            <textarea id="bulkQuestionsJsonInput" rows="4" placeholder='الصق كود حزمة الأسئلة المجهز هنا...' class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-amber-500"></textarea>
-            <button type="button" onclick="processBulkQuestionsFeed()" class="btn-gold w-full py-2.5 rounded-xl text-xs">
-              ⚡ إضافة جميع الأسئلة للقائمة فوراً
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- القسم 1 في المدير: إدارة الطلاب -->
-      <div id="adminPaneStudents" class="hidden card rounded-2xl p-6 border-emerald-500/30 space-y-5">
-        <div class="border-b border-slate-800 pb-4">
-          <h3 class="text-lg font-extrabold text-emerald-400">إضافة طالب وتوليد كود له مباشرة (مُفعّل فوراً)</h3>
-          <form onsubmit="adminCreateStudentDirect(event)" class="grid md:grid-cols-4 gap-3 mt-3 items-end">
-            <input id="admNewStuName" required placeholder="اسم الطالب الكامل..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
-            <input id="admNewStuId" required placeholder="الرقم الجامعي / الواتساب..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
-            <select id="admNewStuYear" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs">
-              <option value="السنة الأولى">السنة الأولى</option>
-              <option value="السنة الثانية">السنة الثانية</option>
-              <option value="السنة الثالثة">السنة الثالثة</option>
-              <option value="السنة الرابعة">السنة الرابعة</option>
-              <option value="السنة الخامسة">السنة الخامسة</option>
-              <option value="السنة السادسة">السنة السادسة</option>
-            </select>
-            <button type="submit" class="btn-gold py-2 rounded-xl text-xs">+ إنشاء وتوليد كود مفعّل</button>
-          </form>
-        </div>
-
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h3 class="text-base font-extrabold text-white">سجل الطلاب وطلبات التفعيل</h3>
-            <p class="text-xs text-slate-400">فعّل الطالب ثم اضغط "نشر جميع التعديلات" وانسخ الكود لإرساله له.</p>
-          </div>
-          <button type="button" onclick="renderAdminStudentsTable()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-bold text-slate-200 border border-slate-700">
-            🔄 تحديث الجدول
-          </button>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-right text-xs border-collapse">
-            <thead>
-              <tr class="border-b border-slate-800 text-slate-400">
-                <th class="py-3 px-3">اسم الطالب</th>
-                <th class="py-3 px-3">الرقم الجامعي / الواتساب</th>
-                <th class="py-3 px-3">السنة</th>
-                <th class="py-3 px-3">كود الدخول (سري لك)</th>
-                <th class="py-3 px-3">الحالة</th>
-                <th class="py-3 px-3">النتائج</th>
-                <th class="py-3 px-3">التحكم الكامل</th>
-              </tr>
-            </thead>
-            <tbody id="adminStudentsTableBody" class="divide-y divide-slate-800"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- القسم 2 في المدير: إضافة وحذف المواد -->
-      <div id="adminPaneSubjects" class="hidden card rounded-2xl p-6 space-y-5">
-        <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إضافة مادة جديدة (حسب السنة والفصل)</h3>
-        <form onsubmit="addSubject(event)" class="grid md:grid-cols-4 gap-3 items-end">
+      <!-- القسم 1 في المدير: إدارة المواد + قفل/فتح المادة + الطلاب المفعّلة عندهم -->
+      <div id="adminPaneSubjects" class="card rounded-2xl p-6 space-y-5">
+        <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إضافة مادة جديدة والتحكم في حالتها والطلاب المشتركين بها</h3>
+        <form onsubmit="addSubject(event)" class="grid md:grid-cols-5 gap-3 items-end">
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">السنة الدراسية</label>
             <select id="subYearInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs">
@@ -466,15 +435,142 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">اسم المادة الدراسية</label>
-            <input id="subNameInput" required placeholder="مثال: Anatomy / علم التشريح" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs" />
+            <input id="subNameInput" required placeholder="مثال: General Biology" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">نوع الوصول</label>
+            <select id="subIsFreeInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs">
+              <option value="false">💎 مدفوعة (للمشتركين)</option>
+              <option value="true">🎁 تجربة مجانية (للجميع)</option>
+            </select>
           </div>
           <button type="submit" class="btn-gold py-2.5 rounded-xl text-xs">+ إضافة المادة</button>
         </form>
 
-        <div id="adminSubjectsList" class="grid sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2"></div>
+        <!-- بطاقات المواد مع زر قفل/فتح + زر التجربة المجانية + قائمة الطلاب المفعّلة عندهم -->
+        <div id="adminSubjectsList" class="grid md:grid-cols-2 gap-4 pt-2"></div>
       </div>
 
-      <!-- القسم 3 في المدير: إضافة المحاضرات والملفات يدوياً -->
+      <!-- القسم 2 في المدير: إعدادات البنك وأرقام الدفع + رابط قناة الواتساب -->
+      <div id="adminPanePayment" class="hidden card rounded-2xl p-6 border-blue-500/30 space-y-5">
+        <div class="border-b border-slate-800 pb-3">
+          <h3 class="text-lg font-black text-blue-400">💳 إعدادات البنك وأرقام الدفع وقناة الواتساب</h3>
+          <p class="text-xs text-slate-400 mt-0.5">تظهر بيانات البنك في واجهة التسجيل للطلاب، ويظهر رابط قناة الواتساب في قسم الإعلانات داخل الواجهة المدفوعة.</p>
+        </div>
+
+        <form onsubmit="savePaymentAndWhatsappSettings(event)" class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">اسم البنك أو المحفظة الإلكترونية</label>
+            <input id="payBankNameInput" required placeholder="مثال: البنك العربي / بنك فلسطين / زين كاش..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">اسم صاحب الحساب المستفيد</label>
+            <input id="payAccountHolderInput" required placeholder="مثال: مالك نصار" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">رقم الحساب / الآيبان (IBAN)</label>
+            <input id="payAccountNumberInput" required placeholder="مثال: PS00ARAB0000000000000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">رقم الهاتف / الواتساب لإرسال إيصال الدفع</label>
+            <input id="payPhoneNumberInput" required placeholder="مثال: 0590000000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-bold text-emerald-400 mb-1">📲 رابط قناة الواتساب الرسمية (يظهر في الإعلانات داخل الواجهة المدفوعة)</label>
+            <input id="whatsappChannelUrlInput" type="url" placeholder="https://whatsapp.com/channel/..." class="w-full bg-slate-950 border border-emerald-700/50 rounded-xl px-3.5 py-2.5 text-white text-xs" />
+          </div>
+          <div class="md:col-span-2">
+            <button type="submit" class="btn-gold px-6 py-2.5 rounded-xl text-xs">
+              💾 حفظ بيانات الدفع وقناة الواتساب (ثم اضغط نشر)
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- القسم 3 في المدير: إدارة الطلاب -->
+      <div id="adminPaneStudents" class="hidden card rounded-2xl p-6 border-emerald-500/30 space-y-5">
+        <div class="border-b border-slate-800 pb-4">
+          <h3 class="text-lg font-extrabold text-emerald-400">إضافة طالب وتوليد كود له مباشرة (مُفعّل فوراً)</h3>
+          <form onsubmit="adminCreateStudentDirect(event)" class="grid md:grid-cols-4 gap-3 mt-3 items-end">
+            <input id="admNewStuName" required placeholder="اسم الطالب الكامل..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <input id="admNewStuId" required placeholder="الرقم الجامعي / الواتساب..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <select id="admNewStuYear" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs">
+              <option value="السنة الأولى">السنة الأولى</option>
+              <option value="السنة الثانية">السنة الثانية</option>
+              <option value="السنة الثالثة">السنة الثالثة</option>
+              <option value="السنة الرابعة">السنة الرابعة</option>
+              <option value="السنة الخامسة">السنة الخامسة</option>
+              <option value="السنة السادسة">السنة السادسة</option>
+            </select>
+            <button type="submit" class="btn-gold py-2 rounded-xl text-xs">+ إنشاء وتوليد كود مفعّل</button>
+          </form>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400">
+                <th class="py-3 px-3">اسم الطالب</th>
+                <th class="py-3 px-3">الرقم / الواتساب</th>
+                <th class="py-3 px-3">السنة</th>
+                <th class="py-3 px-3">كود الدخول</th>
+                <th class="py-3 px-3">الحالة</th>
+                <th class="py-3 px-3">المواد المسموحة</th>
+                <th class="py-3 px-3">التحكم الكامل</th>
+              </tr>
+            </thead>
+            <tbody id="adminStudentsTableBody" class="divide-y divide-slate-800"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- القسم 4 في المدير: التغذية الذكية السريعة -->
+      <div id="adminPaneSmartFeed" class="hidden card rounded-2xl p-6 border-amber-500/40 space-y-6">
+        <div class="border-b border-slate-800 pb-4">
+          <h3 class="text-lg font-black text-amber-400">⚡ التغذية الذكية السريعة دفعة واحدة (Bulk Feed)</h3>
+          <p class="text-xs text-slate-400 mt-1">الصق كود حزمة الملفات والمحاضرات أو كود الأسئلة المجهز لإضافتها في ثانية واحدة.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-blue-500/30 space-y-3">
+          <h4 class="text-sm font-extrabold text-blue-400">🌐 استيراد وتغذية تلقائية من رابط خارجي (URL)</h4>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="smartFeedUrlInput" type="url" placeholder="https://raw.githubusercontent.com/.../feed.json" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs" />
+            <button type="button" onclick="importFromRemoteFeedUrl()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shrink-0">
+              📥 سحب وتغذية المنصة الآن
+            </button>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="p-4 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-3">
+            <h4 class="text-sm font-extrabold text-emerald-400">📁 تغذية سريعة بالمواد والمحاضرات والملفات</h4>
+            <textarea id="bulkContentJsonInput" rows="6" placeholder='الصق كود حزمة الملفات والمحاضرات هنا...' class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-emerald-500"></textarea>
+            <button type="button" onclick="processBulkContentFeed()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black">
+              ⚡ إضافة جميع المواد والملفات والمحاضرات فوراً
+            </button>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-950 border border-amber-500/30 space-y-3">
+            <h4 class="text-sm font-extrabold text-amber-400">📝 تغذية سريعة بأسئلة الاختبارات</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">المادة المستهدفة (اختياري)</label>
+                <select id="bulkQSubjectSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white text-xs"></select>
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">اسم النموذج الافتراضي</label>
+                <input id="bulkQDefaultModel" placeholder="مثال: Model 1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white text-xs" />
+              </div>
+            </div>
+            <textarea id="bulkQuestionsJsonInput" rows="4" placeholder='الصق كود حزمة الأسئلة المجهز هنا...' class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-amber-500"></textarea>
+            <button type="button" onclick="processBulkQuestionsFeed()" class="btn-gold w-full py-2.5 rounded-xl text-xs">
+              ⚡ إضافة جميع الأسئلة للقائمة فوراً
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- القسم 5 في المدير: إضافة المحاضرات والملفات يدوياً -->
       <div id="adminPaneContent" class="hidden card rounded-2xl p-6 space-y-6">
         <div class="grid md:grid-cols-2 gap-6">
           <form onsubmit="addLecture(event)" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
@@ -534,7 +630,7 @@
         </div>
       </div>
 
-      <!-- القسم 4 في المدير: إضافة وحذف أسئلة الاختبارات يدوياً -->
+      <!-- القسم 6 في المدير: إضافة وحذف أسئلة الاختبارات يدوياً -->
       <div id="adminPaneQuestions" class="hidden card rounded-2xl p-6 space-y-5">
         <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إضافة سؤال اختبار لمادة</h3>
         <form onsubmit="addQuestion(event)" class="space-y-4">
@@ -599,7 +695,7 @@
         </div>
       </div>
 
-      <!-- القسم 5 في المدير: إدارة الاستعلامات والإعلانات -->
+      <!-- القسم 7 في المدير: إدارة الاستعلامات والإعلانات -->
       <div id="adminPaneAnnouncements" class="hidden card rounded-2xl p-6 space-y-5">
         <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إدارة خانة الاستعلامات والإعلانات في الواجهة</h3>
         <form onsubmit="addAnnouncement(event)" class="flex flex-col sm:flex-row gap-3">
@@ -626,6 +722,63 @@
     </div>
   </div>
 
+  <!-- نافذة تحديد المواد المسموحة لكل طالب -->
+  <div id="studentPermissionsModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="card rounded-2xl p-6 max-w-lg w-full border-amber-500/40 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base font-black text-amber-400">📚 تحديد المواد المسموحة للطالب</h3>
+          <p id="permModalStudentInfo" class="text-xs text-slate-300 mt-0.5"></p>
+        </div>
+        <button type="button" onclick="closeStudentPermissionsModal()" class="text-slate-400 hover:text-white text-sm font-bold">✕</button>
+      </div>
+
+      <div class="flex gap-2">
+        <button type="button" onclick="toggleAllPermissionsCheckboxes(true)" class="px-3 py-1.5 rounded-lg bg-emerald-900/50 text-emerald-300 border border-emerald-700 text-xs font-bold">
+          ✅ السماح بجميع المواد
+        </button>
+        <button type="button" onclick="toggleAllPermissionsCheckboxes(false)" class="px-3 py-1.5 rounded-lg bg-red-950/60 text-red-300 border border-red-800 text-xs font-bold">
+          ❌ إلغاء تحديد الكل
+        </button>
+      </div>
+
+      <div id="permSubjectsChecklist" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
+
+      <div class="flex gap-2 pt-2 border-t border-slate-800">
+        <button type="button" onclick="saveStudentSubjectPermissions()" class="btn-gold flex-1 py-2.5 rounded-xl text-xs">
+          💾 حفظ صلاحيات المواد
+        </button>
+        <button type="button" onclick="closeStudentPermissionsModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة إدارة الطلاب المفعّلة عندهم مادة معينة -->
+  <div id="subjectStudentsModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="card rounded-2xl p-6 max-w-lg w-full border-emerald-500/40 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base font-black text-emerald-400">👨‍⚕️ الطلاب المفعّلة عندهم المادة</h3>
+          <p id="subStuModalInfo" class="text-xs text-slate-300 mt-0.5"></p>
+        </div>
+        <button type="button" onclick="closeSubjectStudentsModal()" class="text-slate-400 hover:text-white text-sm font-bold">✕</button>
+      </div>
+
+      <div id="subStudentsChecklist" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
+
+      <div class="flex gap-2 pt-2 border-t border-slate-800">
+        <button type="button" onclick="saveSubjectStudentsAssignment()" class="btn-gold flex-1 py-2.5 rounded-xl text-xs">
+          💾 حفظ تفعيل المادة لهؤلاء الطلاب
+        </button>
+        <button type="button" onclick="closeSubjectStudentsModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // إعدادات المدير والمستودع
     let ADMIN_PASSWORD = "malek2026";
@@ -634,1445 +787,70 @@
     const GITHUB_REPO = "Malek-Medical-";
     const GITHUB_FILE_PATH = "index.html";
 
+    // بيانات الدفع وقناة الواتساب
+    const DEFAULT_PAYMENT_CONFIG = {
+      bankName: "البنك العربي / المحفظة الإلكترونية",
+      accountHolder: "مالك نصار",
+      accountNumber: "PS00ARAB0000000000000",
+      phoneNumber: "0590000000",
+      whatsappChannel: ""
+    };
+
     // بيانات المنصة المنشورة
-    const DEFAULT_STUDENTS = [
-  {
-    "name": "صلاح صالح سحويل",
-    "studentId": "+972 56-703-9951",
-    "year": "السنة الأولى",
-    "code": "MED-7259",
-    "approved": true,
-    "results": []
-  },
-  {
-    "name": "قاسم بارود",
-    "studentId": "+972 59-256-8202",
-    "year": "السنة الأولى",
-    "code": "MED-9392",
-    "approved": true,
-    "results": [
-      {
-        "subject": "الأحياء العامة (General Biology)",
-        "score": 14
-      }
-    ]
-  },
-  {
-    "name": "مالك وائل نصار",
-    "studentId": "20260032",
-    "year": "السنة الأولى",
-    "code": "MED-6463",
-    "approved": true,
-    "results": []
-  },
-  {
-    "name": "حلا",
-    "studentId": "+972 59-978-4995",
-    "year": "السنة الأولى",
-    "code": "MED-6958",
-    "approved": true,
-    "results": []
-  }
-];
+    const DEFAULT_STUDENTS = [];
 
     const DEFAULT_ANNOUNCEMENTS = [
-  {
-    "id": "ann1",
-    "text": "أهلاً بكم في منصة المالك الطبية! تم تفعيل نظام المواد والاختبارات الإلكترونية.",
-    "date": "2026"
-  }
-];
+      { id: "ann1", text: "أهلاً بكم في منصة المالك الطبية! تم تفعيل نظام المواد والاختبارات الإلكترونية.", date: "2026" }
+    ];
 
     const DEFAULT_SUBJECTS = [
-  {
-    "id": "sub_bio_1",
-    "year": "السنة الأولى",
-    "semester": "الفصل الأول",
-    "name": "الأحياء العامة (General Biology)"
-  }
-];
+      { id: "sub_anat_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم التشريح العام (General Anatomy)", isOpen: true, isFreeTrial: true },
+      { id: "sub_phys_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم وظائف الأعضاء (Physiology)", isOpen: true, isFreeTrial: false }
+    ];
 
     const DEFAULT_LECTURES = [
-  {
-    "id": "lec_1794940991116",
-    "subjectId": "sub_1794940859075",
-    "title": "رابط جميع المحاضرات",
-    "url": "https://youtube.com/playlist?list=PLYMX9dSS8mGTRl3qBw_PRJDONnein4dVY&si=TZg8uSAo_VNbRuQ7"
-  }
-];
+      { id: "lec_1", subjectId: "sub_anat_1", title: "المحاضرة 1: مقدمة في المصطلحات التشريحية (عينة مجانية)", url: "https://www.youtube.com" }
+    ];
 
     const DEFAULT_FILES = [
-  {
-    "id": "file_1794941131522",
-    "subjectId": "sub_1794940859075",
-    "category": "شباتر",
-    "title": "جميع الشباتر",
-    "url": "https://moodle.alazhar.edu.ps/pluginfile.php/32760/mod_folder/content/0/General%20Biology%20for%20Medicine%202026_2027%202%20slides%20per%20page.pdf?forcedownload=1"
-  },
-  {
-    "id": "file_1794941272605",
-    "subjectId": "sub_1794940859075",
-    "category": "شروحات",
-    "title": "قناة سمسم",
-    "url": "https://t.me/smsm_158"
-  }
-];
+      { id: "file_1", subjectId: "sub_anat_1", category: "تلاخيص", title: "ملخص شامل للمحاضرة الأولى", url: "https://drive.google.com" },
+      { id: "file_2", subjectId: "sub_anat_1", category: "شباتر", title: "Chapter 1 - Introduction to Anatomy", url: "https://drive.google.com" },
+      { id: "file_3", subjectId: "sub_anat_1", category: "شروحات", title: "شرح تفصيلي بالصور للجهاز الهيكلي", url: "https://drive.google.com" }
+    ];
 
     const DEFAULT_QUESTIONS = [
-  {
-    "subjectId": "sub_1794940859075",
-    "model": "Biology [water&life]",
-    "text": "Which two properties of water are of crucial importance to the structure and function of biomolecules",
-    "image": "",
-    "options": [
-      "A) Its high density as a solid and its low heat of vaporization",
-      "B) Cohesion of its molecules and a slight tendency to ionize",
-      "C) Its nonpolar bonds and its ability to dissolve lipids readily",
-      "D) Its linear shape and the great strength of its hydrogen bonds"
-    ],
-    "correct": 1,
-    "explanation": "The attractive forces (cohesion) between water molecules and the slight tendency of water to ionize underlie the behaviour of biomolecules. Every other option names properties water does not have; for example, ice is less dense than the liquid and hydrogen bonds are relatively weak."
-  },
-  {
-    "subjectId": "sub_1794940859075",
-    "model": "Biology [water&life]",
-    "text": "Suppose oxygen and hydrogen had equal electronegativity. Which consequence for water would follow?",
-    "image": "",
-    "options": [
-      "A) Its H-O-H bond angle would widen to exactly 180°",
-      "B) Each of its hydrogen atoms would carry a δ− charge",
-      "C) Water would become a far better solvent for NaCl",
-      "D) Its molecules could no longer form hydrogen bonds"
-    ],
-    "correct": 3,
-    "explanation": "The partial charges exist only because oxygen is more electronegative and pulls the shared electrons toward itself. With equal sharing the O-H bonds would be nonpolar, leaving no δ+ and δ− regions to\nattract neighbouring molecules, so cohesion and the ability to hydrate ions would be lost."
-  },
-  {
-    "subjectId": "sub_1794940859075",
-    "model": "Biology [water&life]",
-    "text": "In which of the following molecules are the electrons of every covalent bond shared equally between the bonded atoms?",
-    "image": "",
-    "options": [
-      "A) H2O",
-      "B) CO2",
-      "C) O2",
-      "D) NH3"
-    ],
-    "correct": 2,
-    "explanation": "In O2, as in N2, the two bonded atoms are identical, so electrons are shared equally and the bond\nis nonpolar. In CO2 each C=O bond is polar; the molecule is nonpolar only because the two dipoles cancel. The bonds of H2O and NH3 are polar."
-  },
-  {
-    "subjectId": "sub_1794940859075",
-    "model": "Biology [water&life]",
-    "text": "A hydrogen bond results from the attraction between a hydrogen atom covalently bonded to a very electronegative atom and another very electronegative atom. Which group lists atoms of this kind?",
-    "image": "",
-    "options": [
-      "A) N, O and F",
-      "B) C, H and P",
-      "C) Na, K and Ca",
-      "D) C, Na and H"
-    ],
-    "correct": 0,
-    "explanation": "Hydrogen bonds form when H is covalently attached to a very electronegative atom such as N, O or F and is attracted to another such atom. Carbon is only slightly more electronegative than hydrogen, so options containing C cannot supply these atoms."
-  },
-  {
-    "subjectId": "sub_1794940859075",
-    "model": "Biology [water&life]",
-    "text": "A central water molecule can be hydrogen-bonded to four neighbouring water molecules. Which feature of the central molecule makes this possible?",
-    "image": "",
-    "options": [
-      "A) Its oxygen shares electrons equally with both of its hydrogens",
-      "B) Its two hydrogens form covalent bonds with neighbouring oxygens",
-      "C) Its δ+ oxygen atom attracts δ− hydrogens on all four neighbours",
-      "D) Its δ− oxygen and two δ+ hydrogens each attract opposite charges"
-    ],
-    "correct": 3,
-    "explanation": "The molecule is polar: its δ− oxygen attracts the δ+ hydrogens of two neighbours, while each of its δ+ hydrogens attracts the δ− oxygen of another neighbour, giving four hydrogen bonds. Hydrogen bonds are\nelectrostatic attractions, not covalent bonds."
-  },
-  {
-    "subjectId": "sub_1794940859075",
-    "model": "Biology [water&life]",
-    "text": "A student draws two neighbouring water molecules with the hydrogen atoms of one pointing directly at the hydrogen atoms of the other. Why is this arrangement unlikely?",
-    "image": "",
-    "options": [
-      "A) Hydrogen atoms can never take part in weak attractions",
-      "B) The facing δ+ hydrogen atoms repel each other",
-      "C) The facing hydrogens would form a covalent H-H bond",
-      "D) Both oxygen atoms carry δ+ charges and repel each other"
-    ],
-    "correct": 1,
-    "explanation": "Like partial charges repel; a hydrogen bond requires the δ+ hydrogen of one molecule to face the δ− oxygen of the other. Oxygen is the δ− region of water, not δ+."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which two properties of water are of crucial importance to the structure and function of biomolecules?",
-    "image": "",
-    "options": [
-      "Its high density as a solid and its low heat of vaporization",
-      "Cohesion of its molecules and a slight tendency to ionize",
-      "Its nonpolar bonds and its ability to dissolve lipids readily",
-      "Its linear shape and the great strength of its hydrogen bonds"
-    ],
-    "correct": 1,
-    "explanation": "The attractive forces (cohesion) between water molecules and the slight tendency of water to ionize underlie the behaviour of biomolecules. Every other option names properties water does not have; for example, ice is less dense than the liquid and hydrogen bonds are relatively weak."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Suppose oxygen and hydrogen had equal electronegativity. Which consequence for water would follow?",
-    "image": "",
-    "options": [
-      "Its H-O-H bond angle would widen to exactly 180°",
-      "Each of its hydrogen atoms would carry a δ- charge",
-      "Water would become a far better solvent for NaCl",
-      "Its molecules could no longer form hydrogen bonds"
-    ],
-    "correct": 3,
-    "explanation": "The partial charges exist only because oxygen is more electronegative and pulls the shared electrons toward itself. With equal sharing the O-H bonds would be nonpolar, leaving no δ+ and δ- regions to attract neighbouring molecules, so cohesion and the ability to hydrate ions would be lost."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "In which of the following molecules are the electrons of every covalent bond shared equally between the bonded atoms?",
-    "image": "",
-    "options": [
-      "H2O",
-      "CO2",
-      "O2",
-      "NH3"
-    ],
-    "correct": 2,
-    "explanation": "In O2, as in N2, the two bonded atoms are identical, so electrons are shared equally and the bond is nonpolar. In CO2 each C=O bond is polar; the molecule is nonpolar only because the two dipoles cancel. The bonds of H2O and NH3 are polar."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A hydrogen bond results from the attraction between a hydrogen atom covalently bonded to a very electronegative atom and another very electronegative atom. Which group lists atoms of this kind?",
-    "image": "",
-    "options": [
-      "N, O and F",
-      "C, H and P",
-      "Na, K and Ca",
-      "C, Na and H"
-    ],
-    "correct": 0,
-    "explanation": "Hydrogen bonds form when H is covalently attached to a very electronegative atom such as N, O or F and is attracted to another such atom. Carbon is only slightly more electronegative than hydrogen, so options containing C cannot supply these atoms."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A central water molecule can be hydrogen-bonded to four neighbouring water molecules. Which feature of the central molecule makes this possible?",
-    "image": "",
-    "options": [
-      "Its oxygen shares electrons equally with both of its hydrogens",
-      "Its two hydrogens form covalent bonds with neighbouring oxygens",
-      "Its δ+ oxygen atom attracts δ- hydrogens on all four neighbours",
-      "Its δ- oxygen and two δ+ hydrogens each attract opposite charges"
-    ],
-    "correct": 3,
-    "explanation": "The molecule is polar: its δ- oxygen attracts the δ+ hydrogens of two neighbours, while each of its δ+ hydrogens attracts the δ- oxygen of another neighbour, giving four hydrogen bonds. Hydrogen bonds are electrostatic attractions, not covalent bonds."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A student draws two neighbouring water molecules with the hydrogen atoms of one pointing directly at the hydrogen atoms of the other. Why is this arrangement unlikely?",
-    "image": "",
-    "options": [
-      "Hydrogen atoms can never take part in weak attractions",
-      "The facing δ+ hydrogen atoms repel each other",
-      "The facing hydrogens would form a covalent H-H bond",
-      "Both oxygen atoms carry δ+ charges and repel each other"
-    ],
-    "correct": 1,
-    "explanation": "Like partial charges repel; a hydrogen bond requires the δ+ hydrogen of one molecule to face the δ- oxygen of the other. Oxygen is the δ- region of water, not δ+."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "How does a water molecule at the air-water surface differ from a water molecule in the interior of the liquid?",
-    "image": "",
-    "options": [
-      "It forms more hydrogen bonds than an interior molecule",
-      "It is hydrogen-bonded to gas molecules in the air above",
-      "It is pulled equally in all directions by its neighbours",
-      "It lacks partners above, so it is pulled toward the interior"
-    ],
-    "correct": 3,
-    "explanation": "A surface molecule is hydrogen-bonded to its neighbours and to the water below but not to the air above. The unbalanced cohesive forces give a net force directed into the liquid, producing water's high surface tension."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "An insect stands on the surface of a pond without breaking through it. Which property of water chiefly makes this possible?",
-    "image": "",
-    "options": [
-      "High surface tension resulting from cohesion",
-      "High heat of vaporization of liquid water",
-      "Lower density of ice than of liquid water",
-      "Lower freezing point of water containing solutes"
-    ],
-    "correct": 0,
-    "explanation": "Hydrogen-bonded molecules at the surface form an ordered layer that resists being stretched or broken, so the surface behaves like an invisible film able to support the insect."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "In the water-conducting cells of a tree, what is the specific contribution of adhesion?",
-    "image": "",
-    "options": [
-      "It holds water molecules together as an unbroken column",
-      "It pulls water upward by evaporation from the leaves",
-      "It binds water to the cell walls, helping resist gravity",
-      "It lowers the freezing point of the water in the stem"
-    ],
-    "correct": 2,
-    "explanation": "Adhesion of water to the cell walls by hydrogen bonds helps resist the downward pull of gravity. Cohesion holds the column together, and evaporation from the leaves provides the upward pull."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following common solvents has the weakest attractive forces between its molecules in the liquid phase (lowest heat of vaporization: 247 J/g)?",
-    "image": "",
-    "options": [
-      "Water (2,260 J/g)",
-      "Methanol (1,100 J/g)",
-      "Hexane (423 J/g)",
-      "Chloroform (247 J/g)"
-    ],
-    "correct": 3,
-    "explanation": "Heat of vaporization is a direct measure of the energy needed to overcome attractive forces between molecules in the liquid, and chloroform has the lowest value (247 J/g). Water, at 2,260 J/g, has the strongest internal cohesion because of its extensive hydrogen bonding."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "When liquid water boils, which bonds must be broken for its molecules to escape into the gas phase?",
-    "image": "",
-    "options": [
-      "Polar covalent O-H bonds within each water molecule",
-      "Ionic bonds between H+ and OH- ions in the liquid",
-      "Nonpolar covalent bonds between adjacent oxygens",
-      "Hydrogen bonds between neighbouring water molecules"
-    ],
-    "correct": 3,
-    "explanation": "Vaporization overcomes the attractive forces between molecules, about 23 kJ/mol per hydrogen bond. The covalent O-H bonds (470 kJ/mol) stay intact, since the gas still consists of H2O molecules."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Individual hydrogen bonds in liquid water are extremely short-lived, yet liquid water has great internal cohesion. Which fact reconciles these observations?",
-    "image": "",
-    "options": [
-      "Each hydrogen bond is stronger than a covalent C-C bond",
-      "A broken hydrogen bond is replaced within about 0.1 ps",
-      "Molecules of the liquid are fixed in a regular lattice",
-      "Each molecule forms four permanent hydrogen bonds"
-    ],
-    "correct": 1,
-    "explanation": "Another hydrogen bond forms, with the same partner or a new one, within ~0.1 ps, so at any moment most molecules are hydrogen-bonded. The sum of these constantly renewed bonds gives the liquid its cohesion."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A water molecule forms a hydrogen bond with the carbonyl oxygen of a ketone. Which statement correctly describes this bond?",
-    "image": "",
-    "options": [
-      "The ketone oxygen is the acceptor; the water O-H is the donor",
-      "A ketone C-H is the donor; the water oxygen is the acceptor",
-      "The ketone carbon is the acceptor; the water O-H is the donor",
-      "The ketone oxygen is the donor; the water oxygen is the acceptor"
-    ],
-    "correct": 0,
-    "explanation": "The hydrogen acceptor is an electronegative atom with a lone pair (here the carbonyl O) and the donor is a hydrogen covalently bonded to another electronegative atom (the O-H of water). A ketone's hydrogens are all on carbon, so it cannot donate."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Ethanol (CH3CH2OH) contains six hydrogen atoms. Which of them can act as a hydrogen-bond donor to water?",
-    "image": "",
-    "options": [
-      "Any of the three hydrogens of the CH3 group",
-      "Either of the two hydrogens of the CH2 group",
-      "Only the hydrogen of the OH group",
-      "All six hydrogens, to an equal extent"
-    ],
-    "correct": 2,
-    "explanation": "A donor hydrogen must be covalently bonded to an electronegative atom. Hydrogens bonded to carbon do not participate in hydrogen bonding because the C-H bond is only very weakly polar."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which class of compounds would NOT be expected to form hydrogen bonds with water?",
-    "image": "",
-    "options": [
-      "Alcohols",
-      "Aldehydes",
-      "Ketones",
-      "Alkanes such as hexane"
-    ],
-    "correct": 3,
-    "explanation": "Alkanes contain only C-C and C-H bonds, and C-H hydrogens do not form hydrogen bonds, so these compounds are hydrophobic. Alcohols, aldehydes, and ketones all hydrogen-bond with water and tend to be soluble."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Why is a hydrogen bond between an R-O-H donor and a P=O acceptor strongest when the atoms are aligned linearly?",
-    "image": "",
-    "options": [
-      "Its hydrogen is covalently bonded to carbon, not to oxygen",
-      "Its acceptor is the phosphorus atom instead of the oxygen",
-      "Its acceptor oxygen lies at an angle to the donor O-H bond",
-      "Its acceptor oxygen lies in line with the donor O-H bond"
-    ],
-    "correct": 3,
-    "explanation": "A hydrogen bond is strongest when the hydrogen and the two atoms sharing it are in a straight line, which maximizes electrostatic interaction and minimizes charge repulsion."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Hydrogen bonds between complementary bases in DNA, such as adenine and thymine, hold the two bases in a precise geometric arrangement. Which property of hydrogen bonds makes this possible?",
-    "image": "",
-    "options": [
-      "Their bond energy, which exceeds that of covalent bonds",
-      "Their high directionality",
-      "Their lifetime of several seconds",
-      "Their restriction to water molecules"
-    ],
-    "correct": 1,
-    "explanation": "Because a hydrogen bond is strongest when donor, hydrogen and acceptor lie in line, hydrogen bonds are highly directional and can hold two hydrogen-bonded groups in a specific geometric arrangement, as between complementary bases."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Compounds that dissolve easily in water are described as:",
-    "image": "",
-    "options": [
-      "hydrophilic",
-      "hydrophobic",
-      "amphipathic",
-      "nonpolar"
-    ],
-    "correct": 0,
-    "explanation": "Hydrophilic (\"water-loving\") compounds dissolve easily in water; they are generally charged or polar. Hydrophobic compounds are nonpolar, and amphipathic compounds contain both polar and nonpolar regions."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following is a hydrophobic material?",
-    "image": "",
-    "options": [
-      "Glucose",
-      "Sodium chloride",
-      "Wax",
-      "Glycerol"
-    ],
-    "correct": 2,
-    "explanation": "Waxes, like other lipids, are nonpolar (hydrophobic) and dissolve in nonpolar solvents such as chloroform and benzene. Glucose and glycerol are polar and NaCl is ionic, so all of them dissolve readily in water."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following molecules is amphipathic?",
-    "image": "",
-    "options": [
-      "Glucose",
-      "Glycine",
-      "Glycerol",
-      "Phenylalanine"
-    ],
-    "correct": 3,
-    "explanation": "Phenylalanine carries charged polar groups (-NH3+ and -COO-) and a nonpolar benzene ring in the same molecule, so it is amphipathic. Glucose, glycine and glycerol are polar throughout."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following groups of biomolecules is hydrated and dissolved by water in the same way as the Na+ and Cl- ions of a salt?",
-    "image": "",
-    "options": [
-      "Methyl group (-CH3)",
-      "Phenyl group (-C6H5)",
-      "Alkyl chain (-(CH2)15CH3)",
-      "Carboxylate group (-COO-)"
-    ],
-    "correct": 3,
-    "explanation": "Charged groups such as ionized carboxylic acids (-COO-), protonated amines (-NH3+) and phosphate esters are hydrated and dissolved by water just as Na+ and Cl- are. The other options are nonpolar hydrocarbon groups."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Benzoic acid (C6H5-COOH) is poorly soluble in water, whereas its ionized form, benzoate (C6H5-COO-), is quite soluble. What is the best explanation?",
-    "image": "",
-    "options": [
-      "Ionization makes the benzene ring of the molecule polar",
-      "The charged -COO- group interacts strongly with water",
-      "Benzoate forms covalent bonds with surrounding water",
-      "Ionization adds C-H bonds that hydrogen-bond with water"
-    ],
-    "correct": 1,
-    "explanation": "Like Na+ and Cl-, a charged carboxylate group is hydrated and stabilized by water, replacing solute-solute interactions with solute-water interactions. The benzene ring stays nonpolar, so the gain in solubility comes from the charge."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Entropy is best defined as a measure of:",
-    "image": "",
-    "options": [
-      "the randomness or disorder of a system",
-      "the heat needed to vaporize 1 g of a liquid",
-      "the strength of the bonds within a molecule",
-      "the number of solute particles in a solution"
-    ],
-    "correct": 0,
-    "explanation": "Entropy is a measure of the randomness or disorder of a system; the greater the randomness, the higher the entropy."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following processes is accompanied by a decrease in the entropy of the system?",
-    "image": "",
-    "options": [
-      "Melting of ice to liquid water",
-      "Dissolving of crystalline NaCl in water",
-      "Movement of O2 from the gas phase into water",
-      "Clustering of dispersed lipids into micelles"
-    ],
-    "correct": 2,
-    "explanation": "Entering solution constrains the motion of the gas molecules and of the surrounding water, so entropy decreases; with O2's nonpolar nature, this makes the gas poorly soluble. The other processes increase entropy by freeing molecules or releasing ordered water."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following gases dissolves readily in water because its molecule is polar?",
-    "image": "",
-    "options": [
-      "N2",
-      "O2",
-      "CO2",
-      "NH3"
-    ],
-    "correct": 3,
-    "explanation": "Ammonia (NH3), like H2S, is polar and dissolves readily in water. N2 and O2 share electrons equally, and CO2 is nonpolar because its two C=O dipoles cancel, so these gases are poorly soluble."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "O2 is poorly soluble in water. How is its transport in the blood made efficient?",
-    "image": "",
-    "options": [
-      "It is converted to bicarbonate by carbonic anhydrase",
-      "It is dissolved in the lipids carried in plasma",
-      "It is exchanged for chloride across the erythrocyte membrane",
-      "It is bound by a water-soluble carrier protein, hemoglobin"
-    ],
-    "correct": 3,
-    "explanation": "Water-soluble carrier proteins such as hemoglobin facilitate O2 transport. Conversion to bicarbonate is how CO2, not O2, is carried."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "In an erythrocyte at a respiring tissue, bicarbonate is pumped out of the cell in exchange for chloride ions. What is the purpose of this exchange?",
-    "image": "",
-    "options": [
-      "It keeps the erythrocyte electrically uncharged",
-      "It increases hemoglobin's affinity for oxygen",
-      "It converts CO2 into carbonic acid inside the cell",
-      "It delivers CO2 from the lungs back to the tissues"
-    ],
-    "correct": 0,
-    "explanation": "Each HCO3- leaving is replaced by a Cl-, so the cell remains electrically uncharged. In the plasma the bicarbonate travels with sodium (as NaHCO3) to the lungs."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "When an erythrocyte reaches the lungs, which event takes place?",
-    "image": "",
-    "options": [
-      "Bicarbonate leaves the cell in exchange for chloride",
-      "Bicarbonate re-enters the cell and is converted to CO2",
-      "Hemoglobin releases its O2 because H+ accumulates",
-      "Carbonic anhydrase combines CO2 with water"
-    ],
-    "correct": 1,
-    "explanation": "At the lungs bicarbonate is pumped back into the erythrocyte and the entire process is reversed: HCO3- + H+ -> H2CO3 -> CO2 + H2O, and the CO2 diffuses out to be exhaled."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Inside an erythrocyte at a respiring tissue, H+ ions are released as carbonic acid dissociates. What prevents them from greatly lowering the intracellular pH?",
-    "image": "",
-    "options": [
-      "Carbonic anhydrase converts the H+ back into CO2",
-      "Chloride ions entering the cell neutralize the H+",
-      "Hemoglobin takes up the H+ and acts as a buffer",
-      "Sodium ions combine with the H+ in the cytosol"
-    ],
-    "correct": 2,
-    "explanation": "The H+ ions make the cell less alkaline and cause hemoglobin to release its O2; hemoglobin then absorbs the H+ ions and acts as a buffer that maintains the intracellular pH."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "What is observed when water is mixed with hexane?",
-    "image": "",
-    "options": [
-      "A single clear solution forms",
-      "Hexane dissociates into ions",
-      "Hexane becomes hydrated like Na+",
-      "Two separate liquid phases form"
-    ],
-    "correct": 3,
-    "explanation": "Hexane and benzene are hydrophobic: they cannot interact favourably with water, so neither liquid is soluble in the other, forming two separate liquid phases."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which two properties of water are of crucial importance to the structure and function of biomolecules?",
-    "image": "",
-    "options": [
-      "Its high density as a solid and its low heat of vaporization",
-      "Cohesion of its molecules and a slight tendency to ionize",
-      "Its nonpolar bonds and its ability to dissolve lipids readily",
-      "Its linear shape and the great strength of its hydrogen bonds"
-    ],
-    "correct": 1,
-    "explanation": "The attractive forces (cohesion) between water molecules and the slight tendency of water to ionize underlie the behaviour of biomolecules. Every other option names properties water does not have; for example, ice is less dense than the liquid and hydrogen bonds are relatively weak."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Suppose oxygen and hydrogen had equal electronegativity. Which consequence for water would follow?",
-    "image": "",
-    "options": [
-      "Its H-O-H bond angle would widen to exactly 180°",
-      "Each of its hydrogen atoms would carry a δ- charge",
-      "Water would become a far better solvent for NaCl",
-      "Its molecules could no longer form hydrogen bonds"
-    ],
-    "correct": 3,
-    "explanation": "The partial charges exist only because oxygen is more electronegative and pulls the shared electrons toward itself. With equal sharing the O-H bonds would be nonpolar, leaving no δ+ and δ- regions to attract neighbouring molecules, so cohesion and the ability to hydrate ions would be lost."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "In which of the following molecules are the electrons of every covalent bond shared equally between the bonded atoms?",
-    "image": "",
-    "options": [
-      "H2O",
-      "CO2",
-      "O2",
-      "NH3"
-    ],
-    "correct": 2,
-    "explanation": "In O2, as in N2, the two bonded atoms are identical, so electrons are shared equally and the bond is nonpolar. In CO2 each C=O bond is polar; the molecule is nonpolar only because the two dipoles cancel. The bonds of H2O and NH3 are polar."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A hydrogen bond results from the attraction between a hydrogen atom covalently bonded to a very electronegative atom and another very electronegative atom. Which group lists atoms of this kind?",
-    "image": "",
-    "options": [
-      "N, O and F",
-      "C, H and P",
-      "Na, K and Ca",
-      "C, Na and H"
-    ],
-    "correct": 0,
-    "explanation": "Hydrogen bonds form when H is covalently attached to a very electronegative atom such as N, O or F and is attracted to another such atom. Carbon is only slightly more electronegative than hydrogen, so options containing C cannot supply these atoms."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A central water molecule can be hydrogen-bonded to four neighbouring water molecules. Which feature of the central molecule makes this possible?",
-    "image": "",
-    "options": [
-      "Its oxygen shares electrons equally with both of its hydrogens",
-      "Its two hydrogens form covalent bonds with neighbouring oxygens",
-      "Its δ+ oxygen atom attracts δ- hydrogens on all four neighbours",
-      "Its δ- oxygen and two δ+ hydrogens each attract opposite charges"
-    ],
-    "correct": 3,
-    "explanation": "The molecule is polar: its δ- oxygen attracts the δ+ hydrogens of two neighbours, while each of its δ+ hydrogens attracts the δ- oxygen of another neighbour, giving four hydrogen bonds. Hydrogen bonds are electrostatic attractions, not covalent bonds."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A student draws two neighbouring water molecules with the hydrogen atoms of one pointing directly at the hydrogen atoms of the other. Why is this arrangement unlikely?",
-    "image": "",
-    "options": [
-      "Hydrogen atoms can never take part in weak attractions",
-      "The facing δ+ hydrogen atoms repel each other",
-      "The facing hydrogens would form a covalent H-H bond",
-      "Both oxygen atoms carry δ+ charges and repel each other"
-    ],
-    "correct": 1,
-    "explanation": "Like partial charges repel; a hydrogen bond requires the δ+ hydrogen of one molecule to face the δ- oxygen of the other. Oxygen is the δ- region of water, not δ+."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "How does a water molecule at the air-water surface differ from a water molecule in the interior of the liquid?",
-    "image": "",
-    "options": [
-      "It forms more hydrogen bonds than an interior molecule",
-      "It is hydrogen-bonded to gas molecules in the air above",
-      "It is pulled equally in all directions by its neighbours",
-      "It lacks partners above, so it is pulled toward the interior"
-    ],
-    "correct": 3,
-    "explanation": "A surface molecule is hydrogen-bonded to its neighbours and to the water below but not to the air above. The unbalanced cohesive forces give a net force directed into the liquid, producing water's high surface tension."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "An insect stands on the surface of a pond without breaking through it. Which property of water chiefly makes this possible?",
-    "image": "",
-    "options": [
-      "High surface tension resulting from cohesion",
-      "High heat of vaporization of liquid water",
-      "Lower density of ice than of liquid water",
-      "Lower freezing point of water containing solutes"
-    ],
-    "correct": 0,
-    "explanation": "Hydrogen-bonded molecules at the surface form an ordered layer that resists being stretched or broken, so the surface behaves like an invisible film able to support the insect."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "In the water-conducting cells of a tree, what is the specific contribution of adhesion?",
-    "image": "",
-    "options": [
-      "It holds water molecules together as an unbroken column",
-      "It pulls water upward by evaporation from the leaves",
-      "It binds water to the cell walls, helping resist gravity",
-      "It lowers the freezing point of the water in the stem"
-    ],
-    "correct": 2,
-    "explanation": "Adhesion of water to the cell walls by hydrogen bonds helps resist the downward pull of gravity. Cohesion holds the column together, and evaporation from the leaves provides the upward pull."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following common solvents has the weakest attractive forces between its molecules in the liquid phase (lowest heat of vaporization: 247 J/g)?",
-    "image": "",
-    "options": [
-      "Water (2,260 J/g)",
-      "Methanol (1,100 J/g)",
-      "Hexane (423 J/g)",
-      "Chloroform (247 J/g)"
-    ],
-    "correct": 3,
-    "explanation": "Heat of vaporization is a direct measure of the energy needed to overcome attractive forces between molecules in the liquid, and chloroform has the lowest value (247 J/g). Water, at 2,260 J/g, has the strongest internal cohesion because of its extensive hydrogen bonding."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "When liquid water boils, which bonds must be broken for its molecules to escape into the gas phase?",
-    "image": "",
-    "options": [
-      "Polar covalent O-H bonds within each water molecule",
-      "Ionic bonds between H+ and OH- ions in the liquid",
-      "Nonpolar covalent bonds between adjacent oxygens",
-      "Hydrogen bonds between neighbouring water molecules"
-    ],
-    "correct": 3,
-    "explanation": "Vaporization overcomes the attractive forces between molecules, about 23 kJ/mol per hydrogen bond. The covalent O-H bonds (470 kJ/mol) stay intact, since the gas still consists of H2O molecules."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Individual hydrogen bonds in liquid water are extremely short-lived, yet liquid water has great internal cohesion. Which fact reconciles these observations?",
-    "image": "",
-    "options": [
-      "Each hydrogen bond is stronger than a covalent C-C bond",
-      "A broken hydrogen bond is replaced within about 0.1 ps",
-      "Molecules of the liquid are fixed in a regular lattice",
-      "Each molecule forms four permanent hydrogen bonds"
-    ],
-    "correct": 1,
-    "explanation": "Another hydrogen bond forms, with the same partner or a new one, within ~0.1 ps, so at any moment most molecules are hydrogen-bonded. The sum of these constantly renewed bonds gives the liquid its cohesion."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A water molecule forms a hydrogen bond with the carbonyl oxygen of a ketone. Which statement correctly describes this bond?",
-    "image": "",
-    "options": [
-      "The ketone oxygen is the acceptor; the water O-H is the donor",
-      "A ketone C-H is the donor; the water oxygen is the acceptor",
-      "The ketone carbon is the acceptor; the water O-H is the donor",
-      "The ketone oxygen is the donor; the water oxygen is the acceptor"
-    ],
-    "correct": 0,
-    "explanation": "The hydrogen acceptor is an electronegative atom with a lone pair (here the carbonyl O) and the donor is a hydrogen covalently bonded to another electronegative atom (the O-H of water). A ketone's hydrogens are all on carbon, so it cannot donate."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Ethanol (CH3CH2OH) contains six hydrogen atoms. Which of them can act as a hydrogen-bond donor to water?",
-    "image": "",
-    "options": [
-      "Any of the three hydrogens of the CH3 group",
-      "Either of the two hydrogens of the CH2 group",
-      "Only the hydrogen of the OH group",
-      "All six hydrogens, to an equal extent"
-    ],
-    "correct": 2,
-    "explanation": "A donor hydrogen must be covalently bonded to an electronegative atom. Hydrogens bonded to carbon do not participate in hydrogen bonding because the C-H bond is only very weakly polar."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which class of compounds would NOT be expected to form hydrogen bonds with water?",
-    "image": "",
-    "options": [
-      "Alcohols",
-      "Aldehydes",
-      "Ketones",
-      "Alkanes such as hexane"
-    ],
-    "correct": 3,
-    "explanation": "Alkanes contain only C-C and C-H bonds, and C-H hydrogens do not form hydrogen bonds, so these compounds are hydrophobic. Alcohols, aldehydes, and ketones all hydrogen-bond with water and tend to be soluble."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Why is a hydrogen bond between an R-O-H donor and a P=O acceptor strongest when the atoms are aligned linearly?",
-    "image": "",
-    "options": [
-      "Its hydrogen is covalently bonded to carbon, not to oxygen",
-      "Its acceptor is the phosphorus atom instead of the oxygen",
-      "Its acceptor oxygen lies at an angle to the donor O-H bond",
-      "Its acceptor oxygen lies in line with the donor O-H bond"
-    ],
-    "correct": 3,
-    "explanation": "A hydrogen bond is strongest when the hydrogen and the two atoms sharing it are in a straight line, which maximizes electrostatic interaction and minimizes charge repulsion."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Hydrogen bonds between complementary bases in DNA, such as adenine and thymine, hold the two bases in a precise geometric arrangement. Which property of hydrogen bonds makes this possible?",
-    "image": "",
-    "options": [
-      "Their bond energy, which exceeds that of covalent bonds",
-      "Their high directionality",
-      "Their lifetime of several seconds",
-      "Their restriction to water molecules"
-    ],
-    "correct": 1,
-    "explanation": "Because a hydrogen bond is strongest when donor, hydrogen and acceptor lie in line, hydrogen bonds are highly directional and can hold two hydrogen-bonded groups in a specific geometric arrangement, as between complementary bases."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Compounds that dissolve easily in water are described as:",
-    "image": "",
-    "options": [
-      "hydrophilic",
-      "hydrophobic",
-      "amphipathic",
-      "nonpolar"
-    ],
-    "correct": 0,
-    "explanation": "Hydrophilic (\"water-loving\") compounds dissolve easily in water; they are generally charged or polar. Hydrophobic compounds are nonpolar, and amphipathic compounds contain both polar and nonpolar regions."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following is a hydrophobic material?",
-    "image": "",
-    "options": [
-      "Glucose",
-      "Sodium chloride",
-      "Wax",
-      "Glycerol"
-    ],
-    "correct": 2,
-    "explanation": "Waxes, like other lipids, are nonpolar (hydrophobic) and dissolve in nonpolar solvents such as chloroform and benzene. Glucose and glycerol are polar and NaCl is ionic, so all of them dissolve readily in water."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following molecules is amphipathic?",
-    "image": "",
-    "options": [
-      "Glucose",
-      "Glycine",
-      "Glycerol",
-      "Phenylalanine"
-    ],
-    "correct": 3,
-    "explanation": "Phenylalanine carries charged polar groups (-NH3+ and -COO-) and a nonpolar benzene ring in the same molecule, so it is amphipathic. Glucose, glycine and glycerol are polar throughout."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following groups of biomolecules is hydrated and dissolved by water in the same way as the Na+ and Cl- ions of a salt?",
-    "image": "",
-    "options": [
-      "Methyl group (-CH3)",
-      "Phenyl group (-C6H5)",
-      "Alkyl chain (-(CH2)15CH3)",
-      "Carboxylate group (-COO-)"
-    ],
-    "correct": 3,
-    "explanation": "Charged groups such as ionized carboxylic acids (-COO-), protonated amines (-NH3+) and phosphate esters are hydrated and dissolved by water just as Na+ and Cl- are. The other options are nonpolar hydrocarbon groups."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Benzoic acid (C6H5-COOH) is poorly soluble in water, whereas its ionized form, benzoate (C6H5-COO-), is quite soluble. What is the best explanation?",
-    "image": "",
-    "options": [
-      "Ionization makes the benzene ring of the molecule polar",
-      "The charged -COO- group interacts strongly with water",
-      "Benzoate forms covalent bonds with surrounding water",
-      "Ionization adds C-H bonds that hydrogen-bond with water"
-    ],
-    "correct": 1,
-    "explanation": "Like Na+ and Cl-, a charged carboxylate group is hydrated and stabilized by water, replacing solute-solute interactions with solute-water interactions. The benzene ring stays nonpolar, so the gain in solubility comes from the charge."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Entropy is best defined as a measure of:",
-    "image": "",
-    "options": [
-      "the randomness or disorder of a system",
-      "the heat needed to vaporize 1 g of a liquid",
-      "the strength of the bonds within a molecule",
-      "the number of solute particles in a solution"
-    ],
-    "correct": 0,
-    "explanation": "Entropy is a measure of the randomness or disorder of a system; the greater the randomness, the higher the entropy."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following processes is accompanied by a decrease in the entropy of the system?",
-    "image": "",
-    "options": [
-      "Melting of ice to liquid water",
-      "Dissolving of crystalline NaCl in water",
-      "Movement of O2 from the gas phase into water",
-      "Clustering of dispersed lipids into micelles"
-    ],
-    "correct": 2,
-    "explanation": "Entering solution constrains the motion of the gas molecules and of the surrounding water, so entropy decreases; with O2's nonpolar nature, this makes the gas poorly soluble. The other processes increase entropy by freeing molecules or releasing ordered water."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following gases dissolves readily in water because its molecule is polar?",
-    "image": "",
-    "options": [
-      "N2",
-      "O2",
-      "CO2",
-      "NH3"
-    ],
-    "correct": 3,
-    "explanation": "Ammonia (NH3), like H2S, is polar and dissolves readily in water. N2 and O2 share electrons equally, and CO2 is nonpolar because its two C=O dipoles cancel, so these gases are poorly soluble."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "O2 is poorly soluble in water. How is its transport in the blood made efficient?",
-    "image": "",
-    "options": [
-      "It is converted to bicarbonate by carbonic anhydrase",
-      "It is dissolved in the lipids carried in plasma",
-      "It is exchanged for chloride across the erythrocyte membrane",
-      "It is bound by a water-soluble carrier protein, hemoglobin"
-    ],
-    "correct": 3,
-    "explanation": "Water-soluble carrier proteins such as hemoglobin facilitate O2 transport. Conversion to bicarbonate is how CO2, not O2, is carried."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "In an erythrocyte at a respiring tissue, bicarbonate is pumped out of the cell in exchange for chloride ions. What is the purpose of this exchange?",
-    "image": "",
-    "options": [
-      "It keeps the erythrocyte electrically uncharged",
-      "It increases hemoglobin's affinity for oxygen",
-      "It converts CO2 into carbonic acid inside the cell",
-      "It delivers CO2 from the lungs back to the tissues"
-    ],
-    "correct": 0,
-    "explanation": "Each HCO3- leaving is replaced by a Cl-, so the cell remains electrically uncharged. In the plasma the bicarbonate travels with sodium (as NaHCO3) to the lungs."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "When an erythrocyte reaches the lungs, which event takes place?",
-    "image": "",
-    "options": [
-      "Bicarbonate leaves the cell in exchange for chloride",
-      "Bicarbonate re-enters the cell and is converted to CO2",
-      "Hemoglobin releases its O2 because H+ accumulates",
-      "Carbonic anhydrase combines CO2 with water"
-    ],
-    "correct": 1,
-    "explanation": "At the lungs bicarbonate is pumped back into the erythrocyte and the entire process is reversed: HCO3- + H+ -> H2CO3 -> CO2 + H2O, and the CO2 diffuses out to be exhaled."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Inside an erythrocyte at a respiring tissue, H+ ions are released as carbonic acid dissociates. What prevents them from greatly lowering the intracellular pH?",
-    "image": "",
-    "options": [
-      "Carbonic anhydrase converts the H+ back into CO2",
-      "Chloride ions entering the cell neutralize the H+",
-      "Hemoglobin takes up the H+ and acts as a buffer",
-      "Sodium ions combine with the H+ in the cytosol"
-    ],
-    "correct": 2,
-    "explanation": "The H+ ions make the cell less alkaline and cause hemoglobin to release its O2; hemoglobin then absorbs the H+ ions and acts as a buffer that maintains the intracellular pH."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "What is observed when water is mixed with hexane?",
-    "image": "",
-    "options": [
-      "A single clear solution forms",
-      "Hexane dissociates into ions",
-      "Hexane becomes hydrated like Na+",
-      "Two separate liquid phases form"
-    ],
-    "correct": 3,
-    "explanation": "Hexane and benzene are hydrophobic: they cannot interact favourably with water, so neither liquid is soluble in the other, forming two separate liquid phases."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which two properties of water are of crucial importance to the structure and function of biomolecules?",
-    "image": "",
-    "options": [
-      "Its high density as a solid and its low heat of vaporization",
-      "Cohesion of its molecules and a slight tendency to ionize",
-      "Its nonpolar bonds and its ability to dissolve lipids readily",
-      "Its linear shape and the great strength of its hydrogen bonds"
-    ],
-    "correct": 1,
-    "explanation": "The attractive forces (cohesion) between water molecules and the slight tendency of water to ionize underlie the behaviour of biomolecules. Every other option names properties water does not have; for example, ice is less dense than the liquid and hydrogen bonds are relatively weak."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Suppose oxygen and hydrogen had equal electronegativity. Which consequence for water would follow?",
-    "image": "",
-    "options": [
-      "Its H-O-H bond angle would widen to exactly 180°",
-      "Each of its hydrogen atoms would carry a δ- charge",
-      "Water would become a far better solvent for NaCl",
-      "Its molecules could no longer form hydrogen bonds"
-    ],
-    "correct": 3,
-    "explanation": "The partial charges exist only because oxygen is more electronegative and pulls the shared electrons toward itself. With equal sharing the O-H bonds would be nonpolar, leaving no δ+ and δ- regions to attract neighbouring molecules, so cohesion and the ability to hydrate ions would be lost."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "In which of the following molecules are the electrons of every covalent bond shared equally between the bonded atoms?",
-    "image": "",
-    "options": [
-      "H2O",
-      "CO2",
-      "O2",
-      "NH3"
-    ],
-    "correct": 2,
-    "explanation": "In O2, as in N2, the two bonded atoms are identical, so electrons are shared equally and the bond is nonpolar. In CO2 each C=O bond is polar; the molecule is nonpolar only because the two dipoles cancel. The bonds of H2O and NH3 are polar."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A hydrogen bond results from the attraction between a hydrogen atom covalently bonded to a very electronegative atom and another very electronegative atom. Which group lists atoms of this kind?",
-    "image": "",
-    "options": [
-      "N, O and F",
-      "C, H and P",
-      "Na, K and Ca",
-      "C, Na and H"
-    ],
-    "correct": 0,
-    "explanation": "Hydrogen bonds form when H is covalently attached to a very electronegative atom such as N, O or F and is attracted to another such atom. Carbon is only slightly more electronegative than hydrogen, so options containing C cannot supply these atoms."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A central water molecule can be hydrogen-bonded to four neighbouring water molecules. Which feature of the central molecule makes this possible?",
-    "image": "",
-    "options": [
-      "Its oxygen shares electrons equally with both of its hydrogens",
-      "Its two hydrogens form covalent bonds with neighbouring oxygens",
-      "Its δ+ oxygen atom attracts δ- hydrogens on all four neighbours",
-      "Its δ- oxygen and two δ+ hydrogens each attract opposite charges"
-    ],
-    "correct": 3,
-    "explanation": "The molecule is polar: its δ- oxygen attracts the δ+ hydrogens of two neighbours, while each of its δ+ hydrogens attracts the δ- oxygen of another neighbour, giving four hydrogen bonds. Hydrogen bonds are electrostatic attractions, not covalent bonds."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A student draws two neighbouring water molecules with the hydrogen atoms of one pointing directly at the hydrogen atoms of the other. Why is this arrangement unlikely?",
-    "image": "",
-    "options": [
-      "Hydrogen atoms can never take part in weak attractions",
-      "The facing δ+ hydrogen atoms repel each other",
-      "The facing hydrogens would form a covalent H-H bond",
-      "Both oxygen atoms carry δ+ charges and repel each other"
-    ],
-    "correct": 1,
-    "explanation": "Like partial charges repel; a hydrogen bond requires the δ+ hydrogen of one molecule to face the δ- oxygen of the other. Oxygen is the δ- region of water, not δ+."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "How does a water molecule at the air-water surface differ from a water molecule in the interior of the liquid?",
-    "image": "",
-    "options": [
-      "It forms more hydrogen bonds than an interior molecule",
-      "It is hydrogen-bonded to gas molecules in the air above",
-      "It is pulled equally in all directions by its neighbours",
-      "It lacks partners above, so it is pulled toward the interior"
-    ],
-    "correct": 3,
-    "explanation": "A surface molecule is hydrogen-bonded to its neighbours and to the water below but not to the air above. The unbalanced cohesive forces give a net force directed into the liquid, producing water's high surface tension."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "An insect stands on the surface of a pond without breaking through it. Which property of water chiefly makes this possible?",
-    "image": "",
-    "options": [
-      "High surface tension resulting from cohesion",
-      "High heat of vaporization of liquid water",
-      "Lower density of ice than of liquid water",
-      "Lower freezing point of water containing solutes"
-    ],
-    "correct": 0,
-    "explanation": "Hydrogen-bonded molecules at the surface form an ordered layer that resists being stretched or broken, so the surface behaves like an invisible film able to support the insect."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "In the water-conducting cells of a tree, what is the specific contribution of adhesion?",
-    "image": "",
-    "options": [
-      "It holds water molecules together as an unbroken column",
-      "It pulls water upward by evaporation from the leaves",
-      "It binds water to the cell walls, helping resist gravity",
-      "It lowers the freezing point of the water in the stem"
-    ],
-    "correct": 2,
-    "explanation": "Adhesion of water to the cell walls by hydrogen bonds helps resist the downward pull of gravity. Cohesion holds the column together, and evaporation from the leaves provides the upward pull."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following common solvents has the weakest attractive forces between its molecules in the liquid phase (lowest heat of vaporization: 247 J/g)?",
-    "image": "",
-    "options": [
-      "Water (2,260 J/g)",
-      "Methanol (1,100 J/g)",
-      "Hexane (423 J/g)",
-      "Chloroform (247 J/g)"
-    ],
-    "correct": 3,
-    "explanation": "Heat of vaporization is a direct measure of the energy needed to overcome attractive forces between molecules in the liquid, and chloroform has the lowest value (247 J/g). Water, at 2,260 J/g, has the strongest internal cohesion because of its extensive hydrogen bonding."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "When liquid water boils, which bonds must be broken for its molecules to escape into the gas phase?",
-    "image": "",
-    "options": [
-      "Polar covalent O-H bonds within each water molecule",
-      "Ionic bonds between H+ and OH- ions in the liquid",
-      "Nonpolar covalent bonds between adjacent oxygens",
-      "Hydrogen bonds between neighbouring water molecules"
-    ],
-    "correct": 3,
-    "explanation": "Vaporization overcomes the attractive forces between molecules, about 23 kJ/mol per hydrogen bond. The covalent O-H bonds (470 kJ/mol) stay intact, since the gas still consists of H2O molecules."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Individual hydrogen bonds in liquid water are extremely short-lived, yet liquid water has great internal cohesion. Which fact reconciles these observations?",
-    "image": "",
-    "options": [
-      "Each hydrogen bond is stronger than a covalent C-C bond",
-      "A broken hydrogen bond is replaced within about 0.1 ps",
-      "Molecules of the liquid are fixed in a regular lattice",
-      "Each molecule forms four permanent hydrogen bonds"
-    ],
-    "correct": 1,
-    "explanation": "Another hydrogen bond forms, with the same partner or a new one, within ~0.1 ps, so at any moment most molecules are hydrogen-bonded. The sum of these constantly renewed bonds gives the liquid its cohesion."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "A water molecule forms a hydrogen bond with the carbonyl oxygen of a ketone. Which statement correctly describes this bond?",
-    "image": "",
-    "options": [
-      "The ketone oxygen is the acceptor; the water O-H is the donor",
-      "A ketone C-H is the donor; the water oxygen is the acceptor",
-      "The ketone carbon is the acceptor; the water O-H is the donor",
-      "The ketone oxygen is the donor; the water oxygen is the acceptor"
-    ],
-    "correct": 0,
-    "explanation": "The hydrogen acceptor is an electronegative atom with a lone pair (here the carbonyl O) and the donor is a hydrogen covalently bonded to another electronegative atom (the O-H of water). A ketone's hydrogens are all on carbon, so it cannot donate."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Ethanol (CH3CH2OH) contains six hydrogen atoms. Which of them can act as a hydrogen-bond donor to water?",
-    "image": "",
-    "options": [
-      "Any of the three hydrogens of the CH3 group",
-      "Either of the two hydrogens of the CH2 group",
-      "Only the hydrogen of the OH group",
-      "All six hydrogens, to an equal extent"
-    ],
-    "correct": 2,
-    "explanation": "A donor hydrogen must be covalently bonded to an electronegative atom. Hydrogens bonded to carbon do not participate in hydrogen bonding because the C-H bond is only very weakly polar."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which class of compounds would NOT be expected to form hydrogen bonds with water?",
-    "image": "",
-    "options": [
-      "Alcohols",
-      "Aldehydes",
-      "Ketones",
-      "Alkanes such as hexane"
-    ],
-    "correct": 3,
-    "explanation": "Alkanes contain only C-C and C-H bonds, and C-H hydrogens do not form hydrogen bonds, so these compounds are hydrophobic. Alcohols, aldehydes, and ketones all hydrogen-bond with water and tend to be soluble."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Why is a hydrogen bond between an R-O-H donor and a P=O acceptor strongest when the atoms are aligned linearly?",
-    "image": "",
-    "options": [
-      "Its hydrogen is covalently bonded to carbon, not to oxygen",
-      "Its acceptor is the phosphorus atom instead of the oxygen",
-      "Its acceptor oxygen lies at an angle to the donor O-H bond",
-      "Its acceptor oxygen lies in line with the donor O-H bond"
-    ],
-    "correct": 3,
-    "explanation": "A hydrogen bond is strongest when the hydrogen and the two atoms sharing it are in a straight line, which maximizes electrostatic interaction and minimizes charge repulsion."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Hydrogen bonds between complementary bases in DNA, such as adenine and thymine, hold the two bases in a precise geometric arrangement. Which property of hydrogen bonds makes this possible?",
-    "image": "",
-    "options": [
-      "Their bond energy, which exceeds that of covalent bonds",
-      "Their high directionality",
-      "Their lifetime of several seconds",
-      "Their restriction to water molecules"
-    ],
-    "correct": 1,
-    "explanation": "Because a hydrogen bond is strongest when donor, hydrogen and acceptor lie in line, hydrogen bonds are highly directional and can hold two hydrogen-bonded groups in a specific geometric arrangement, as between complementary bases."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Compounds that dissolve easily in water are described as:",
-    "image": "",
-    "options": [
-      "hydrophilic",
-      "hydrophobic",
-      "amphipathic",
-      "nonpolar"
-    ],
-    "correct": 0,
-    "explanation": "Hydrophilic (\"water-loving\") compounds dissolve easily in water; they are generally charged or polar. Hydrophobic compounds are nonpolar, and amphipathic compounds contain both polar and nonpolar regions."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following is a hydrophobic material?",
-    "image": "",
-    "options": [
-      "Glucose",
-      "Sodium chloride",
-      "Wax",
-      "Glycerol"
-    ],
-    "correct": 2,
-    "explanation": "Waxes, like other lipids, are nonpolar (hydrophobic) and dissolve in nonpolar solvents such as chloroform and benzene. Glucose and glycerol are polar and NaCl is ionic, so all of them dissolve readily in water."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following molecules is amphipathic?",
-    "image": "",
-    "options": [
-      "Glucose",
-      "Glycine",
-      "Glycerol",
-      "Phenylalanine"
-    ],
-    "correct": 3,
-    "explanation": "Phenylalanine carries charged polar groups (-NH3+ and -COO-) and a nonpolar benzene ring in the same molecule, so it is amphipathic. Glucose, glycine and glycerol are polar throughout."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following groups of biomolecules is hydrated and dissolved by water in the same way as the Na+ and Cl- ions of a salt?",
-    "image": "",
-    "options": [
-      "Methyl group (-CH3)",
-      "Phenyl group (-C6H5)",
-      "Alkyl chain (-(CH2)15CH3)",
-      "Carboxylate group (-COO-)"
-    ],
-    "correct": 3,
-    "explanation": "Charged groups such as ionized carboxylic acids (-COO-), protonated amines (-NH3+) and phosphate esters are hydrated and dissolved by water just as Na+ and Cl- are. The other options are nonpolar hydrocarbon groups."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Benzoic acid (C6H5-COOH) is poorly soluble in water, whereas its ionized form, benzoate (C6H5-COO-), is quite soluble. What is the best explanation?",
-    "image": "",
-    "options": [
-      "Ionization makes the benzene ring of the molecule polar",
-      "The charged -COO- group interacts strongly with water",
-      "Benzoate forms covalent bonds with surrounding water",
-      "Ionization adds C-H bonds that hydrogen-bond with water"
-    ],
-    "correct": 1,
-    "explanation": "Like Na+ and Cl-, a charged carboxylate group is hydrated and stabilized by water, replacing solute-solute interactions with solute-water interactions. The benzene ring stays nonpolar, so the gain in solubility comes from the charge."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Entropy is best defined as a measure of:",
-    "image": "",
-    "options": [
-      "the randomness or disorder of a system",
-      "the heat needed to vaporize 1 g of a liquid",
-      "the strength of the bonds within a molecule",
-      "the number of solute particles in a solution"
-    ],
-    "correct": 0,
-    "explanation": "Entropy is a measure of the randomness or disorder of a system; the greater the randomness, the higher the entropy."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following processes is accompanied by a decrease in the entropy of the system?",
-    "image": "",
-    "options": [
-      "Melting of ice to liquid water",
-      "Dissolving of crystalline NaCl in water",
-      "Movement of O2 from the gas phase into water",
-      "Clustering of dispersed lipids into micelles"
-    ],
-    "correct": 2,
-    "explanation": "Entering solution constrains the motion of the gas molecules and of the surrounding water, so entropy decreases; with O2's nonpolar nature, this makes the gas poorly soluble. The other processes increase entropy by freeing molecules or releasing ordered water."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Which of the following gases dissolves readily in water because its molecule is polar?",
-    "image": "",
-    "options": [
-      "N2",
-      "O2",
-      "CO2",
-      "NH3"
-    ],
-    "correct": 3,
-    "explanation": "Ammonia (NH3), like H2S, is polar and dissolves readily in water. N2 and O2 share electrons equally, and CO2 is nonpolar because its two C=O dipoles cancel, so these gases are poorly soluble."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "O2 is poorly soluble in water. How is its transport in the blood made efficient?",
-    "image": "",
-    "options": [
-      "It is converted to bicarbonate by carbonic anhydrase",
-      "It is dissolved in the lipids carried in plasma",
-      "It is exchanged for chloride across the erythrocyte membrane",
-      "It is bound by a water-soluble carrier protein, hemoglobin"
-    ],
-    "correct": 3,
-    "explanation": "Water-soluble carrier proteins such as hemoglobin facilitate O2 transport. Conversion to bicarbonate is how CO2, not O2, is carried."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "In an erythrocyte at a respiring tissue, bicarbonate is pumped out of the cell in exchange for chloride ions. What is the purpose of this exchange?",
-    "image": "",
-    "options": [
-      "It keeps the erythrocyte electrically uncharged",
-      "It increases hemoglobin's affinity for oxygen",
-      "It converts CO2 into carbonic acid inside the cell",
-      "It delivers CO2 from the lungs back to the tissues"
-    ],
-    "correct": 0,
-    "explanation": "Each HCO3- leaving is replaced by a Cl-, so the cell remains electrically uncharged. In the plasma the bicarbonate travels with sodium (as NaHCO3) to the lungs."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "When an erythrocyte reaches the lungs, which event takes place?",
-    "image": "",
-    "options": [
-      "Bicarbonate leaves the cell in exchange for chloride",
-      "Bicarbonate re-enters the cell and is converted to CO2",
-      "Hemoglobin releases its O2 because H+ accumulates",
-      "Carbonic anhydrase combines CO2 with water"
-    ],
-    "correct": 1,
-    "explanation": "At the lungs bicarbonate is pumped back into the erythrocyte and the entire process is reversed: HCO3- + H+ -> H2CO3 -> CO2 + H2O, and the CO2 diffuses out to be exhaled."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "Inside an erythrocyte at a respiring tissue, H+ ions are released as carbonic acid dissociates. What prevents them from greatly lowering the intracellular pH?",
-    "image": "",
-    "options": [
-      "Carbonic anhydrase converts the H+ back into CO2",
-      "Chloride ions entering the cell neutralize the H+",
-      "Hemoglobin takes up the H+ and acts as a buffer",
-      "Sodium ions combine with the H+ in the cytosol"
-    ],
-    "correct": 2,
-    "explanation": "The H+ ions make the cell less alkaline and cause hemoglobin to release its O2; hemoglobin then absorbs the H+ ions and acts as a buffer that maintains the intracellular pH."
-  },
-  {
-    "subjectId": "sub_bio_1",
-    "model": "Chapter 1 - Water (Model 1)",
-    "text": "What is observed when water is mixed with hexane?",
-    "image": "",
-    "options": [
-      "A single clear solution forms",
-      "Hexane dissociates into ions",
-      "Hexane becomes hydrated like Na+",
-      "Two separate liquid phases form"
-    ],
-    "correct": 3,
-    "explanation": "Hexane and benzene are hydrophobic: they cannot interact favourably with water, so neither liquid is soluble in the other, forming two separate liquid phases."
-  }
-];
+      {
+        subjectId: "sub_anat_1",
+        model: "Model 1 - General Anatomy",
+        text: "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
+        image: "",
+        options: ["Glossopharyngeal nerve (CN IX)", "Vagus nerve (CN X)", "Accessory nerve (CN XI)", "Hypoglossal nerve (CN XII)"],
+        correct: 1,
+        explanation: "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
+      },
+      {
+        subjectId: "sub_phys_1",
+        model: "Model 1 - Cardiology",
+        text: "What is the primary pacemaker of the normal human heart?",
+        image: "",
+        options: ["Atrioventricular (AV) node", "Bundle of His", "Sinoatrial (SA) node", "Purkinje fibers"],
+        correct: 2,
+        explanation: "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
+      }
+    ];
 
-    let studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
-    let announcementsList = loadLocalOrDefault("malek_announcements_v3", DEFAULT_ANNOUNCEMENTS);
-    let subjectsList = loadLocalOrDefault("malek_subjects_v3", DEFAULT_SUBJECTS);
-    let lecturesList = loadLocalOrDefault("malek_lectures_v3", DEFAULT_LECTURES);
-    let filesList = loadLocalOrDefault("malek_files_v3", DEFAULT_FILES);
-    let questions = loadLocalOrDefault("malek_questions_v3", DEFAULT_QUESTIONS);
+    let paymentConfig = loadObjectOrDefault("malek_payment_v5", DEFAULT_PAYMENT_CONFIG);
+    let studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+    let announcementsList = loadLocalOrDefault("malek_announcements_v5", DEFAULT_ANNOUNCEMENTS);
+    let subjectsList = loadLocalOrDefault("malek_subjects_v5", DEFAULT_SUBJECTS);
+    let lecturesList = loadLocalOrDefault("malek_lectures_v5", DEFAULT_LECTURES);
+    let filesList = loadLocalOrDefault("malek_files_v5", DEFAULT_FILES);
+    let questions = loadLocalOrDefault("malek_questions_v5", DEFAULT_QUESTIONS);
 
     let currentStudent = null;
+    let isFreeTrialSession = false;
+    let editingStudentIdx = null;
+    let editingSubjectIdForStudents = null;
     let selectedYear = "";
     let selectedSemester = "";
     let selectedSubject = null;
@@ -2088,6 +866,11 @@
     let isPaused = false;
     let currentMode = "practice";
 
+    function loadObjectOrDefault(key, defVal) {
+      const saved = localStorage.getItem(key);
+      return saved ? { ...defVal, ...JSON.parse(saved) } : { ...defVal };
+    }
+
     function loadLocalOrDefault(key, defVal) {
       const saved = localStorage.getItem(key);
       return saved ? JSON.parse(saved) : [...defVal];
@@ -2101,24 +884,95 @@
     }
 
     function saveAllLocalState() {
-      localStorage.setItem("malek_students_v3", JSON.stringify(studentsList));
-      localStorage.setItem("malek_announcements_v3", JSON.stringify(announcementsList));
-      localStorage.setItem("malek_subjects_v3", JSON.stringify(subjectsList));
-      localStorage.setItem("malek_lectures_v3", JSON.stringify(lecturesList));
-      localStorage.setItem("malek_files_v3", JSON.stringify(filesList));
-      localStorage.setItem("malek_questions_v3", JSON.stringify(questions));
+      localStorage.setItem("malek_payment_v5", JSON.stringify(paymentConfig));
+      localStorage.setItem("malek_students_v5", JSON.stringify(studentsList));
+      localStorage.setItem("malek_announcements_v5", JSON.stringify(announcementsList));
+      localStorage.setItem("malek_subjects_v5", JSON.stringify(subjectsList));
+      localStorage.setItem("malek_lectures_v5", JSON.stringify(lecturesList));
+      localStorage.setItem("malek_files_v5", JSON.stringify(filesList));
+      localStorage.setItem("malek_questions_v5", JSON.stringify(questions));
     }
 
     function getEffectiveAdminPassword() {
-      return localStorage.getItem("malek_custom_admin_pass_v3") || ADMIN_PASSWORD;
+      return localStorage.getItem("malek_custom_admin_pass_v5") || ADMIN_PASSWORD;
     }
 
     function isPlatformLocked() {
-      const localLock = localStorage.getItem("malek_platform_locked_v3");
+      const localLock = localStorage.getItem("malek_platform_locked_v5");
       return localLock !== null ? localLock === "true" : PLATFORM_LOCKED;
     }
 
-    // بوابة الطلاب
+    // عرض بيانات الدفع والبنك في الواجهة الرئيسية فور تحميل الصفحة
+    function renderPublicPaymentInfo() {
+      const box = document.getElementById("publicPaymentInfoBox");
+      if (!box) return;
+      box.innerHTML = `
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <span class="text-slate-400">البنك / المحفظة:</span>
+          <span class="font-bold text-white">${paymentConfig.bankName || "—"}</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <span class="text-slate-400">اسم المستفيد:</span>
+          <span class="font-bold text-amber-400">${paymentConfig.accountHolder || "—"}</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
+          <span class="text-slate-400 shrink-0">رقم الحساب / IBAN:</span>
+          <div class="flex items-center gap-2">
+            <span class="font-mono font-bold text-emerald-400 select-all">${paymentConfig.accountNumber || "—"}</span>
+            <button type="button" onclick="copyTextQuick('${paymentConfig.accountNumber}')" class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-white border border-slate-700">نسخ</button>
+          </div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
+          <span class="text-slate-400 shrink-0">رقم التواصل / الواتساب:</span>
+          <div class="flex items-center gap-2">
+            <span class="font-mono font-bold text-blue-400 select-all">${paymentConfig.phoneNumber || "—"}</span>
+            <button type="button" onclick="copyTextQuick('${paymentConfig.phoneNumber}')" class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-white border border-slate-700">نسخ</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyTextQuick(txt) {
+      if (!txt) return;
+      navigator.clipboard.writeText(txt).then(() => alert("تم النسخ: " + txt));
+    }
+
+    // التحقق هل المادة متاحة للمستخدم الحالي (سواء في التجربة المجانية أو المدفوع)
+    function isSubjectAccessible(sub) {
+      if (!sub || sub.isOpen === false) return false;
+      if (isFreeTrialSession) return sub.isFreeTrial === true;
+      if (!currentStudent) return false;
+      return Array.isArray(currentStudent.allowedSubjects) && currentStudent.allowedSubjects.includes(sub.id);
+    }
+
+    // الدخول لواجهة التجربة المجانية
+    function enterFreeTrialMode() {
+      if (isPlatformLocked()) {
+        alert("⛔ المنصة مغلقة مؤقتاً للصيانة والتحديث من قبل الإدارة.");
+        return;
+      }
+      isFreeTrialSession = true;
+      currentStudent = null;
+
+      document.getElementById("studentLoginScreen").classList.add("hidden");
+      document.getElementById("adminView").classList.add("hidden");
+      document.getElementById("studentView").classList.remove("hidden");
+
+      document.getElementById("freeTrialBanner").classList.remove("hidden");
+      document.getElementById("paidWhatsappChannelBtn").classList.add("hidden");
+
+      const badge = document.getElementById("loggedStudentHeaderBadge");
+      badge.textContent = "🎁 وضع التجربة المجانية";
+      badge.classList.remove("hidden");
+
+      document.getElementById("academicExplorerTitle").textContent = "محتوى التجربة المجانية";
+      document.getElementById("academicExplorerSubtitle").textContent = "تصفح العينات المجانية المتاحة في المحاضرات والملفات والاختبارات";
+
+      renderStudentAnnouncements();
+      showYearsStep();
+    }
+
+    // بوابة الطلاب المدفوعة
     function switchAuthTab(tab) {
       const loginForm = document.getElementById("codeLoginForm");
       const regForm = document.getElementById("studentRegisterForm");
@@ -2129,13 +983,13 @@
       if (tab === "login") {
         loginForm.classList.remove("hidden");
         regForm.classList.add("hidden");
-        loginBtn.className = "py-2.5 rounded-xl text-xs tab-active transition";
-        regBtn.className = "py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
+        loginBtn.className = "py-2 rounded-xl text-xs tab-active transition";
+        regBtn.className = "py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
       } else {
         loginForm.classList.add("hidden");
         regForm.classList.remove("hidden");
-        regBtn.className = "py-2.5 rounded-xl text-xs font-bold bg-emerald-600 text-white transition";
-        loginBtn.className = "py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
+        regBtn.className = "py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white transition";
+        loginBtn.className = "py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
       }
     }
 
@@ -2155,9 +1009,17 @@
       const year = document.getElementById("regStudentYear").value;
       if (!name || !studentId) return;
 
-      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
       const secretCode = generateUniqueStudentCode();
-      studentsList.push({ name, studentId, year, code: secretCode, approved: false, results: [] });
+      studentsList.push({
+        name,
+        studentId,
+        year,
+        code: secretCode,
+        approved: false,
+        allowedSubjects: [],
+        results: []
+      });
       saveAllLocalState();
 
       document.getElementById("pendingApprovalNotice").classList.remove("hidden");
@@ -2172,7 +1034,7 @@
       }
 
       const enteredCode = document.getElementById("studentCodeInput").value.trim().toUpperCase();
-      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
       const found = studentsList.find(s => s.code === enteredCode);
 
       if (!found) {
@@ -2185,14 +1047,30 @@
         return;
       }
 
+      isFreeTrialSession = false;
       currentStudent = found;
+
       document.getElementById("studentLoginScreen").classList.add("hidden");
       document.getElementById("adminView").classList.add("hidden");
       document.getElementById("studentView").classList.remove("hidden");
 
+      document.getElementById("freeTrialBanner").classList.add("hidden");
+
+      // إظهار رابط قناة الواتساب في قسم الإعلانات داخل الواجهة المدفوعة
+      const waBtn = document.getElementById("paidWhatsappChannelBtn");
+      if (paymentConfig.whatsappChannel && paymentConfig.whatsappChannel.trim() !== "") {
+        waBtn.href = paymentConfig.whatsappChannel.trim();
+        waBtn.classList.remove("hidden");
+      } else {
+        waBtn.classList.add("hidden");
+      }
+
       const badge = document.getElementById("loggedStudentHeaderBadge");
-      badge.textContent = `${found.name} | ${found.code}`;
+      badge.textContent = `👑 ${found.name} | ${found.code}`;
       badge.classList.remove("hidden");
+
+      document.getElementById("academicExplorerTitle").textContent = "المكتبة الأكاديمية والاختبارات (النسخة الكاملة)";
+      document.getElementById("academicExplorerSubtitle").textContent = "تظهر لك المواد المفعّلة والمصرّح لك بالوصول إليها";
 
       renderStudentAnnouncements();
       showYearsStep();
@@ -2235,12 +1113,12 @@
 
       const years = ["السنة الأولى", "السنة الثانية", "السنة الثالثة", "السنة الرابعة", "السنة الخامسة", "السنة السادسة"];
       document.getElementById("stepYearsView").innerHTML = years.map((y, idx) => {
-        const count = subjectsList.filter(s => s.year === y).length;
+        const count = subjectsList.filter(s => s.year === y && isSubjectAccessible(s)).length;
         return `
           <button type="button" onclick="selectYear('${y}')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
             <span class="text-xs font-black text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg">المستوى ${idx + 1}</span>
             <h3 class="text-lg font-extrabold text-white mt-3 group-hover:text-amber-400">${y}</h3>
-            <p class="text-xs text-slate-400 mt-1">عدد المواد المتاحة: ${count}</p>
+            <p class="text-xs text-slate-400 mt-1">المواد المتاحة لك: <span class="text-emerald-400 font-bold">${count}</span></p>
           </button>
         `;
       }).join("");
@@ -2268,26 +1146,42 @@
       document.getElementById("stepSubjectsView").classList.remove("hidden");
       document.getElementById("stepSubjectContentView").classList.add("hidden");
 
-      const filtered = subjectsList.filter(s => s.year === selectedYear && s.semester === selectedSemester);
+      const accessibleSubjects = subjectsList.filter(s =>
+        s.year === selectedYear &&
+        s.semester === selectedSemester &&
+        isSubjectAccessible(s)
+      );
+
       const grid = document.getElementById("subjectsGrid");
 
-      if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full p-6 text-center rounded-2xl bg-slate-950 border border-slate-800 text-slate-400 text-sm">لم يتم إضافة مواد لهذا الفصل بعد.</div>`;
+      if (accessibleSubjects.length === 0) {
+        grid.innerHTML = `<div class="col-span-full p-6 text-center rounded-2xl bg-slate-950 border border-slate-800 text-slate-400 text-sm">${
+          isFreeTrialSession
+            ? "🎁 لا توجد مواد تجريبية مجانية في هذا الفصل حالياً. اختر فصلاً آخر أو انتقل للاشتراك الكامل."
+            : "🔒 لا توجد مواد مفتوحة ومفعّلة لك في هذا الفصل حالياً."
+        }</div>`;
         return;
       }
 
-      grid.innerHTML = filtered.map(sub => `
+      grid.innerHTML = accessibleSubjects.map(sub => `
         <button type="button" onclick="openSubject('${sub.id}')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
-          <span class="text-2xl mb-2 block">🧬</span>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-2xl">🧬</span>
+            ${sub.isFreeTrial ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">تجربة مجانية</span>` : `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">مشترك</span>`}
+          </div>
           <h4 class="text-base font-extrabold text-white group-hover:text-amber-400">${sub.name}</h4>
-          <p class="text-xs text-slate-400 mt-1">اضغط لفتح المحاضرات والملفات والاختبارات</p>
+          <p class="text-xs text-emerald-400 mt-1">✅ مفتوحة — اضغط للدخول</p>
         </button>
       `).join("");
     }
 
     function openSubject(subjectId) {
-      selectedSubject = subjectsList.find(s => s.id === subjectId);
-      if (!selectedSubject) return;
+      const sub = subjectsList.find(s => s.id === subjectId);
+      if (!sub || !isSubjectAccessible(sub)) {
+        alert("⛔ هذه المادة مغلقة حالياً أو غير مصرّح لك بالدخول إليها.");
+        return;
+      }
+      selectedSubject = sub;
       updateBreadcrumb();
       document.getElementById("stepSubjectsView").classList.add("hidden");
       document.getElementById("stepSubjectContentView").classList.remove("hidden");
@@ -2513,8 +1407,8 @@
       activeQuestions.forEach((q, i) => { if (userAnswers[i] === q.correct) correctCount++; });
       const pct = Math.round((correctCount / activeQuestions.length) * 100);
 
-      if (currentStudent) {
-        studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
+      if (currentStudent && !isFreeTrialSession) {
+        studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
         const target = studentsList.find(s => s.code === currentStudent.code);
         if (target) {
           if (!target.results) target.results = [];
@@ -2523,7 +1417,7 @@
         }
       }
 
-      document.getElementById("resultStudentName").textContent = currentStudent ? currentStudent.name : "";
+      document.getElementById("resultStudentName").textContent = currentStudent ? currentStudent.name : "زائر (تجربة مجانية)";
       document.getElementById("scorePercentage").textContent = `${pct}%`;
       document.getElementById("scoreSummaryText").textContent = `أجبت بشكل صحيح على ${correctCount} من أصل ${activeQuestions.length} سؤال`;
       document.getElementById("studentGradeLabel").textContent =
@@ -2552,7 +1446,7 @@
     }
 
     // ==========================================
-    // لوحة تحكم المدير + نظام التغذية الذكية السريعة
+    // لوحة تحكم المدير (إدارة المواد، قفلها/فتحها، الطلاب المفعّلة عندهم، البنك وقناة الواتس)
     // ==========================================
     let tapCount = 0;
     let tapTimer = null;
@@ -2585,6 +1479,7 @@
         if (savedToken) document.getElementById("ghTokenInput").value = savedToken;
         document.getElementById("adminPasswordEditInput").value = getEffectiveAdminPassword();
         updatePlatformLockButtonUI();
+        populatePaymentFormFields();
 
         document.getElementById("studentLoginScreen").classList.add("hidden");
         document.getElementById("studentView").classList.add("hidden");
@@ -2592,7 +1487,7 @@
         document.getElementById("adminView").classList.remove("hidden");
 
         refreshAllAdminViews();
-        switchAdminTab("smartfeed");
+        switchAdminTab("subjects");
       } else {
         alert("كلمة مرور المدير غير صحيحة!");
       }
@@ -2602,15 +1497,18 @@
       document.getElementById("adminView").classList.add("hidden");
       document.getElementById("studentView").classList.add("hidden");
       document.getElementById("studentLoginScreen").classList.remove("hidden");
+      renderPublicPaymentInfo();
     }
 
     function resetAllToStudentLogin() {
       clearInterval(timerInterval);
       currentStudent = null;
+      isFreeTrialSession = false;
       document.getElementById("loggedStudentHeaderBadge").classList.add("hidden");
       document.getElementById("adminView").classList.add("hidden");
       document.getElementById("studentView").classList.add("hidden");
       document.getElementById("studentLoginScreen").classList.remove("hidden");
+      renderPublicPaymentInfo();
     }
 
     function updatePlatformLockButtonUI() {
@@ -2627,7 +1525,7 @@
     function togglePlatformMaintenance() {
       const nextState = !isPlatformLocked();
       PLATFORM_LOCKED = nextState;
-      localStorage.setItem("malek_platform_locked_v3", String(nextState));
+      localStorage.setItem("malek_platform_locked_v5", String(nextState));
       updatePlatformLockButtonUI();
       alert(nextState ? "تم إغلاق المنصة عن الطلاب مؤقتاً (اضغط نشر لتثبيت الإغلاق)." : "تم فتح المنصة للطلاب.");
     }
@@ -2636,7 +1534,7 @@
       const newPass = document.getElementById("adminPasswordEditInput").value.trim();
       if (!newPass || newPass.length < 4) return alert("أدخل كلمة مرور من 4 أحرف على الأقل.");
       ADMIN_PASSWORD = newPass;
-      localStorage.setItem("malek_custom_admin_pass_v3", newPass);
+      localStorage.setItem("malek_custom_admin_pass_v5", newPass);
       alert("تم تحديث كلمة مرور المدير! اضغط 'نشر جميع التعديلات' لتثبيتها.");
     }
 
@@ -2649,15 +1547,39 @@
 
     function copyPlatformLink() {
       const cleanUrl = window.location.origin + window.location.pathname;
-      const text = `منصة المالك الطبية (Al-Malik Medical Platform):\n${cleanUrl}\nأرسل طلب تسجيل حساب أو أدخل كودك المفعّل.`;
+      const text = `منصة المالك الطبية (Al-Malik Medical Platform):\n${cleanUrl}\nجرّب المنصة مجاناً أو اشترك للحصول على كود الدخول الكامل.`;
       navigator.clipboard.writeText(text).then(() => alert("تم نسخ رابط منصة المالك:\n\n" + text));
+    }
+
+    // تعبئة وحفظ بيانات الدفع والبنك وقناة الواتساب
+    function populatePaymentFormFields() {
+      document.getElementById("payBankNameInput").value = paymentConfig.bankName || "";
+      document.getElementById("payAccountHolderInput").value = paymentConfig.accountHolder || "";
+      document.getElementById("payAccountNumberInput").value = paymentConfig.accountNumber || "";
+      document.getElementById("payPhoneNumberInput").value = paymentConfig.phoneNumber || "";
+      document.getElementById("whatsappChannelUrlInput").value = paymentConfig.whatsappChannel || "";
+    }
+
+    function savePaymentAndWhatsappSettings(e) {
+      e.preventDefault();
+      paymentConfig = {
+        bankName: document.getElementById("payBankNameInput").value.trim(),
+        accountHolder: document.getElementById("payAccountHolderInput").value.trim(),
+        accountNumber: document.getElementById("payAccountNumberInput").value.trim(),
+        phoneNumber: document.getElementById("payPhoneNumberInput").value.trim(),
+        whatsappChannel: document.getElementById("whatsappChannelUrlInput").value.trim()
+      };
+      saveAllLocalState();
+      renderPublicPaymentInfo();
+      alert("✅ تم حفظ بيانات البنك والدفع ورابط قناة الواتساب! اضغط الآن على '🚀 نشر جميع التعديلات للطلاب فوراً' لتحديثها للجميع.");
     }
 
     function switchAdminTab(tab) {
       const tabs = {
-        smartfeed: ["admTabSmartFeed", "adminPaneSmartFeed"],
-        students: ["admTabStudents", "adminPaneStudents"],
         subjects: ["admTabSubjects", "adminPaneSubjects"],
+        students: ["admTabStudents", "adminPaneStudents"],
+        payment: ["admTabPayment", "adminPanePayment"],
+        smartfeed: ["admTabSmartFeed", "adminPaneSmartFeed"],
         content: ["admTabContent", "adminPaneContent"],
         questions: ["admTabQuestions", "adminPaneQuestions"],
         announcements: ["admTabAnnouncements", "adminPaneAnnouncements"]
@@ -2671,24 +1593,303 @@
     }
 
     function refreshAllAdminViews() {
-      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
       document.getElementById("admBadgeStudents").textContent = studentsList.length;
       document.getElementById("admBadgeSubjects").textContent = subjectsList.length;
       document.getElementById("admBadgeContent").textContent = lecturesList.length + filesList.length;
       document.getElementById("admBadgeQuestions").textContent = questions.length;
       document.getElementById("admBadgeAnnouncements").textContent = announcementsList.length;
 
-      renderAdminStudentsTable();
       renderAdminSubjectsList();
+      renderAdminStudentsTable();
       populateAdminSubjectSelects();
       renderAdminContentLists();
       renderAdminQuestionsList();
       renderAdminAnnouncementsList();
     }
 
-    // ==========================================
-    // معالجة التغذية الذكية السريعة (Bulk Feed)
-    // ==========================================
+    // إدارة المواد (قفل/فتح المادة + مجانية/مدفوعة + الطلاب المفعّلة عندهم)
+    function addSubject(e) {
+      e.preventDefault();
+      const year = document.getElementById("subYearInput").value;
+      const semester = document.getElementById("subSemesterInput").value;
+      const name = document.getElementById("subNameInput").value.trim();
+      const isFreeTrial = document.getElementById("subIsFreeInput").value === "true";
+      if (!name) return;
+
+      subjectsList.push({
+        id: "sub_" + Date.now(),
+        year,
+        semester,
+        name,
+        isOpen: true,
+        isFreeTrial
+      });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      alert("تمت إضافة المادة بنجاح!");
+    }
+
+    function toggleSubjectOpenStatus(id) {
+      const sub = subjectsList.find(s => s.id === id);
+      if (!sub) return;
+      sub.isOpen = sub.isOpen === false ? true : false;
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    function toggleSubjectFreeTrialStatus(id) {
+      const sub = subjectsList.find(s => s.id === id);
+      if (!sub) return;
+      sub.isFreeTrial = !sub.isFreeTrial;
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    function deleteSubject(id) {
+      if (!confirm("هل تريد حذف هذه المادة؟")) return;
+      subjectsList = subjectsList.filter(s => s.id !== id);
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    // نافذة إدارة الطلاب المفعّلة عندهم مادة معينة (من بطاقة المادة)
+    function openSubjectStudentsModal(subjectId) {
+      editingSubjectIdForStudents = subjectId;
+      const sub = subjectsList.find(s => s.id === subjectId);
+      if (!sub) return;
+
+      document.getElementById("subStuModalInfo").textContent = `المادة: ${sub.name} (${sub.year} • ${sub.semester})`;
+      const container = document.getElementById("subStudentsChecklist");
+
+      if (studentsList.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">لا يوجد طلاب مسجلون في المنصة بعد.</p>`;
+      } else {
+        container.innerHTML = studentsList.map((stu, idx) => {
+          const hasSub = Array.isArray(stu.allowedSubjects) && stu.allowedSubjects.includes(subjectId);
+          return `
+            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 cursor-pointer">
+              <div>
+                <p class="text-xs font-bold text-white">${stu.name} <span class="font-mono text-amber-400">(${stu.code})</span></p>
+                <span class="text-[11px] text-slate-400">${stu.year || ""} • ${stu.approved ? "حساب مفعّل" : "حساب غير مفعّل"}</span>
+              </div>
+              <input type="checkbox" data-stu-idx="${idx}" ${hasSub ? "checked" : ""} class="sub-stu-checkbox w-4 h-4 accent-emerald-500 rounded" />
+            </label>
+          `;
+        }).join("");
+      }
+
+      document.getElementById("subjectStudentsModal").classList.remove("hidden");
+    }
+
+    function closeSubjectStudentsModal() {
+      editingSubjectIdForStudents = null;
+      document.getElementById("subjectStudentsModal").classList.add("hidden");
+    }
+
+    function saveSubjectStudentsAssignment() {
+      if (!editingSubjectIdForStudents) return;
+      document.querySelectorAll(".sub-stu-checkbox").forEach(cb => {
+        const idx = parseInt(cb.getAttribute("data-stu-idx"));
+        const stu = studentsList[idx];
+        if (!stu) return;
+        if (!Array.isArray(stu.allowedSubjects)) stu.allowedSubjects = [];
+
+        if (cb.checked) {
+          if (!stu.allowedSubjects.includes(editingSubjectIdForStudents)) {
+            stu.allowedSubjects.push(editingSubjectIdForStudents);
+          }
+        } else {
+          stu.allowedSubjects = stu.allowedSubjects.filter(id => id !== editingSubjectIdForStudents);
+        }
+      });
+
+      saveAllLocalState();
+      closeSubjectStudentsModal();
+      refreshAllAdminViews();
+      alert("✅ تم تحديث قائمة الطلاب المفعّلة عندهم المادة! اضغط 'نشر جميع التعديلات' لتثبيتها.");
+    }
+
+    function renderAdminSubjectsList() {
+      document.getElementById("adminSubjectsList").innerHTML = subjectsList.map(s => {
+        const isOpen = s.isOpen !== false;
+        const enrolledStudents = studentsList.filter(stu => Array.isArray(stu.allowedSubjects) && stu.allowedSubjects.includes(s.id));
+        const enrolledNames = enrolledStudents.length > 0
+          ? enrolledStudents.map(st => st.name).join("، ")
+          : "لا يوجد طلاب مفعّلة عندهم بعد";
+
+        return `
+          <div class="p-4 rounded-2xl bg-slate-950 border ${isOpen ? "border-slate-800" : "border-red-900/60"} flex flex-col justify-between gap-3">
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                <span class="text-[11px] font-bold text-amber-400">${s.year} • ${s.semester}</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded ${s.isFreeTrial ? "bg-emerald-500/20 text-emerald-300" : "bg-blue-500/20 text-blue-300"}">
+                    ${s.isFreeTrial ? "🎁 تجربة مجانية" : "💎 مدفوعة"}
+                  </span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded ${isOpen ? "bg-emerald-950 text-emerald-400 border border-emerald-800" : "bg-red-950 text-red-400 border border-red-800"}">
+                    ${isOpen ? "🔓 مفتوحة" : "🔒 مقفولة"}
+                  </span>
+                </div>
+              </div>
+              <h4 class="text-base font-extrabold text-white">${s.name}</h4>
+              <div class="mt-2 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800">
+                <p class="text-[11px] font-bold text-slate-300">👨‍⚕️ الطلاب المفعّلة عندهم (${enrolledStudents.length}):</p>
+                <p class="text-[11px] text-emerald-400 mt-0.5 leading-relaxed">${enrolledNames}</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/80">
+              <button type="button" onclick="toggleSubjectOpenStatus('${s.id}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold ${isOpen ? "bg-amber-900/50 text-amber-200 hover:bg-amber-800" : "bg-emerald-700 text-white hover:bg-emerald-600"}">
+                ${isOpen ? "🔒 قفل على الطلاب" : "🔓 فتح للطلاب"}
+              </button>
+              <button type="button" onclick="openSubjectStudentsModal('${s.id}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-blue-950 text-blue-300 border border-blue-800 hover:bg-blue-900">
+                👥 الطلاب (${enrolledStudents.length})
+              </button>
+              <button type="button" onclick="toggleSubjectFreeTrialStatus('${s.id}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-200 hover:bg-slate-700">
+                ${s.isFreeTrial ? "تحويل لمدفوعة" : "إتاحة كمجانية"}
+              </button>
+              <button type="button" onclick="deleteSubject('${s.id}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-red-950 text-red-300 hover:bg-red-900 mr-auto">
+                حذف
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // إدارة الطلاب
+    function adminCreateStudentDirect(e) {
+      e.preventDefault();
+      const name = document.getElementById("admNewStuName").value.trim();
+      const studentId = document.getElementById("admNewStuId").value.trim();
+      const year = document.getElementById("admNewStuYear").value;
+      if (!name || !studentId) return;
+
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+      const code = generateUniqueStudentCode();
+      studentsList.push({
+        name,
+        studentId,
+        year,
+        code,
+        approved: true,
+        allowedSubjects: [],
+        results: []
+      });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      navigator.clipboard.writeText(code).catch(() => {});
+      alert(`✅ تم إنشاء حساب مفعّل للطالب (${name})\nكود الدخول: ${code}\n\nحدد له المواد المسموحة الآن ثم اضغط "نشر جميع التعديلات".`);
+    }
+
+    function copyStudentCodeForAdmin(code, name) {
+      const msg = `مرحباً ${name}، تم تفعيل اشتراكك في منصة المالك الطبية.\nرابط المنصة: ${window.location.origin + window.location.pathname}\nكود الدخول الخاص بك: ${code}`;
+      navigator.clipboard.writeText(msg).then(() => {
+        alert("تم نسخ رسالة التفعيل مع الكود لإرسالها للطالب:\n\n" + msg);
+      });
+    }
+
+    function openStudentPermissionsModal(idx) {
+      editingStudentIdx = idx;
+      const stu = studentsList[idx];
+      if (!stu) return;
+      if (!Array.isArray(stu.allowedSubjects)) stu.allowedSubjects = [];
+      document.getElementById("permModalStudentInfo").textContent = `الطالب: ${stu.name} (${stu.code}) — ${stu.year || ""}`;
+
+      const listContainer = document.getElementById("permSubjectsChecklist");
+      if (subjectsList.length === 0) {
+        listContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">لا توجد مواد مضافة بعد.</p>`;
+      } else {
+        listContainer.innerHTML = subjectsList.map(sub => {
+          const isChecked = stu.allowedSubjects.includes(sub.id) ? "checked" : "";
+          return `
+            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-500/50 cursor-pointer">
+              <div>
+                <p class="text-xs font-bold text-white">${sub.name}</p>
+                <span class="text-[11px] text-amber-400">${sub.year} • ${sub.semester}</span>
+              </div>
+              <input type="checkbox" value="${sub.id}" ${isChecked} class="perm-subject-checkbox w-4 h-4 accent-amber-500 rounded" />
+            </label>
+          `;
+        }).join("");
+      }
+
+      document.getElementById("studentPermissionsModal").classList.remove("hidden");
+    }
+
+    function closeStudentPermissionsModal() { editingStudentIdx = null; document.getElementById("studentPermissionsModal").classList.add("hidden"); }
+    function toggleAllPermissionsCheckboxes(state) { document.querySelectorAll(".perm-subject-checkbox").forEach(cb => cb.checked = state); }
+
+    function saveStudentSubjectPermissions() {
+      if (editingStudentIdx === null) return;
+      const selectedIds = Array.from(document.querySelectorAll(".perm-subject-checkbox:checked")).map(cb => cb.value);
+      studentsList[editingStudentIdx].allowedSubjects = selectedIds;
+      saveAllLocalState();
+      closeStudentPermissionsModal();
+      refreshAllAdminViews();
+      alert(`✅ تم حفظ صلاحيات المواد (${selectedIds.length} مادة). اضغط "نشر جميع التعديلات" لتثبيتها.`);
+    }
+
+    function renderAdminStudentsTable() {
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+      document.getElementById("admBadgeStudents").textContent = studentsList.length;
+      const tbody = document.getElementById("adminStudentsTableBody");
+
+      if (studentsList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-5 text-center text-slate-400">لا يوجد طلاب مسجلون بعد.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = studentsList.map((s, idx) => {
+        const statusBadge = s.approved
+          ? `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">مُفعّل ✅</span>`
+          : `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold">بانتظار التفعيل ⏳</span>`;
+
+        const toggleBtn = s.approved
+          ? `<button type="button" onclick="toggleStudentApproval(${idx}, false)" class="px-2 py-1 rounded-lg bg-amber-900/60 text-amber-200 hover:bg-amber-800 font-bold">🔒 إغلاق</button>`
+          : `<button type="button" onclick="toggleStudentApproval(${idx}, true)" class="px-2 py-1 rounded-lg bg-emerald-700 text-white hover:bg-emerald-600 font-bold">✅ تفعيل</button>`;
+
+        const allowedCount = Array.isArray(s.allowedSubjects) ? s.allowedSubjects.length : 0;
+        const allowedNames = Array.isArray(s.allowedSubjects) && s.allowedSubjects.length > 0
+          ? s.allowedSubjects.map(id => subjectsList.find(sub => sub.id === id)?.name || id).join("، ")
+          : "لا توجد مواد مسموحة بعد";
+
+        return `
+          <tr class="hover:bg-slate-900/60">
+            <td class="py-3 px-3 font-bold text-white">${s.name}</td>
+            <td class="py-3 px-3 text-slate-300">${s.studentId}</td>
+            <td class="py-3 px-3 text-slate-300">${s.year || "—"}</td>
+            <td class="py-3 px-3 font-mono font-bold text-amber-400">
+              <div class="flex items-center gap-1.5">
+                <span>${s.code}</span>
+                <button type="button" onclick="copyStudentCodeForAdmin('${s.code}', '${s.name}')" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-white hover:border-amber-500">نسخ</button>
+              </div>
+            </td>
+            <td class="py-3 px-3">${statusBadge}</td>
+            <td class="py-3 px-3">
+              <button type="button" onclick="openStudentPermissionsModal(${idx})" class="px-2.5 py-1 rounded-lg bg-blue-950 text-blue-300 border border-blue-700 hover:bg-blue-900 font-bold">
+                📚 صلاحيات المواد (${allowedCount})
+              </button>
+              <p class="text-[10px] text-slate-400 mt-1 max-w-[180px] truncate" title="${allowedNames}">${allowedNames}</p>
+            </td>
+            <td class="py-3 px-3">
+              <div class="flex items-center gap-1.5">
+                ${toggleBtn}
+                <button type="button" onclick="deleteStudentRecord(${idx})" class="px-2 py-1 rounded-lg bg-red-900/60 text-red-200 hover:bg-red-800 font-bold">حذف</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function toggleStudentApproval(idx, state) { studentsList[idx].approved = state; saveAllLocalState(); renderAdminStudentsTable(); }
+    function deleteStudentRecord(idx) { studentsList.splice(idx, 1); saveAllLocalState(); refreshAllAdminViews(); }
+
+    // التغذية الذكية السريعة
     function applyFeedPayload(payload) {
       let addedSubjects = 0, addedLectures = 0, addedFiles = 0, addedQuestions = 0;
 
@@ -2701,7 +1902,9 @@
               id,
               year: s.year || "السنة الأولى",
               semester: s.semester || "الفصل الأول",
-              name: s.name
+              name: s.name,
+              isOpen: s.isOpen !== false,
+              isFreeTrial: s.isFreeTrial === true
             });
             addedSubjects++;
           }
@@ -2778,7 +1981,7 @@
         const parsed = JSON.parse(raw);
         const res = applyFeedPayload(parsed);
         document.getElementById("bulkContentJsonInput").value = "";
-        alert(`✅ تمت التغذية بنجاح!\n• مواد مضافة: ${res.addedSubjects}\n• محاضرات مضافة: ${res.addedLectures}\n• ملفات مضافة: ${res.addedFiles}\n\nاضغط الآن على '🚀 نشر جميع التعديلات للطلاب فوراً'.`);
+        alert(`✅ تمت التغذية بنجاح!\n• مواد: ${res.addedSubjects}\n• محاضرات: ${res.addedLectures}\n• ملفات: ${res.addedFiles}`);
       } catch (err) {
         alert("❌ تنسيق الكود غير صحيح، تأكد من نسخ الكود كاملاً بدون نقص.");
       }
@@ -2792,7 +1995,7 @@
         const payload = Array.isArray(parsed) ? { questions: parsed } : parsed;
         const res = applyFeedPayload(payload);
         document.getElementById("bulkQuestionsJsonInput").value = "";
-        alert(`✅ تمت إضافة (${res.addedQuestions}) سؤال بنجاح مع خياراتها وشروحاتها!\n\nاضغط الآن على '🚀 نشر جميع التعديلات للطلاب فوراً'.`);
+        alert(`✅ تمت إضافة (${res.addedQuestions}) سؤال بنجاح!`);
       } catch (err) {
         alert("❌ تنسيق كود الأسئلة غير صحيح، تأكد من نسخ الكود كاملاً بدون نقص.");
       }
@@ -2807,109 +2010,10 @@
         const data = await res.json();
         const stats = applyFeedPayload(data);
         document.getElementById("smartFeedUrlInput").value = "";
-        alert(`✅ تم سحب البيانات وتغذية المنصة بنجاح!\n• مواد: ${stats.addedSubjects}\n• محاضرات: ${stats.addedLectures}\n• ملفات: ${stats.addedFiles}\n• أسئلة: ${stats.addedQuestions}\n\nاضغط الآن على '🚀 نشر جميع التعديلات للطلاب فوراً'.`);
+        alert(`✅ تم سحب البيانات وتغذية المنصة بنجاح!\n• مواد: ${stats.addedSubjects}\n• محاضرات: ${stats.addedLectures}\n• ملفات: ${stats.addedFiles}\n• أسئلة: ${stats.addedQuestions}`);
       } catch (err) {
         alert("❌ خطأ أثناء السحب من الرابط: " + err.message);
       }
-    }
-
-    // إدارة الطلاب
-    function adminCreateStudentDirect(e) {
-      e.preventDefault();
-      const name = document.getElementById("admNewStuName").value.trim();
-      const studentId = document.getElementById("admNewStuId").value.trim();
-      const year = document.getElementById("admNewStuYear").value;
-      if (!name || !studentId) return;
-
-      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
-      const code = generateUniqueStudentCode();
-      studentsList.push({ name, studentId, year, code, approved: true, results: [] });
-      saveAllLocalState();
-      e.target.reset();
-      refreshAllAdminViews();
-      navigator.clipboard.writeText(code).catch(() => {});
-      alert(`✅ تم إنشاء حساب مفعّل للطالب (${name})\nكود الدخول الخاص به: ${code}\n(تم نسخ الكود للحافظة — اضغط الآن على 'نشر جميع التعديلات للطلاب فوراً')`);
-    }
-
-    function copyStudentCodeForAdmin(code, name) {
-      const msg = `مرحباً ${name}، تم تفعيل حسابك في منصة المالك الطبية.\nرابط المنصة: ${window.location.origin + window.location.pathname}\nكود الدخول الخاص بك: ${code}`;
-      navigator.clipboard.writeText(msg).then(() => {
-        alert("تم نسخ رسالة التفعيل مع الكود لإرسالها للطالب:\n\n" + msg);
-      });
-    }
-
-    function renderAdminStudentsTable() {
-      studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
-      document.getElementById("admBadgeStudents").textContent = studentsList.length;
-      const tbody = document.getElementById("adminStudentsTableBody");
-
-      if (studentsList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-5 text-center text-slate-400">لا يوجد طلاب مسجلون بعد.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = studentsList.map((s, idx) => {
-        const statusBadge = s.approved
-          ? `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">مُفعّل ✅</span>`
-          : `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold">بانتظار التفعيل ⏳</span>`;
-
-        const toggleBtn = s.approved
-          ? `<button type="button" onclick="toggleStudentApproval(${idx}, false)" class="px-2.5 py-1 rounded-lg bg-amber-900/60 text-amber-200 hover:bg-amber-800 font-bold">🔒 إغلاق</button>`
-          : `<button type="button" onclick="toggleStudentApproval(${idx}, true)" class="px-2.5 py-1 rounded-lg bg-emerald-700 text-white hover:bg-emerald-600 font-bold">✅ تفعيل</button>`;
-
-        const resText = (s.results && s.results.length > 0)
-          ? s.results.map(r => `<span class="inline-block bg-slate-800 px-1.5 py-0.5 rounded ml-1 text-emerald-300">${r.subject}: ${r.score}%</span>`).join("")
-          : `<span class="text-slate-500">—</span>`;
-
-        return `
-          <tr class="hover:bg-slate-900/60">
-            <td class="py-3 px-3 font-bold text-white">${s.name}</td>
-            <td class="py-3 px-3 text-slate-300">${s.studentId}</td>
-            <td class="py-3 px-3 text-slate-300">${s.year || "—"}</td>
-            <td class="py-3 px-3 font-mono font-bold text-amber-400 flex items-center gap-1.5">
-              <span>${s.code}</span>
-              <button type="button" onclick="copyStudentCodeForAdmin('${s.code}', '${s.name}')" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-white hover:border-amber-500">نسخ</button>
-            </td>
-            <td class="py-3 px-3">${statusBadge}</td>
-            <td class="py-3 px-3">${resText}</td>
-            <td class="py-3 px-3 flex items-center gap-1.5">
-              ${toggleBtn}
-              <button type="button" onclick="deleteStudentRecord(${idx})" class="px-2.5 py-1 rounded-lg bg-red-900/60 text-red-200 hover:bg-red-800 font-bold">حذف</button>
-            </td>
-          </tr>
-        `;
-      }).join("");
-    }
-
-    function toggleStudentApproval(idx, state) { studentsList[idx].approved = state; saveAllLocalState(); renderAdminStudentsTable(); }
-    function deleteStudentRecord(idx) { studentsList.splice(idx, 1); saveAllLocalState(); renderAdminStudentsTable(); }
-
-    // إدارة المواد والمحتوى والأسئلة والإعلانات
-    function addSubject(e) {
-      e.preventDefault();
-      const year = document.getElementById("subYearInput").value;
-      const semester = document.getElementById("subSemesterInput").value;
-      const name = document.getElementById("subNameInput").value.trim();
-      if (!name) return;
-      subjectsList.push({ id: "sub_" + Date.now(), year, semester, name });
-      saveAllLocalState();
-      e.target.reset();
-      refreshAllAdminViews();
-      alert("تمت إضافة المادة بنجاح!");
-    }
-
-    function deleteSubject(id) { subjectsList = subjectsList.filter(s => s.id !== id); saveAllLocalState(); refreshAllAdminViews(); }
-
-    function renderAdminSubjectsList() {
-      document.getElementById("adminSubjectsList").innerHTML = subjectsList.map(s => `
-        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
-          <div>
-            <span class="text-[11px] font-bold text-amber-400">${s.year} • ${s.semester}</span>
-            <p class="text-sm font-bold text-white mt-0.5">${s.name}</p>
-          </div>
-          <button type="button" onclick="deleteSubject('${s.id}')" class="px-2.5 py-1 rounded bg-red-900/60 text-red-200 text-xs">حذف</button>
-        </div>
-      `).join("");
     }
 
     function populateAdminSubjectSelects() {
@@ -3103,10 +2207,10 @@
       const status = document.getElementById("publishStatus");
       btn.disabled = true;
       btn.textContent = "⏳ جاري النشر للطلاب...";
-      status.textContent = "جاري تحديث الطلاب، المواد، المحاضرات، الملفات، والاختبارات...";
+      status.textContent = "جاري تحديث بيانات الدفع، قناة الواتساب، المواد، الطلاب، والاختبارات...";
 
       try {
-        studentsList = loadMergedArray("malek_students_v3", DEFAULT_STUDENTS, "code");
+        studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
         const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
         const getRes = await fetch(apiUrl, {
           headers: {
@@ -3125,6 +2229,7 @@
         let updatedContent = currentContent
           .replace(/let ADMIN_PASSWORD = ".*?";/, `let ADMIN_PASSWORD = ${JSON.stringify(currentAdminPass)};`)
           .replace(/let PLATFORM_LOCKED = (true|false);/, `let PLATFORM_LOCKED = ${isPlatformLocked()};`)
+          .replace(/const DEFAULT_PAYMENT_CONFIG = \{[\s\S]*?\};/, `const DEFAULT_PAYMENT_CONFIG = ${JSON.stringify(paymentConfig, null, 2)};`)
           .replace(/const DEFAULT_STUDENTS = \[[\s\S]*?\];/, `const DEFAULT_STUDENTS = ${JSON.stringify(studentsList, null, 2)};`)
           .replace(/const DEFAULT_ANNOUNCEMENTS = \[[\s\S]*?\];/, `const DEFAULT_ANNOUNCEMENTS = ${JSON.stringify(announcementsList, null, 2)};`)
           .replace(/const DEFAULT_SUBJECTS = \[[\s\S]*?\];/, `const DEFAULT_SUBJECTS = ${JSON.stringify(subjectsList, null, 2)};`)
@@ -3142,7 +2247,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            message: "Publish full updates from Al-Malik Medical Platform",
+            message: "Publish free trial, paid portal, bank & WhatsApp updates from Al-Malik LMS",
             content: encodedContent,
             sha: fileData.sha
           })
@@ -3151,9 +2256,9 @@
         if (!putRes.ok) throw new Error("فشل رفع التحديثات إلى GitHub.");
 
         ADMIN_PASSWORD = currentAdminPass;
-        localStorage.setItem("malek_custom_admin_pass_v3", currentAdminPass);
+        localStorage.setItem("malek_custom_admin_pass_v5", currentAdminPass);
         status.className = "text-xs font-bold text-emerald-400";
-        status.textContent = "✅ تم النشر بنجاح! جميع التعديلات وتفعيلات الطلاب متاحة الآن على الرابط.";
+        status.textContent = "✅ تم النشر بنجاح! جميع التعديلات متاحة الآن للطلاب.";
         alert("تم نشر جميع التعديلات بنجاح للطلاب!");
       } catch (err) {
         status.className = "text-xs font-bold text-red-400";
@@ -3164,6 +2269,9 @@
         btn.textContent = "🚀 نشر جميع التعديلات للطلاب فوراً";
       }
     }
+
+    // تهيئة بيانات الدفع عند فتح الصفحة
+    renderPublicPaymentInfo();
   </script>
 </body>
 </html>
