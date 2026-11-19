@@ -819,7 +819,16 @@
   }
 ];
 
-    const DEFAULT_SUBJECTS = [];
+    const DEFAULT_SUBJECTS = [
+  {
+    "id": "general-biology",
+    "year": "السنة الأولى",
+    "semester": "الفصل الأول",
+    "name": "أحياء عامة (General Biology)",
+    "isOpen": true,
+    "isFreeTrial": false
+  }
+];
 
     const DEFAULT_LECTURES = [
   {
@@ -832,7 +841,1184 @@
 
     const DEFAULT_FILES = [];
 
-    const DEFAULT_QUESTIONS = []; Kw = [H+]^2 = 1 × 10^-14 M^2, hence [H+] = √Kw = 10^-7 M."
+    const DEFAULT_QUESTIONS = [
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Binding of phosphate to (C-5') atom of pentose is the most prevalent form in biological systems and the one found in DNA but not RNA.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Only in prokaryotic RNA",
+      "Depends on pH"
+    ],
+    "correct": 1,
+    "explanation": "False. Binding of phosphate to the C-5' atom of pentose is the most prevalent form in biological systems and is found in BOTH DNA and RNA."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Mutarotation is the process of the direct interconversion of α and β anomers of the monosaccharide in aqueous solution.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Only occurs in non-aqueous solvents",
+      "Occurs without ring opening"
+    ],
+    "correct": 1,
+    "explanation": "False. Mutarotation is NOT a direct interconversion; it occurs via a transient open-chain (linear) intermediate form in aqueous solution."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Proline residues are constraint for α-helix formation as they introduce a destabilizing kink in an α-helix in addition to their limited ability to form interchain hydrogen bonds with other residues.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Proline stabilizes α-helices",
+      "Proline forms double hydrogen bonds"
+    ],
+    "correct": 1,
+    "explanation": "False. Proline lacks an amide hydrogen to form INTRACHAIN (not interchain) hydrogen bonds within the same polypeptide α-helix, and its rigid ring introduces a destabilizing kink."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Sucrose is a disaccharide formed from D-glucose and D-fructose with its glycosidic bond formed between non-anomeric carbon atoms; therefore, sucrose is a non-reducing sugar.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Sucrose is a reducing sugar",
+      "Formed from galactose and glucose"
+    ],
+    "correct": 1,
+    "explanation": "False. In sucrose, the glycosidic bond is formed BETWEEN the ANOMERIC carbon atoms (C1 of α-D-glucose and C2 of β-D-fructose), leaving no free anomeric carbon, which makes it a non-reducing sugar."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "All amino acids except glycine contain at least one symmetric carbon and are optically active.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Glycine has two chiral carbons",
+      "None are optically active"
+    ],
+    "correct": 1,
+    "explanation": "False. All standard amino acids except glycine contain at least one ASYMMETRIC (chiral) α-carbon atom, making them optically active."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Chloride shift occurs across the red blood cells (RBCs) of the active (respiring) tissue and the lungs (Alveoli), and it represents the exchange of hydroxide (OH-) ions with chloride (Cl-) ions to keep the RBC uncharged.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Exchanges Na+ with Cl-",
+      "Occurs only in white blood cells"
+    ],
+    "correct": 1,
+    "explanation": "False. Chloride shift represents the exchange of BICARBONATE (HCO3-) ions with chloride (Cl-) ions across the RBC membrane to maintain electrical neutrality."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The 'flickering clusters' is the phrase that has been applied to the strong-connected groups of water molecules interlinked by hydrogen bonds in liquid water.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Applies only to solid ice",
+      "Refers to covalent O-H bonds"
+    ],
+    "correct": 1,
+    "explanation": "False. 'Flickering clusters' refers to SHORT-LIVED (weakly/transiently connected) groups of water molecules continuously forming and breaking hydrogen bonds in liquid water."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The net charge of acidic amino acid at high pH is (-1).",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Net charge is 0",
+      "Net charge is +1"
+    ],
+    "correct": 1,
+    "explanation": "False. At high pH (alkaline), both carboxyl groups (α-COOH and R-group COOH) are deprotonated (-COO-) and the amino group is neutral (-NH2), resulting in a net charge of (-2)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The colligative properties of water depend only on the number of solute particles in a given amount of water and alter its physical properties: osmotic pressure, boiling point, freezing point, and heat of vaporization.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Depends on solute molecular weight",
+      "Affects density only"
+    ],
+    "correct": 1,
+    "explanation": "False. The four colligative properties are osmotic pressure, boiling point, freezing point, and VAPOR PRESSURE (not heat of vaporization)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Molecules that contain at least one chiral carbon are optically active.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Only molecules with 3 chiral carbons",
+      "Chiral carbons prevent optical activity"
+    ],
+    "correct": 1,
+    "explanation": "False. Meso compounds contain chiral carbons yet are optically inactive due to an internal plane of symmetry; also racemic mixtures are optically inactive."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Z form of DNA is a synthetic left-handed CG-very rich double helix produced under high humidity conditions.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Z-DNA is right-handed",
+      "A-DNA is left-handed"
+    ],
+    "correct": 1,
+    "explanation": "False. Z-DNA is formed under HIGH SALT concentration (or negative supercoiling), whereas A-DNA is formed under low humidity conditions."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "In a double stranded DNA organisms, the ratio of purines: pyrimidines is organism specific.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Ratio is always 2:1",
+      "Applies only to RNA"
+    ],
+    "correct": 1,
+    "explanation": "False. According to Chargaff's rules, in all double-stranded DNA organisms, Purines = Pyrimidines, so the ratio is always 1:1 (constant, NOT organism specific). The (A+T)/(G+C) ratio is what is organism specific."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Modified nucleosides triphosphate such as 2', 3' dideoxycytidine (2', 3' ddCTP) could be used to treat cancer and virally infected cells by inhibiting the transcription of the DNA.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Inhibits translation",
+      "Inhibits glycolysis"
+    ],
+    "correct": 1,
+    "explanation": "False. 2',3'-dideoxynucleoside triphosphates lack a 3'-OH group and act as chain terminators that inhibit DNA REPLICATION (DNA synthesis / reverse transcription), not transcription."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Amphipathic compounds contain regions that are polar and charged and regions that are polar but uncharged.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Contain only hydrophobic regions",
+      "Contain only ionic bonds"
+    ],
+    "correct": 1,
+    "explanation": "False. Amphipathic compounds contain regions that are polar (hydrophilic) and regions that are NONPOLAR (hydrophobic)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The enzyme lysozyme is notably present in tears and kills bacteria by hydrolyzing the peptide bonds of the crosslinked short peptides of the bacterial peptidoglycan cell wall.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Lysozyme is found only in blood",
+      "Lysozyme breaks phosphodiester bonds"
+    ],
+    "correct": 1,
+    "explanation": "False. Lysozyme kills bacteria by hydrolyzing the β(1→4) GLYCOSIDIC bonds between NAG and NAM in the peptidoglycan polysaccharide backbone, not the peptide crosslinks."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Polar amino acids are characterized by having an ionizable R-group.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "All amino acids have ionizable R-groups",
+      "Nonpolar amino acids are charged"
+    ],
+    "correct": 1,
+    "explanation": "False. Polar UNCHARGED amino acids (like serine, threonine, glutamine) have hydrophilic R-groups that form hydrogen bonds without being ionizable; only acidic and basic amino acids have ionizable R-groups."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The phosphodiester bond of a polynucleotide is very strong ionic bond, and for this reason DNA is remarkably stable. DNA can be boiled and even autoclaved without degrading.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Phosphodiester bond is a hydrogen bond",
+      "DNA cannot be denatured by heat"
+    ],
+    "correct": 1,
+    "explanation": "False. The phosphodiester bond is a strong COVALENT bond (not an ionic bond), though the covalent backbone survives boiling (denaturation separates the hydrogen-bonded strands)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "All monosaccharides are reducing sugars except dihydroxyacetone.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Glucose is non-reducing",
+      "Fructose is non-reducing"
+    ],
+    "correct": 1,
+    "explanation": "False. ALL monosaccharides (including both aldoses and ketoses such as dihydroxyacetone) are reducing sugars because they possess a free carbonyl group (or tautomerize to an aldose)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "O2, N2 and CO2 are nonpolar gases because electrons are shared equally by atoms.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "CO2 is a polar molecule",
+      "O2 has ionic bonds"
+    ],
+    "correct": 1,
+    "explanation": "False. In CO2, electrons are NOT shared equally (C=O bonds are polar), but CO2 is nonpolar overall because its linear geometry cancels out the two opposite bond dipoles."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "In glucose linear form the orientation of the -H and -OH groups around the carbon atom # 5 determines the anomeric forms of glucose.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Carbon #2 determines D/L",
+      "Carbon #6 is the anomeric carbon"
+    ],
+    "correct": 1,
+    "explanation": "False. In linear glucose, orientation around C-5 determines the D and L enantiomeric forms; the anomeric forms (α and β) only exist in the CYCLIC form around C-1."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Optically active molecules must have at least one stereogenic center.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Optically active molecules have no isomers",
+      "Only polymers are optically active"
+    ],
+    "correct": 0,
+    "explanation": "True. Optical activity requires chirality (asymmetry), which necessitates at least one stereogenic center (or chiral axis/plane) without an internal plane of symmetry."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Generally the ionizable polar substances have more effect than non-ionizable substances on the colligative properties of water.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Non-ionizable solutes dissociate into ions",
+      "Colligative properties ignore ion count"
+    ],
+    "correct": 0,
+    "explanation": "True. Ionizable substances dissociate into multiple ions (van 't Hoff factor i > 1), producing more solute particles per mole than non-ionizable substances."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The number of α(1→6) bonds per mole of starch is lower than the number of α(1→6) bonds per mole of glycogen.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Starch is more branched than glycogen",
+      "Neither contains α(1→6) bonds"
+    ],
+    "correct": 0,
+    "explanation": "True. Glycogen is much more extensively branched (branching every 8–12 residues) than amylopectin in starch (every 24–30 residues), so it has more α(1→6) glycosidic linkages."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "At high pH, the net charge of monoamino dicarboxylic α-amino acid is (-2).",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Net charge is (-1)",
+      "Net charge is (0)"
+    ],
+    "correct": 0,
+    "explanation": "True. A monoamino dicarboxylic α-amino acid (acidic amino acid like Asp or Glu) has two deprotonated carboxyl groups (-1 each) and a neutral amino group (0) at high pH, giving a net charge of -2."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "26:3(Δ9,15,19): this represents a 25-carbon tail polyunsaturated fatty acid with three double bonds between C-9 and C-10, between C-15 and C-16 and between C-19 and C-20.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Has 26 carbons in the tail",
+      "Has 4 double bonds"
+    ],
+    "correct": 0,
+    "explanation": "True. A 26-carbon fatty acid (26:3) has 1 carboxyl carbon (C-1) plus a 25-carbon hydrocarbon tail, with 3 double bonds starting at C-9, C-15, and C-19."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Carbonic anhydrase (CAH) is an enzyme found inside the RBCs and catalyzes the reversible formation/breakdown of carbonic acid.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Found only in blood plasma",
+      "Catalyzes irreversible breakdown"
+    ],
+    "correct": 0,
+    "explanation": "True. Carbonic anhydrase inside red blood cells rapidly and reversibly catalyzes the hydration of CO2 to carbonic acid (H2CO3) and its dehydration back to CO2 and H2O."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "snRNA are nucleic acids with enzymatic activities.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "snRNA encodes proteins",
+      "snRNA is double-stranded DNA"
+    ],
+    "correct": 0,
+    "explanation": "True. Small nuclear RNAs (snRNAs) are catalytic RNA molecules (ribozymes) within the spliceosome that catalyze pre-mRNA splicing."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The cohesive forces provided by the many hydrogen bonds between water molecules are responsible for making H2O liquid at room temperature and forming the H2O crystalline ice structure.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Ionic bonds keep water liquid",
+      "Water is a gas at room temperature"
+    ],
+    "correct": 0,
+    "explanation": "True. Extensive intermolecular hydrogen bonding gives water high cohesion and a high boiling point (liquid at room temperature) and arranges water into an open tetrahedral lattice in crystalline ice."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Lactose is a reducing disaccharide formed from D-galactose and D-glucose and it is abbreviated as Gal β(1→4)Glc.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Abbreviated as Glc α(1→2)Fru",
+      "Lactose is a non-reducing sugar"
+    ],
+    "correct": 0,
+    "explanation": "True. Lactose consists of D-galactose linked via a β(1→4) glycosidic bond to D-glucose, leaving C-1 of glucose free as a reducing hemiacetal."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The double bonds of polyunsaturated fatty acids are almost never conjugated but are separated by a methylene (-CH2-) group.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Double bonds are always conjugated",
+      "Separated by oxygen atoms"
+    ],
+    "correct": 0,
+    "explanation": "True. Naturally occurring polyunsaturated fatty acids (PUFAs) have methylene-interrupted cis double bonds (-CH=CH-CH2-CH=CH-)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The net charge of a cysteine dissolved in high alkaline (pH > 12) solution is (-2).",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Net charge is (-1)",
+      "Net charge is (0)"
+    ],
+    "correct": 0,
+    "explanation": "True. At pH > 12, cysteine's α-carboxyl (-COO-, -1), sulfhydryl thiol group (-S-, pKa ~8.3, -1), and α-amino group (-NH2, pKa ~10.8, 0) yield a total net charge of -2."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "In the active (respiring) tissue, lowering the pH inside the red blood cells (RBCs) decreases the affinity of hemoglobin to Oxygen.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Increases hemoglobin oxygen affinity",
+      "pH has no effect on hemoglobin"
+    ],
+    "correct": 0,
+    "explanation": "True. According to the Bohr effect, lower pH (higher [H+]) in metabolically active tissues stabilizes the T-state of hemoglobin, reducing its affinity for O2 and promoting oxygen release."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "In non-reducing disaccharides a double-headed arrow connects the symbols specifying the anomeric carbons and their configurations.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "A single-headed arrow is used",
+      "No arrow is used"
+    ],
+    "correct": 0,
+    "explanation": "True. When both anomeric carbons participate in the glycosidic bond (e.g., sucrose: Glc(α1↔2β)Fru), a double-headed arrow (↔) is used."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The presence of monoamino dicarboxylic α-amino acid near the N-terminus stabilizes the α-helix secondary structure of the polypeptide chain.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Destabilizes the N-terminus",
+      "Stabilizes the C-terminus"
+    ],
+    "correct": 0,
+    "explanation": "True. The α-helix has a macrodipole with a partial positive charge at the N-terminus; negatively charged acidic amino acids (Asp/Glu) near the N-terminus electrostatically stabilize this dipole."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Chitin and cellulose are almost similar linear homopolysaccharides with β(1→4) glycoside bonds linking their monomers. In chitin the hydroxyl group at carbon atom #2 of the D-glucose is replaced by an acetylated amino group.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Chitin has α(1→4) bonds",
+      "Replacement occurs at C-6"
+    ],
+    "correct": 0,
+    "explanation": "True. Both cellulose (poly-D-glucose) and chitin (poly-N-acetyl-D-glucosamine) are unbranched β(1→4)-linked homopolysaccharides, differing at C-2 where -OH is replaced by -NHCOCH3."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "For same weight of crystalline ice and liquid water, Ice is less dense but larger in size than Liquid water.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Ice is denser than liquid water",
+      "Ice has smaller volume than water"
+    ],
+    "correct": 0,
+    "explanation": "True. Hydrogen bonding in crystalline ice creates an open hexagonal lattice, increasing volume (size) and decreasing density (~0.92 g/cm³ vs 1.00 g/cm³ for liquid water) for the same mass."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Making of ice is associated with a decrease of the entropy, while the complementary binding between the polar enzyme and its polar substrate is accompanied with an increase in entropy.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Making ice increases entropy",
+      "Enzyme-substrate binding decreases entropy"
+    ],
+    "correct": 0,
+    "explanation": "True. Freezing orders water molecules into a crystal lattice (ΔS < 0), while binding of a polar substrate to a polar enzyme active site displaces ordered solvation water shells into bulk solvent, increasing overall entropy (ΔS > 0)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "The net charge of basic amino acid at low pH is (+2).",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Net charge is (+1)",
+      "Net charge is (0)"
+    ],
+    "correct": 0,
+    "explanation": "True. At low pH (strongly acidic), the α-carboxyl group is neutral (-COOH, 0), while both the α-amino group (-NH3+, +1) and basic R-group (+1) are protonated, giving a net charge of +2."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "Condensation reaction connects a monomer to a monomer or to a growing polymer.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Hydrolysis connects monomers",
+      "Condensation breaks polymers"
+    ],
+    "correct": 0,
+    "explanation": "True. Polymerization of biological macromolecules occurs via condensation (dehydration synthesis) reactions that covalently link monomers with the removal of water."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 1 (True/False)",
+    "text": "At neutral pH, both polar uncharged and polar charged amino acids exist as zwitterion and can act as either an acid or a base.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Only nonpolar amino acids are zwitterions",
+      "Zwitterions cannot act as acids"
+    ],
+    "correct": 0,
+    "explanation": "True. At neutral pH (~7), α-amino acids possess both a positively charged -NH3+ group (proton donor/acid) and a negatively charged -COO- group (proton acceptor/base), making them amphoteric zwitterions."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 2 (MCQ)",
+    "text": "Of the following segments of DNA molecules, two have a melting temperature (Tm) of about 50°C. But one has a Tm of 43°C. Which one?",
+    "image": "",
+    "options": [
+      "5'-AGTACGCTAG-3' / 3'-TCATGCGATC-5'",
+      "5'-GAATTTAAAC-3' / 3'-CTTAAATTTG-5'",
+      "5'-ATTGATGCTT-3' / 3'-TAACTACGAA-5'",
+      "5'-TTTAAACCCT-3' / 3'-AAATTTGGGA-5'"
+    ],
+    "correct": 1,
+    "explanation": "Melting temperature (Tm) increases with G-C content (3 hydrogen bonds vs 2 in A-T). Sequence (b) has only 2 G-C pairs (20% GC, 80% AT), whereas (a) has 5 G-C pairs and (c), (d) have 3 G-C pairs each, giving (b) the lowest Tm (43°C)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 2 (MCQ)",
+    "text": "Given that the boiling point of Acetic acid (CH3COOH) is 118 °C and the elevation or increase in the boiling point of Acetic acid is 2.9 °C per mole of solute. What is the boiling point of 0.1 M solution of sodium sulphate (Na2SO4) dissolved in Acetic acid?",
+    "image": "",
+    "options": [
+      "109.3°C",
+      "126.7°C",
+      "118.87°C",
+      "117.13°C"
+    ],
+    "correct": 2,
+    "explanation": "Na2SO4 dissociates into 3 ions (2 Na+ + 1 SO4^2-, van 't Hoff factor i = 3). Total effective particle concentration = 0.1 M × 3 = 0.3 M. Boiling point elevation ΔTb = 0.3 × 2.9°C = 0.87°C. New boiling point = 118°C + 0.87°C = 118.87°C."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 2 (MCQ)",
+    "text": "Identify the Haworth projection shown in Question 3 (Part II): a pyranose ring with CH2OH up at C-5, OH up at C-1 (cis to CH2OH), OH down at C-2, OH up at C-3, and OH up at C-4 (or L-configuration mirror orientation as labeled in the exam key).",
+    "image": "",
+    "options": [
+      "α-L-glucose",
+      "α-D-galactose",
+      "β-L-glucose",
+      "β-D-glucose"
+    ],
+    "correct": 2,
+    "explanation": "According to the official exam answer key, the depicted Haworth structure corresponds to β-L-glucose (option c)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 2 (MCQ)",
+    "text": "The following two cyclic monosaccharide molecules (differing only in the configuration of -H and -OH around the anomeric carbon C-1) are called:",
+    "image": "",
+    "options": [
+      "isomers",
+      "anomers",
+      "enantiomers",
+      "Racemic mixture"
+    ],
+    "correct": 1,
+    "explanation": "Cyclic stereoisomers of sugars that differ in configuration solely at the hemiacetal/hemiketal anomeric carbon (C-1 in aldoses) are called anomers (α and β)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 2 (MCQ)",
+    "text": "Identify the Haworth projection shown in Question 5 (Part II): a pyranose ring with CH2OH up at C-5, OH down at C-1, OH down at C-2, OH up at C-3, and OH up at C-4 (official exam key: f) α-L-galactose).",
+    "image": "",
+    "options": [
+      "α-L-glucose",
+      "β-L-glucose",
+      "α-D-galactose",
+      "α-L-galactose"
+    ],
+    "correct": 3,
+    "explanation": "According to the official exam answer key, the depicted pyranose structure is α-L-galactose."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 2 (MCQ)",
+    "text": "Identify the furanose Haworth projection shown in Question 6 (Part II): a five-membered ring with CH2OH groups at C-2 and C-5 pointing up, OH at C-2 pointing down, OH at C-3 pointing up, and OH at C-4 pointing down (official exam key: f) α-L-Fructose).",
+    "image": "",
+    "options": [
+      "α-D-Fructose",
+      "α-L-galactose",
+      "β-L-ribose",
+      "α-L-Fructose"
+    ],
+    "correct": 3,
+    "explanation": "According to the official exam answer key, the depicted fructofuranose ring structure is α-L-Fructose."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 3 (Titration Curve)",
+    "text": "In the titration curve of phosphoric acid (H3PO4; pKa1 = 2.14, pKa2 = 6.86, pKa3 = 12.4), what is the predominant species at Point A (0 equivalents of OH- added, initial acidic solution)?",
+    "image": "",
+    "options": [
+      "[H3PO4]",
+      "[H2PO4^-1]",
+      "[HPO4^-2]",
+      "[PO4^-3]"
+    ],
+    "correct": 0,
+    "explanation": "At Point A (before any base OH- is added, pH < pKa1), phosphoric acid exists predominantly in its fully protonated form [H3PO4]."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 3 (Titration Curve)",
+    "text": "In the titration curve of phosphoric acid (H3PO4; pKa1 = 2.14, pKa2 = 6.86, pKa3 = 12.4), what is the predominant species at Point B (first equivalence region around 1.0 equivalent of OH-)?",
+    "image": "",
+    "options": [
+      "[H3PO4]",
+      "[H2PO4^-1]",
+      "[H2PO4^-1] = [HPO4^-2]",
+      "[PO4^-3]"
+    ],
+    "correct": 1,
+    "explanation": "At Point B (after the first proton is neutralized, between pKa1 and pKa2), the monoanion [H2PO4^-1] is the predominant species."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 3 (Titration Curve)",
+    "text": "In the titration curve of phosphoric acid (H3PO4; pKa1 = 2.14, pKa2 = 6.86, pKa3 = 12.4), what is the predominant species at Point C (second buffer midpoint where pH = pKa2 = 6.86)?",
+    "image": "",
+    "options": [
+      "[H3PO4] = [H2PO4^-1]",
+      "[H2PO4^-1] = [HPO4^-2]",
+      "[HPO4^-2] = [PO4^-3]",
+      "[PO4^-3]"
+    ],
+    "correct": 1,
+    "explanation": "Point C lies on the second buffering plateau (pH = pKa2 = 6.86), where the conjugate acid-base pair [H2PO4^-1] and [HPO4^-2] exist in equal concentrations."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 3 (Titration Curve)",
+    "text": "In the titration curve of phosphoric acid (H3PO4; pKa1 = 2.14, pKa2 = 6.86, pKa3 = 12.4), what is the predominant species at Point D (third buffer midpoint where pH = pKa3 = 12.4)?",
+    "image": "",
+    "options": [
+      "[H2PO4^-1]",
+      "[H2PO4^-1] = [HPO4^-2]",
+      "[HPO4^-2] = [PO4^-3]",
+      "[PO4^-3]"
+    ],
+    "correct": 2,
+    "explanation": "Point D lies on the third buffering plateau (pH = pKa3 = 12.4), where [HPO4^-2] and [PO4^-3] are present in equal concentrations."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Midterm Exam 2022 - Part 3 (Titration Curve)",
+    "text": "In the titration curve of phosphoric acid (H3PO4; pKa1 = 2.14, pKa2 = 6.86, pKa3 = 12.4), what is the predominant species at Point E (strongly alkaline region, pH > 13)?",
+    "image": "",
+    "options": [
+      "[H3PO4]",
+      "[H2PO4^-1]",
+      "[HPO4^-2]",
+      "[PO4^-3]"
+    ],
+    "correct": 3,
+    "explanation": "At Point E (after complete deprotonation at very high pH > pKa3), the fully deprotonated phosphate ion [PO4^-3] predominates."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Calculate the pH for an aqueous solution containing ten folds concentration of H3PO4 as compared to the concentration of HPO4^-2, given that for phosphoric acid H3PO4: pK1 = 2.14, pK2 = 6.86, pK3 = 12.4.",
+    "image": "",
+    "options": [
+      "7.86",
+      "5.86",
+      "3.14",
+      "pH cannot be determined or this is not a buffer system"
+    ],
+    "correct": 3,
+    "explanation": "H3PO4 and HPO4^-2 are NOT a conjugate acid-base pair (they differ by 2 protons; H2PO4^-1 is the intermediate species), so the Henderson-Hasselbalch buffer equation does not apply and this is not a buffer system."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "The high surface tension of water is a result of unbalanced cohesive forces of the water molecules at the surface of the water.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Caused by adhesive forces with air",
+      "Water has low surface tension"
+    ],
+    "correct": 0,
+    "explanation": "True. Water molecules at the air-water interface experience inward and lateral hydrogen-bonding cohesive forces from neighboring water molecules without balancing upward forces from air, creating high surface tension."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Which of the following is NOT correct about entropy?",
+    "image": "",
+    "options": [
+      "Melting of ice is accompanied by an increase of entropy",
+      "Making of ice is associated with a decrease of the entropy",
+      "The complementary binding between the polar enzyme and its polar substrate is accompanied with a decrease in entropy",
+      "Dissolving salts such as CaCl2 in water is associated with an increase of the entropy"
+    ],
+    "correct": 2,
+    "explanation": "Complementary binding between a polar enzyme and its polar substrate releases ordered hydration-shell water molecules into bulk water, resulting in a net INCREASE (not decrease) in entropy."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Which of the following pOH values represents the weakest acidic solution?",
+    "image": "",
+    "options": [
+      "6.9",
+      "8.1",
+      "10.7",
+      "12.8"
+    ],
+    "correct": 1,
+    "explanation": "An acidic solution has pH < 7, which corresponds to pOH > 7 (since pH + pOH = 14). The weakest acidic solution has a pH closest to 7 (pH = 5.9), which corresponds to the lowest pOH value greater than 7: pOH = 8.1."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Hydrogen bonds are strongest when the bonded molecules are oriented to maximize electrostatic interaction and maximize charge repulsion.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Only occurs in nonpolar molecules",
+      "Hydrogen bonds are covalent"
+    ],
+    "correct": 1,
+    "explanation": "False. Hydrogen bonds are strongest when the bonded molecules are oriented to maximize electrostatic attraction and MINIMIZE charge repulsion (linear alignment)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "ينتج التوتر السطحي للماء عن قدرة جزيء الماء الموجود على السطح على تكوين قوى متماسكة فقط مع جزيئات المياه السطحية المجاورة وجزيئات الماء المجاورة تحت السطح.",
+    "image": "",
+    "options": [
+      "صح",
+      "خطأ",
+      "ينتج عن قوى التلاصق مع الهواء",
+      "الماء عديم التوتر السطحي"
+    ],
+    "correct": 0,
+    "explanation": "صح. جزيئات الماء على السطح لا تحاط بجزيئات ماء من الأعلى، فتتجاذب بقوى تماسك (روابط هيدروجينية) مع الجزيئات السطحية وتحت السطحية فقط مما يولد التوتر السطحي."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Given that the freezing point of acetic acid (CH3COOH) is 16.6 °C and the depression or drop in the freezing point of acetic acid is 3.9 °C per mole of solute. What is the freezing point of 0.01 M solution of HCl dissolved in acetic acid?",
+    "image": "",
+    "options": [
+      "11.700°C",
+      "16.522°C",
+      "15.430°C",
+      "4.921°C"
+    ],
+    "correct": 1,
+    "explanation": "HCl dissociates into 2 ions (H+ and Cl-, i = 2). Effective particle concentration = 0.01 M × 2 = 0.02 M. Freezing point depression ΔTf = 0.02 × 3.9°C = 0.078°C. New freezing point = 16.6°C - 0.078°C = 16.522°C."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Butanol has a relatively higher boiling point than butane because of its ability to form hydrogen bonds with water molecules.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Butane forms stronger hydrogen bonds",
+      "Butanol has a lower boiling point"
+    ],
+    "correct": 1,
+    "explanation": "False. Pure butanol has a higher boiling point than butane because of its ability to form intermolecular hydrogen bonds with OTHER BUTANOL molecules (not water molecules)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Hydrogen bonds are strongest when the bonded molecules are oriented to minimize charge repulsion and maximize electrostatic interaction.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Strongest when bent at 90 degrees",
+      "Independent of molecular orientation"
+    ],
+    "correct": 0,
+    "explanation": "True. Optimal linear geometry maximizes electrostatic attraction between partial charges while minimizing repulsion."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Which of the following pKa values represents a 'relatively strongest' weak acid?",
+    "image": "",
+    "options": [
+      "9.72",
+      "12.45",
+      "10.85",
+      "8.85"
+    ],
+    "correct": 3,
+    "explanation": "pKa = -log(Ka). The smaller the pKa value, the larger the acid dissociation constant (Ka) and the stronger the weak acid. Among the choices, 8.85 is the lowest pKa."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Chloride shift occurs across the cells of active (respiring) tissue and the cells of the lungs (Alveoli), and it represents the exchange of bicarbonate (HCO3-) ions with chloride (Cl-) ions to keep the pH of the plasma unchanged.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Exchanges K+ with Cl-",
+      "Occurs in hepatocytes"
+    ],
+    "correct": 1,
+    "explanation": "False. Chloride shift occurs across RED BLOOD CELLS (RBCs) — not tissue/alveolar cells — and serves to maintain electrical neutrality (ionic balance) of the RBC, not to keep plasma pH unchanged."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Given that the freezing point of water is 0.0 °C and the depression or drop in the freezing point of water is 1.85 °C per mole of solute. What is the freezing point of 0.01 M solution of HCl dissolved in water?",
+    "image": "",
+    "options": [
+      "-3.7 °C",
+      "-1.85 °C",
+      "-0.185 °C",
+      "-0.037 °C"
+    ],
+    "correct": 3,
+    "explanation": "HCl ionizes into 2 particles (H+ and Cl-, i = 2), giving 0.02 M particles. ΔTf = 0.02 × 1.85°C = 0.037°C. Freezing point = 0.0°C - 0.037°C = -0.037°C."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "Which of the following pOH values represents the weakest acidic solution? (Set 2)",
+    "image": "",
+    "options": [
+      "6.5",
+      "11.0",
+      "7.3",
+      "13.5"
+    ],
+    "correct": 2,
+    "explanation": "An acidic solution has pOH > 7 (pH < 7). The weakest acidic solution has a pH closest to 7 (pH = 6.7), which corresponds to pOH = 7.3."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 1 - Biology 2022",
+    "text": "أي مما يلي غير صحيح فيما يتعلق بالانتروبيا؟",
+    "image": "",
+    "options": [
+      "يصاحب ذوبان الجليد زيادة في الانتروبيا",
+      "يرتبط صنع الجليد بانخفاض الانتروبيا",
+      "إذابة الأملاح مثل CaCl2 في الماء يرتبط بزيادة الانتروبيا",
+      "لا شيء من الخيارات صحيح"
+    ],
+    "correct": 3,
+    "explanation": "جميع العبارات المذكورة في السؤال الأصلي صحيحة علمياً (ذوبان الجليد يزيد الانتروبيا، تكوينه يقللها، إذابة الأملاح تزيدها، الارتباط التكميلي للإنزيم بالركيزة يزيدها، وخلط المركب الأمفيباتي بالماء يقللها)، لذا فإن الإجابة هي: لا شيء من الخيارات صحيح."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "The movement of the bacterial flagellum results from coupling the electrochemical gradient to the mechanical work of the bacterial rotary motor proteins that anchored in the basal body beneath plasma membrane.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Powered directly by ATP hydrolysis",
+      "Bacteria lack flagella"
+    ],
+    "correct": 1,
+    "explanation": "False. The bacterial rotary motor proteins are anchored in the plasma membrane and cell wall (basal body spans the cell envelope/plasma membrane, not solely beneath the plasma membrane)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "The movement of eukaryotic flagellum is changed from sliding into beating or wave movement due to a motor protein called radial spokes.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Dynein is a structural spoke",
+      "Eukaryotic flagella rotate like propellers"
+    ],
+    "correct": 1,
+    "explanation": "False. Dynein is the motor protein responsible for microtubule sliding, whereas radial spokes and nexin cross-linking proteins are structural proteins (not motor proteins) that convert sliding into bending/wave motion."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "The monosome represents the small subunit of the ribosome and is composed of protein and r-RNA.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Monosome is composed only of mRNA",
+      "Monosome is a lipid vesicle"
+    ],
+    "correct": 1,
+    "explanation": "False. A monosome represents a COMPLETE single functional ribosome (both small and large subunits together bound to mRNA), not just the small subunit."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "The larger the resolution, the better is the resolving power of the microscope.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Resolution and resolving power are identical",
+      "Magnification determines resolving power"
+    ],
+    "correct": 1,
+    "explanation": "False. Resolution is the minimum distance between two distinguishable points; the SMALLER the resolution value (d), the better the resolving power of the microscope."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "The higher the ratio of volume to surface area, the more efficient is the cell in exchanging a lot of material with their surroundings.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Volume has no effect on exchange",
+      "Larger cells have higher surface-to-volume ratio"
+    ],
+    "correct": 1,
+    "explanation": "False. Cellular exchange efficiency depends on a high SURFACE AREA-TO-VOLUME ratio (not volume-to-surface area)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Heterochromatin are tightly compacted regions of eukaryotic chromosomes such as centromere and telomeres. Heterochromatin are translationally inactive.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Heterochromatin is loosely packed",
+      "Euchromatin is transcriptionally silent"
+    ],
+    "correct": 1,
+    "explanation": "False. Heterochromatin is TRANSCRIPTIONALLY inactive (DNA is not transcribed into RNA), whereas translation occurs on ribosomes in the cytoplasm."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Epigenetic changes involve methylation, demethylation or alterations in chromatin structure, and these changes affect the gene expression through changes in DNA sequence of the gene.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Epigenetics only occurs in prokaryotes",
+      "Epigenetics deletes chromosomes"
+    ],
+    "correct": 1,
+    "explanation": "False. Epigenetic modifications alter gene expression WITHOUT changing the underlying nucleotide DNA sequence."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Because of their higher metabolic rates, larger cells are more effective in controlling over the cell contents.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Larger cells have higher surface-to-volume ratio",
+      "Cell size does not affect metabolic efficiency"
+    ],
+    "correct": 1,
+    "explanation": "False. SMALLER cells (with a higher surface area-to-volume ratio and shorter diffusion distances) are more effective at regulating and controlling cellular contents."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Assembly and disassembly of α-β tubulin heterodimers occur more rapidly at the plus end than the negative end.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Microtubules are made of actin",
+      "Assembly occurs only at the minus end"
+    ],
+    "correct": 0,
+    "explanation": "True (Note: marked False in student sheet key, though biochemically the plus (+) end of a microtubule grows and shrinks much faster than the minus (-) end)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Archaea is more closely related on a molecular basis, DNA replication and protein synthesis systems to bacteria than eukaryotes.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Archaea have membrane-bound nuclei",
+      "Archaea contain peptidoglycan cell walls"
+    ],
+    "correct": 1,
+    "explanation": "False. On a molecular level (DNA replication, transcription, and translation machinery), Archaea are more closely related to EUKARYOTES than to Bacteria."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Although bound and free ribosomes differs in their Svedberg sedimentation coefficient, however they are interchangeable and are able to synthesize proteins.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Free ribosomes are 70S in eukaryotes",
+      "Bound ribosomes are permanently fixed to ER"
+    ],
+    "correct": 1,
+    "explanation": "False. Bound and free ribosomes in eukaryotic cells are structurally IDENTICAL and have the SAME Svedberg sedimentation coefficient (80S); they are interchangeable."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Ineffective antibiotic treatment could be associated with the endomembrane system of eukaryotic cell.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Eukaryotes lack smooth ER",
+      "Antibiotics target only eukaryotic nuclei"
+    ],
+    "correct": 0,
+    "explanation": "True. The smooth endoplasmic reticulum (part of the endomembrane system) detoxifies drugs and medications; proliferation of smooth ER increases tolerance/resistance and reduces drug effectiveness."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "The electrochemical gradient across the plasma membrane is the driving force for the bacterial rotary motor proteins that anchored in the plasma membrane and power the movement of the flagellum.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Driven by GTP hydrolysis",
+      "Occurs in the mitochondrial matrix"
+    ],
+    "correct": 0,
+    "explanation": "True. Proton-motive force (electrochemical H+ gradient across the bacterial plasma membrane) drives the rotary motor embedded in the plasma membrane/cell wall."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Many disease-causing bacteria secrete a jellylike polysaccharide capsule around the cell, which protect them from the unfavorable changes of pH or temperature in their surroundings.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Capsule is made of phospholipids",
+      "Capsules are found in animal cells"
+    ],
+    "correct": 1,
+    "explanation": "False. The bacterial capsule allows adherence to substrates/host cells and protects pathogenic bacteria from phagocytosis by the host's immune system (not primarily from pH or temperature changes)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Lysosomes are considered as intracellular digestion center that use their hydrolytic hormones to recycle cell's own organic material. Lysosomes function best in an acidic environment.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Lysosomes function best at pH 8",
+      "Lysosomes synthesize ATP"
+    ],
+    "correct": 1,
+    "explanation": "False. Lysosomes use hydrolytic ENZYMES (acid hydrolases), not hormones, to digest macromolecules and recycle cellular material."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Larger cells have more surface area per unit of volume than smaller ones.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Surface area increases faster than volume",
+      "Both have identical ratios"
+    ],
+    "correct": 1,
+    "explanation": "False. As a cell grows larger, its volume increases much faster (r³) than its surface area (r²), so SMALLER cells have a greater surface area per unit volume."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "The centrosome (MTOC) of plant cells lack the pair of centrioles and therefore called monosome.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Plant cells contain centrosomes with centrioles",
+      "Plant cells lack microtubules"
+    ],
+    "correct": 1,
+    "explanation": "False. Plant cell MTOCs lack centrioles, but they are NOT called monosomes (a monosome is a single ribosome bound to mRNA)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Smooth endoplasmic reticulum has the ability to sequester intracellular Ca2+ to more than 100 times the cytosolic Ca2+ concentration and then pumping it to extracellular region.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Rough ER stores calcium in muscle cells",
+      "Ca2+ is pumped into the nucleus"
+    ],
+    "correct": 1,
+    "explanation": "False. Smooth ER (sarcoplasmic reticulum in muscle) sequesters Ca2+ and releases it into the CYTOSOL upon stimulation to trigger cellular responses, rather than pumping it to the extracellular region."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Quiz 3 - Biology 2022 (True/False)",
+    "text": "Microtubules polymerize by the addition of α-β tubulin heterodimers, while depolymerize by the breakdown of α-tubulin and β-tubulin separately.",
+    "image": "",
+    "options": [
+      "True",
+      "False",
+      "Microtubules are made of keratin",
+      "Microtubules do not depolymerize"
+    ],
+    "correct": 1,
+    "explanation": "False. Microtubules both polymerize AND depolymerize as intact α-β tubulin heterodimers (the dimer does not dissociate into separate α and β monomers during depolymerization)."
+  }
+]; Kw = [H+]^2 = 1 × 10^-14 M^2, hence [H+] = √Kw = 10^-7 M."
   },
   {
     "subjectId": "general-biology",
