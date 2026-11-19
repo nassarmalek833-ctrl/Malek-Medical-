@@ -819,24 +819,7 @@
   }
 ];
 
-    const DEFAULT_SUBJECTS = [
-  {
-    "id": "general-biology",
-    "year": "السنة الأولى",
-    "semester": "الفصل الأول",
-    "name": "أحياء عامة (General Biology)",
-    "isOpen": true,
-    "isFreeTrial": true
-  },
-  {
-    "id": "sub_1795116059411_704",
-    "year": "السنة الأولى",
-    "semester": "الفصل الأول",
-    "name": "أحياء عامة",
-    "isOpen": true,
-    "isFreeTrial": false
-  }
-];
+    const DEFAULT_SUBJECTS = [];
 
     const DEFAULT_LECTURES = [
   {
@@ -2613,6 +2596,456 @@
     ],
     "correct": 1,
     "explanation": "Each ionization yields one H+ and one OH-, so in pure water [H+] = [OH-]; Kw = [H+]^2 = 1 × 10^-14 M^2, hence [H+] = √Kw = 10^-7 M."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "The initials pH stand for:",
+    "image": "",
+    "options": [
+      "Pressure of hydrogen",
+      "Percentage of hydrogen",
+      "Power of hydrogen",
+      "Product of hydroxide"
+    ],
+    "correct": 2,
+    "explanation": "The initials pH stand for 'power of hydrogen' or 'potential of hydrogen', and the 'p' is read mathematically as -log, so pH = -log[H+]."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "A solution has a hydrogen ion concentration of 10^-3 mol/L. Its pH and character are:",
+    "image": "",
+    "options": [
+      "pH 11; basic",
+      "pH -3; acidic",
+      "pH 3; basic",
+      "pH 3; acidic"
+    ],
+    "correct": 3,
+    "explanation": "pH = -log[H+] = -log(10^-3) = 3. Because the pH is below 7, [H+] (10^-3 M) exceeds [OH-] (10^-11 M), so the solution is acidic."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "A lake has a pH of 4.0. What is the hydroxide ion concentration of the lake water?",
+    "image": "",
+    "options": [
+      "10^-10 M",
+      "10^-4 M",
+      "4.0 M",
+      "10^-7 M"
+    ],
+    "correct": 0,
+    "explanation": "At pH 4.0, [H+] = 10^-4 M; since [H+][OH-] = 10^-14, [OH-] = 10^-14 / 10^-4 = 10^-10 M (equivalently pOH = 14 - 4 = 10)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "A base is added to pure water until [OH-] reaches 10^-3 M. What are the new [H+] and pH?",
+    "image": "",
+    "options": [
+      "[H+] = 10^-3 M; pH 3",
+      "[H+] = 10^-11 M; pH 3",
+      "[H+] = 10^-7 M; pH 7",
+      "[H+] = 10^-11 M; pH 11"
+    ],
+    "correct": 3,
+    "explanation": "[H+] = Kw / [OH-] = 10^-14 / 10^-3 = 10^-11 M, so pH = 11 (pOH = 3; pH + pOH = 14)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "What is the pH of a solution whose H+ concentration is 6.5 × 10^-10 mol/L?",
+    "image": "",
+    "options": [
+      "0.81",
+      "4.81",
+      "8.19",
+      "9.19"
+    ],
+    "correct": 3,
+    "explanation": "pH = -log(6.5 × 10^-10) = -(log 6.5 + log 10^-10) = -(0.81 - 10) = 9.19."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "What is the H+ concentration of a solution with a pH of 6.52?",
+    "image": "",
+    "options": [
+      "3.0 × 10^-6 M",
+      "6.5 × 10^-7 M",
+      "3.0 × 10^-7 M",
+      "3.3 × 10^-8 M"
+    ],
+    "correct": 2,
+    "explanation": "[H+] = 10^-pH = 10^-6.52 = 10^0.48 × 10^-7 = 3.0 × 10^-7 M."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Compared with the same volume of a solution at pH 9, a solution at pH 4 contains how many times as many hydrogen ions?",
+    "image": "",
+    "options": [
+      "5",
+      "10^5",
+      "500",
+      "10^4"
+    ],
+    "correct": 1,
+    "explanation": "pH is logarithmic: each unit is a tenfold change in [H+]. [H+] is 10^-4 M at pH 4 and 10^-9 M at pH 9, and 10^-4 / 10^-9 = 10^5 (100,000)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "In which of the following solutions does [OH-] exceed [H+]?",
+    "image": "",
+    "options": [
+      "Gastric acid",
+      "Urine",
+      "Black coffee",
+      "Sea water"
+    ],
+    "correct": 3,
+    "explanation": "At pH 8 (sea water), [H+] = 10^-8 M and [OH-] = 10^-6 M, so the solution is basic. Gastric acid (pH 2), black coffee (pH 5) and urine (pH 6) are all below pH 7, where [H+] > [OH-]."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Which pair consists of a strong acid and a strong base?",
+    "image": "",
+    "options": [
+      "CH3COOH and NaOH",
+      "HCl and NH3",
+      "H2CO3 and KOH",
+      "HNO3 and KOH"
+    ],
+    "correct": 3,
+    "explanation": "HNO3 (like HCl and H2SO4) is a strong acid and KOH (like NaOH) is a strong base; both are completely ionized in water. Acetic and carbonic acids are weak acids, and NH3 is a weak base."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "HCl dissociates in water as HCl → H+ + Cl-. What is the pH of a 0.01 M HCl solution?",
+    "image": "",
+    "options": [
+      "0.01",
+      "1.0",
+      "2.0",
+      "7.0"
+    ],
+    "correct": 2,
+    "explanation": "HCl is a strong acid and is completely ionized, so [H+] = 0.01 M = 10^-2 M and pH = -log 10^-2 = 2.0."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "A 0.1 M solution of acetic acid has a higher pH than a 0.1 M solution of HCl because acetic acid:",
+    "image": "",
+    "options": [
+      "is a base that accepts the protons released by water",
+      "is only partially ionized, so it releases far less H+",
+      "is completely ionized but releases OH- as well as H+",
+      "has a lower pKa than HCl, so it holds on to its proton"
+    ],
+    "correct": 1,
+    "explanation": "Strong acids such as HCl are completely ionized ([H+] = 0.1 M, pH 1), whereas a weak acid is only partially ionized; its dissociation is an equilibrium described by Ka (1.74 × 10^-5 M), so [H+] is far below 0.1 M and the pH is higher."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Which statement correctly describes the acetic acid/acetate system, CH3COOH ⇌ H+ + CH3COO-?",
+    "image": "",
+    "options": [
+      "CH3COO- is the proton donor and CH3COOH is its conjugate base",
+      "CH3COOH is a strong acid and CH3COO- is its conjugate base",
+      "CH3COO- is the proton acceptor and H+ is its conjugate acid",
+      "CH3COOH is the proton donor and CH3COO- is its conjugate base"
+    ],
+    "correct": 3,
+    "explanation": "Acetic acid donates the proton (Brønsted-Lowry acid) and acetate is the proton acceptor, its conjugate base. Acetic acid is a weak acid (pKa 4.76)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "A 10.0 mL sample of gastric juice, containing no buffers, was titrated with 0.1 M NaOH; 7.2 mL of NaOH was required to reach neutrality. Taking the acid to be HCl, the pH of the gastric juice was approximately:",
+    "image": "",
+    "options": [
+      "0.72",
+      "1.14",
+      "1.85",
+      "2.14"
+    ],
+    "correct": 1,
+    "explanation": "Moles of NaOH = 0.0072 L × 0.1 M = 7.2 × 10^-4 mol, equal to the moles of HCl. [HCl] = 7.2 × 10^-4 mol ÷ 0.0100 L = 0.072 M; because HCl is completely ionized, [H+] = 0.072 M and pH = -log 0.072 = 1.14."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Using the Ka values given, which of the following is the strongest acid?",
+    "image": "",
+    "options": [
+      "Carbonic acid, H2CO3 (Ka = 1.70 × 10^-4 M)",
+      "Acetic acid, CH3COOH (Ka = 1.74 × 10^-5 M)",
+      "Dihydrogen phosphate, H2PO4- (Ka = 1.38 × 10^-7 M)",
+      "Ammonium ion, NH4+ (Ka = 5.62 × 10^-10 M)"
+    ],
+    "correct": 0,
+    "explanation": "Acid strength rises with Ka: the larger the Ka, the greater the tendency to dissociate a proton and the lower the pKa (3.77 for H2CO3)."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Acetic acid has Ka = 1.74 × 10^-5 M. Its pKa is:",
+    "image": "",
+    "options": [
+      "1.74",
+      "4.76",
+      "5.00",
+      "5.24"
+    ],
+    "correct": 1,
+    "explanation": "pKa = -log Ka = -(log 1.74 + log 10^-5) = -(0.24 - 5) = 4.76."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Phosphoric acid has pKa values of 2.14, 6.86 and 12.4. Which species predominates in a phosphate solution at pH 7.86?",
+    "image": "",
+    "options": [
+      "HPO4^2-",
+      "H2PO4-",
+      "PO4^3-",
+      "H3PO4"
+    ],
+    "correct": 0,
+    "explanation": "pH 7.86 is one unit above pKa2 (6.86), so [HPO4^2-]/[H2PO4-] = 10^1 = 10:1; it is still about 4.5 units below pKa3, so very little PO4^3- forms."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "The amino group of glycine has a pKa of 9.60. Over which pH range can it serve as an effective buffer?",
+    "image": "",
+    "options": [
+      "1.34-3.34",
+      "6.86-9.60",
+      "7.60-9.60",
+      "8.60-10.60"
+    ],
+    "correct": 3,
+    "explanation": "A weak acid and its conjugate base give the best buffering power within about ±1 unit of the pKa, i.e. 8.60–10.60 for the -NH3+/-NH2 pair."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "In titrating an acid with NaOH of known concentration, the concentration of the acid in the original solution is calculated from:",
+    "image": "",
+    "options": [
+      "the pH of the acid solution before any NaOH is added",
+      "the pH reached when exactly half of the acid is neutralized",
+      "the width of the flat buffering region of the titration curve",
+      "the volume and concentration of NaOH needed to neutralize it"
+    ],
+    "correct": 3,
+    "explanation": "Titration determines the amount of acid: NaOH is added in small increments until the acid is consumed, and moles of acid = volume × concentration of NaOH added, divided by the volume of the acid sample."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Acetic acid (pKa 4.76) is titrated with NaOH. What is the pH after 0.25 equivalent of OH- has been added?",
+    "image": "",
+    "options": [
+      "4.28",
+      "3.76",
+      "4.76",
+      "5.24"
+    ],
+    "correct": 0,
+    "explanation": "0.25 equivalent converts one quarter of the acid into acetate, so [CH3COO-]/[CH3COOH] = 0.25/0.75 = 1:3. pH = pKa + log(1/3) = 4.76 - 0.48 = 4.28."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Which statement about the midpoint of the titration of a weak acid HA with NaOH is NOT correct? At the midpoint,",
+    "image": "",
+    "options": [
+      "the pH equals the pKa of the weak acid",
+      "the concentrations of HA and A- are equal",
+      "the pH changes least per unit of base added",
+      "all of the weak acid has been converted to A-"
+    ],
+    "correct": 3,
+    "explanation": "Complete conversion occurs only at the end point (1.0 equivalent). At the midpoint (0.5 equivalent) half the acid is neutralized, [HA] = [A-] and pH = pKa, which is also where the curve is flattest."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "A solution must be held at pH 9.0. Which conjugate pair would buffer it best?",
+    "image": "",
+    "options": [
+      "Acetic acid/acetate (pKa 4.76)",
+      "H2PO4-/HPO4^2- (pKa 6.86)",
+      "Carbonic acid/bicarbonate (pKa 3.77)",
+      "NH4+/NH3 (pKa 9.25)"
+    ],
+    "correct": 3,
+    "explanation": "Buffering power is greatest within about ±1 unit of the pKa; the NH4+/NH3 titration curve has its buffering region between 8.25 and 10.25, which contains pH 9.0."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "When a small amount of NaOH is added to an acetic acid/acetate buffer, the added OH-:",
+    "image": "",
+    "options": [
+      "combines with CH3COO- to form CH3COOH",
+      "reacts with CH3COOH to form H2O and CH3COO-",
+      "is neutralized by Na+ ions to re-form NaOH",
+      "remains free and raises the pH by several units"
+    ],
+    "correct": 1,
+    "explanation": "The weak acid (proton donor) neutralizes added base: OH- + CH3COOH → H2O + CH3COO-. The OH- is consumed and only the [CH3COO-]/[CH3COOH] ratio shifts slightly, so the pH barely changes."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Cells keep their cytosolic pH nearly constant, usually near pH 7, mainly because:",
+    "image": "",
+    "options": [
+      "water can ionize only at a pH close to 7",
+      "the value of Kw changes whenever the pH changes",
+      "biomolecules must be kept in their optimal ionic state",
+      "buffers can work only at exactly pH 7"
+    ],
+    "correct": 2,
+    "explanation": "Almost every biological process is pH dependent, and a small change in pH produces a large, unfavorable change in the rate of the process because biomolecules must be kept in their optimal ionic state."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "The organism's first line of defense against changes in internal pH is provided by:",
+    "image": "",
+    "options": [
+      "buffer systems of the body fluids",
+      "complete ionization of strong acids",
+      "excretion of excess H+ by the kidneys",
+      "the ion product of water, Kw"
+    ],
+    "correct": 0,
+    "explanation": "Constancy of intracellular and extracellular pH is achieved primarily by biological buffers, which form the first line of defense because they act at once on any added H+ or OH-."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Which of the following mixtures, dissolved in water, forms a buffer?",
+    "image": "",
+    "options": [
+      "HCl and NaCl",
+      "NaOH and NaCl",
+      "CH3COOH and CH3COONa",
+      "HCl and NaOH in equal amounts"
+    ],
+    "correct": 2,
+    "explanation": "A buffer consists of a weak acid (proton donor) and its conjugate base (proton acceptor): acetic acid and acetate."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "A solution contains 0.12 mol/L NH4Cl and 0.03 mol/L NaOH. Given pKa (NH4+/NH3) = 9.25, what is its pH?",
+    "image": "",
+    "options": [
+      "8.25",
+      "8.65",
+      "8.77",
+      "9.25"
+    ],
+    "correct": 2,
+    "explanation": "NaOH converts an equal amount of NH4+ into NH3: [NH3] = 0.03 M and [NH4+] = 0.12 - 0.03 = 0.09 M. pH = 9.25 + log(0.03/0.09) = 9.25 - 0.48 = 8.77."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "When 99% of the amino groups of glycine are in the protonated -NH3+ form, the pH of the solution is related to the pKa of the amino group by:",
+    "image": "",
+    "options": [
+      "pH ≈ pKa - 2",
+      "pH ≈ pKa - 1",
+      "pH = pKa",
+      "pH ≈ pKa + 2"
+    ],
+    "correct": 0,
+    "explanation": "-NH3+ is the proton donor and -NH2 the acceptor, so pH = pKa + log(1/99) ≈ pKa + log 10^-2 = pKa - 2."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "In a 0.1 M glycine solution at pH 9.0, what fraction of the glycine has its amino group (pKa 9.60) in the protonated -NH3+ form?",
+    "image": "",
+    "options": [
+      "0.20",
+      "0.25",
+      "0.50",
+      "0.80"
+    ],
+    "correct": 3,
+    "explanation": "log([-NH2]/[-NH3+]) = pH - pKa = 9.0 - 9.6 = -0.6, so [-NH2]:[-NH3+] ≈ 0.25 = 1:4. The fraction protonated is 4/(1+4) = 0.80."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "Aspirin is a weak acid with pKa 3.5. In the stomach, where the pH is about 1.5, the ratio of its ionized form (A-) to its un-ionized form (HA) is about:",
+    "image": "",
+    "options": [
+      "100:1",
+      "10:1",
+      "1:10",
+      "1:100"
+    ],
+    "correct": 3,
+    "explanation": "log([A-]/[HA]) = pH - pKa = 1.5 - 3.5 = -2, so [A-]/[HA] = 10^-2 = 1:100; at a pH two units below its pKa, aspirin is about 99% un-ionized."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "The phosphate buffer system acting in the cytoplasm of all cells consists of:",
+    "image": "",
+    "options": [
+      "H3PO4 as donor and H2PO4- as acceptor",
+      "HPO4^2- as donor and H2PO4- as acceptor",
+      "HPO4^2- as donor and PO4^3- as acceptor",
+      "H2PO4- as donor and HPO4^2- as acceptor"
+    ],
+    "correct": 3,
+    "explanation": "In H2PO4- ⇌ H+ + HPO4^2-, H2PO4- is the proton donor and HPO4^2- the proton acceptor; this pair (pKa 6.86) buffers the cytoplasm."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "The figure shows the titration curve of a triprotic acid H3A with a strong base (Midpoint 1 at pH ~2.0, Midpoint 2 at pH ~5.4, Midpoint 3 at pH ~9.2). The best estimate of the pKa for the dissociation H2A- ⇌ H+ + HA^2- is:",
+    "image": "",
+    "options": [
+      "≈ 2.0",
+      "≈ 3.4",
+      "≈ 5.4",
+      "≈ 9.2"
+    ],
+    "correct": 2,
+    "explanation": "At Midpoint 2 (about 15 mL), [H2A-] = [HA^2-], so by the Henderson-Hasselbalch equation pH = pKa2 ≈ 5.4."
+  },
+  {
+    "subjectId": "general-biology",
+    "model": "Chapter 2 - Ionization of Water, pH, Weak Acids and Buffers",
+    "text": "In the titration of a triprotic acid H3A, which conjugate pair buffers the solution in the region between the first and second equivalence points?",
+    "image": "",
+    "options": [
+      "H3A / H2A-",
+      "H2A- / HA^2-",
+      "HA^2- / A^3-",
+      "H3A / A^3-"
+    ],
+    "correct": 1,
+    "explanation": "At the first equivalence point all H3A has become H2A-; further base removes the second proton, so the region up to the second equivalence point contains H2A- (donor) and HA^2- (acceptor), centred on Midpoint 2 (pH = pKa2)."
+  }
+]; Kw = [H+]^2 = 1 × 10^-14 M^2, hence [H+] = √Kw = 10^-7 M."
   },
   {
     "subjectId": "general-biology",
