@@ -3,921 +3,2383 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>منصة المالك الطبية | Dr. Malek</title>
+  <title>منصة المالك الطبية | Al-Malik Medical Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Cairo', 'Inter', sans-serif;
-      background-color: #0b1120;
+      background-color: #070d19;
       color: #f8fafc;
       user-select: none;
+      -webkit-user-select: none;
+    }
+    input, textarea, select, .select-all {
+      user-select: text;
+      -webkit-user-select: text;
     }
     .ltr-text {
       direction: ltr;
       text-align: left;
       font-family: 'Inter', 'Cairo', sans-serif;
     }
-    .card-hover {
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
-    }
-    .card-hover:hover {
-      transform: translateY(-3px);
-      border-color: #f97316;
-      box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.15);
-    }
-    /* Custom Scrollbar */
+    .card { background-color: #0f172a; border: 1px solid #1e293b; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); }
+    .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); }
+    .btn-gold { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #070d19; font-weight: 800; transition: 0.2s; }
+    .btn-gold:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .option-btn { transition: all 0.2s; border: 1px solid #334155; background-color: #0b1120; }
+    .option-btn:hover:not(:disabled) { border-color: #f59e0b; background-color: #1e293b; }
+    .option-selected { border-color: #3b82f6 !important; background-color: #172554 !important; }
+    .option-correct { border-color: #22c55e !important; background-color: #052e16 !important; color: #bbf7d0; }
+    .option-wrong { border-color: #ef4444 !important; background-color: #450a0a !important; color: #fecaca; }
+    .tab-active { background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); color: #070d19; font-weight: 800; }
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #f97316; }
+    ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950" oncontextmenu="return false;">
 
-  <!-- Navbar -->
-  <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="app.goHome()">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center font-extrabold text-white text-xl shadow-lg">
-          M
-        </div>
+  <!-- الشريط العلوي -->
+  <header class="bg-[#0b1120]/95 backdrop-blur border-b border-amber-500/20 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- الضغط 5 مرات متتالية على شعار المالك يفتح لوحة المدير -->
+        <button id="secretLogoBtn" type="button" onclick="handleSecretTap()" class="w-11 h-11 rounded-xl gold-gradient flex items-center justify-center font-black text-2xl text-slate-950 select-none active:scale-95 transition shadow-lg shadow-amber-500/20">
+          م
+        </button>
         <div>
-          <h1 class="font-extrabold text-lg text-white leading-tight">منصة المالك الطبية</h1>
-          <p class="text-xs text-orange-400 font-semibold">إشراف Dr. Malek</p>
+          <h1 class="font-black text-xl text-white tracking-tight flex items-center gap-2">
+            منصة المالك
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">AL-MALIK MEDICAL</span>
+          </h1>
+          <p class="text-xs text-slate-400">الأكاديمية الطبية المتكاملة للمحاضرات والاختبارات</p>
         </div>
       </div>
-
-      <div class="flex items-center gap-2 sm:gap-3">
-        <a href="https://whatsapp.com/channel/0029Va..." target="_blank" id="whatsapp-btn"
-           class="hidden sm:inline-flex items-center gap-1.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600/30 px-3 py-1.5 rounded-lg text-xs font-bold transition">
-          <span>قناة الواتساب</span>
-        </a>
-        <button onclick="app.openModal('activation-modal')" id="status-badge"
-                class="bg-slate-800 border border-slate-700 hover:border-orange-500 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-200 transition">
-          حالة الحساب: <span id="user-tier-label" class="text-orange-400">تجريبي</span>
-        </button>
-        <button onclick="app.openAdminLogin()"
-                class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 rounded-lg text-xs border border-slate-700" title="لوحة الإدارة">
-          ⚙️
+      <div class="flex items-center gap-2.5">
+        <span id="loggedStudentHeaderBadge" class="hidden text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-xl"></span>
+        <button type="button" onclick="resetAllToStudentLogin()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800/90 text-slate-300 border border-slate-700 hover:text-white hover:border-amber-500/40 transition">
+          الرئيسية / خروج
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Content Container -->
-  <main id="app-root" class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
-    <!-- Dynamic Views Render Here -->
+  <!-- المحتوى الرئيسي -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+
+    <!-- 1. البوابة الرئيسية (واجهة التجربة المجانية + واجهة المدفوع وبيانات البنك) -->
+    <section id="studentLoginScreen" class="max-w-5xl mx-auto mt-4 space-y-6">
+
+      <!-- البطاقتان الرئيسيتان: التجربة المجانية vs الدخول المدفوع -->
+      <div class="grid md:grid-cols-2 gap-6 items-start">
+
+        <!-- البطاقة اليمنى: واجهة الدخول المدفوع للمشتركين -->
+        <div class="card rounded-3xl p-7 border-amber-500/30">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl gold-gradient text-slate-950 flex items-center justify-center text-2xl font-black shadow-lg">
+                👑
+              </div>
+              <div>
+                <h2 class="text-xl font-black text-white">بوابة المشتركين (المدفوع)</h2>
+                <p class="text-xs text-amber-400">للوصول الكامل لجميع المواد والاختبارات</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 mb-5">
+            <button type="button" id="tabCodeLoginBtn" onclick="switchAuthTab('login')" class="py-2 rounded-xl text-xs tab-active transition">
+              دخول بكود الاشتراك
+            </button>
+            <button type="button" id="tabRegisterBtn" onclick="switchAuthTab('register')" class="py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">
+              طلب اشتراك جديد
+            </button>
+          </div>
+
+          <form id="codeLoginForm" onsubmit="loginWithStudentCode(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">كود الدخول الخاص بك</label>
+              <input id="studentCodeInput" type="text" required placeholder="أدخل الكود الممنوح لك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-center font-mono text-base uppercase tracking-widest focus:outline-none focus:border-amber-500" />
+            </div>
+            <button type="submit" class="btn-gold w-full py-3 rounded-xl text-sm shadow-lg shadow-amber-500/20">
+              دخول إلى المنصة الكاملة ←
+            </button>
+          </form>
+
+          <form id="studentRegisterForm" onsubmit="registerNewStudent(event)" class="hidden space-y-3.5">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">اسم الطالب الكامل</label>
+              <input id="regStudentName" type="text" required placeholder="اكتب اسمك الثلاثي..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">الرقم الجامعي أو رقم الواتساب</label>
+              <input id="regStudentId" type="text" required placeholder="لإرسال كود الاشتراك إليك..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">السنة الدراسية</label>
+              <select id="regStudentYear" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                <option value="السنة الأولى">السنة الأولى</option>
+                <option value="السنة الثانية">السنة الثانية</option>
+                <option value="السنة الثالثة">السنة الثالثة</option>
+                <option value="السنة الرابعة">السنة الرابعة</option>
+                <option value="السنة الخامسة">السنة الخامسة</option>
+                <option value="السنة السادسة">السنة السادسة</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition">
+              إرسال طلب الاشتراك للإدارة 📩
+            </button>
+          </form>
+
+          <div id="pendingApprovalNotice" class="hidden mt-4 p-4 rounded-2xl bg-amber-950/40 border border-amber-500/50 text-center space-y-1.5">
+            <p class="text-sm font-black text-amber-400">⏳ تم إرسال طلبك بنجاح!</p>
+            <p class="text-xs text-slate-200 leading-relaxed">
+              حسابك قيد المراجعة. أتمم التحويل عبر بيانات الدفع وتواصل مع الدكتور مالك لتفعيل حسابك وتزويدك بالكود.
+            </p>
+          </div>
+        </div>
+
+        <!-- البطاقة اليسرى: واجهة التجربة المجانية + معلومات البنك والدفع -->
+        <div class="space-y-6">
+          <!-- قسم التجربة المجانية -->
+          <div class="card rounded-3xl p-6 border-emerald-500/30 bg-gradient-to-br from-emerald-950/30 to-slate-900">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-2xl">
+                🎁
+              </div>
+              <div>
+                <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">مجاني بالكامل بدون كود</span>
+                <h2 class="text-xl font-black text-white mt-0.5">التجربة المجانية للمنصة</h2>
+              </div>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+              جرّب نظام الشرح، التلاخيص، والاختبارات التفاعلية مجاناً قبل الاشتراك الكامل في موادك الدراسية.
+            </p>
+            <button type="button" onclick="enterFreeTrialMode()" class="w-full py-3 rounded-xl font-black text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20 transition">
+              🚀 ابدأ التجربة المجانية الآن ←
+            </button>
+          </div>
+
+          <!-- بطاقة بيانات البنك وأرقام الدفع -->
+          <div class="card rounded-3xl p-6 border-blue-500/30 bg-slate-900/90 space-y-3">
+            <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+              <span class="text-xl">💳</span>
+              <div>
+                <h3 class="text-base font-black text-white">بيانات الدفع والاشتراك الرسمي</h3>
+                <p class="text-[11px] text-slate-400">للاشتراك وتفعيل المواد، يمكنك التحويل عبر البيانات التالية:</p>
+              </div>
+            </div>
+            <div id="publicPaymentInfoBox" class="space-y-2 text-xs"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. واجهة الطالب الرئيسية (تعمل للمشترك المدفوع وللتجربة المجانية) -->
+    <section id="studentView" class="hidden space-y-6">
+
+      <!-- شريط تنبيه التجربة المجانية (يظهر فقط في وضع التجربة المجانية) -->
+      <div id="freeTrialBanner" class="hidden p-4 rounded-2xl bg-emerald-950/50 border border-emerald-500/40 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">🎁</span>
+          <div>
+            <p class="text-sm font-black text-emerald-300">أنت تتصفح الآن وضع التجربة المجانية</p>
+            <p class="text-xs text-slate-300">لفتح جميع المواد والشباتر وبنوك الأسئلة الكاملة، اطلب كود الاشتراك المدفوع.</p>
+          </div>
+        </div>
+        <button type="button" onclick="resetAllToStudentLogin()" class="btn-gold px-4 py-2 rounded-xl text-xs">
+          الانتقال للاشتراك المدفوع 👑
+        </button>
+      </div>
+
+      <!-- خانة الاستعلامات والإعلانات الجديدة + رابط قناة الواتساب في المدفوع -->
+      <div class="card rounded-2xl p-5 border-amber-500/30 bg-gradient-to-l from-amber-950/20 to-slate-900 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-black border border-amber-500/30">📢 استعلامات وإعلانات جديدة</span>
+          <!-- زر قناة الواتساب (يظهر حصراً في الواجهة المدفوعة إذا تم وضع الرابط) -->
+          <a id="paidWhatsappChannelBtn" href="#" target="_blank" rel="noopener" class="hidden px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black flex items-center gap-1.5 shadow-md">
+            <span>📲</span>
+            <span>قناة الواتساب الرسمية للمشتركين ↗</span>
+          </a>
+        </div>
+        <div id="studentAnnouncementsList" class="space-y-2 text-sm text-slate-200"></div>
+      </div>
+
+      <!-- شاشة التنقل الأكاديمي: سنوات -> فصول -> مواد -->
+      <div id="academicExplorerCard" class="card rounded-2xl p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-5">
+          <div>
+            <h2 id="academicExplorerTitle" class="text-xl font-black text-white">المكتبة الأكاديمية والاختبارات</h2>
+            <p id="academicExplorerSubtitle" class="text-xs text-slate-400 mt-0.5">اختر السنة الدراسية ثم الفصل الدراسي</p>
+          </div>
+          <div id="academicBreadcrumb" class="flex items-center gap-1.5 text-xs font-bold text-amber-400 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800"></div>
+        </div>
+
+        <div id="stepYearsView" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
+
+        <div id="stepSemestersView" class="hidden space-y-4">
+          <button type="button" onclick="showYearsStep()" class="text-xs font-bold text-slate-400 hover:text-amber-400 flex items-center gap-1">
+            → العودة لاختيار السنة الدراسية
+          </button>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <button type="button" onclick="selectSemester('الفصل الأول')" class="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
+              <span class="text-2xl mb-2 block">📘</span>
+              <h3 class="text-lg font-extrabold text-white group-hover:text-amber-400">الفصل الدراسي الأول</h3>
+              <p class="text-xs text-slate-400 mt-1">عرض مواد الفصل الأول المتاحة لك</p>
+            </button>
+            <button type="button" onclick="selectSemester('الفصل الثاني')" class="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
+              <span class="text-2xl mb-2 block">📙</span>
+              <h3 class="text-lg font-extrabold text-white group-hover:text-amber-400">الفصل الدراسي الثاني</h3>
+              <p class="text-xs text-slate-400 mt-1">عرض مواد الفصل الثاني المتاحة لك</p>
+            </button>
+          </div>
+        </div>
+
+        <div id="stepSubjectsView" class="hidden space-y-4">
+          <button type="button" onclick="showSemestersStep()" class="text-xs font-bold text-slate-400 hover:text-amber-400 flex items-center gap-1">
+            → العودة لاختيار الفصل الدراسي
+          </button>
+          <div id="subjectsGrid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+        </div>
+
+        <div id="stepSubjectContentView" class="hidden space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div>
+              <button type="button" onclick="showSubjectsStep()" class="text-xs font-bold text-slate-400 hover:text-amber-400 mb-1 block">
+                → العودة لقائمة المواد
+              </button>
+              <h3 id="currentSubjectTitle" class="text-2xl font-black text-amber-400"></h3>
+            </div>
+            <div class="flex flex-wrap gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+              <button type="button" id="subTabLectures" onclick="switchSubjectTab('lectures')" class="px-4 py-2 rounded-lg text-xs tab-active">
+                🎥 روابط المحاضرات
+              </button>
+              <button type="button" id="subTabFiles" onclick="switchSubjectTab('files')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                📁 الملفات (تلاخيص/شباتر/شروحات)
+              </button>
+              <button type="button" id="subTabExams" onclick="switchSubjectTab('exams')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                📝 الاختبارات
+              </button>
+            </div>
+          </div>
+
+          <div id="subjectLecturesPane" class="space-y-3"></div>
+
+          <div id="subjectFilesPane" class="hidden space-y-5">
+            <div class="flex gap-2 border-b border-slate-800 pb-3">
+              <button type="button" id="fileCatAll" onclick="filterFilesCategory('الكل')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">الكل</button>
+              <button type="button" id="fileCatSummaries" onclick="filterFilesCategory('تلاخيص')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-300 border border-slate-700">تلاخيص</button>
+              <button type="button" id="fileCatChapters" onclick="filterFilesCategory('شباتر')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-300 border border-slate-700">شباتر</button>
+              <button type="button" id="fileCatExplanations" onclick="filterFilesCategory('شروحات')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-300 border border-slate-700">شروحات</button>
+            </div>
+            <div id="subjectFilesList" class="grid sm:grid-cols-2 gap-3"></div>
+          </div>
+
+          <div id="subjectExamsPane" class="hidden space-y-4">
+            <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 grid md:grid-cols-3 gap-4 items-end">
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">اختر نموذج الاختبار</label>
+                <select id="modelSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500"></select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">نظام الاختبار</label>
+                <select id="modeSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                  <option value="practice">وضع التدريب (تصحيح وشرح فوري)</option>
+                  <option value="exam">وضع الامتحان الحقيقي (النتيجة في النهاية)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">مدة الاختبار (بالدقائق)</label>
+                <input id="durationInput" type="number" min="1" max="180" value="45" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" />
+              </div>
+            </div>
+            <button type="button" onclick="startExam()" class="btn-gold px-8 py-3 rounded-xl text-sm shadow-lg">
+              بدء الاختبار الآن ←
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- شاشة حل الأسئلة -->
+      <div id="examRunner" class="hidden">
+        <div class="card rounded-2xl p-4 mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="bg-blue-950 text-blue-300 border border-blue-800 px-3 py-1 rounded-lg text-sm font-bold" id="questionProgressText">سؤال 1 من 10</span>
+            <button type="button" onclick="toggleFlag()" id="flagBtn" class="px-3 py-1 rounded-lg text-sm border border-slate-700 text-slate-300 hover:bg-slate-800">
+              🚩 تعليم للمراجعة
+            </button>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg font-mono text-amber-400 font-bold" id="timerDisplay">45:00</div>
+            <button type="button" onclick="togglePause()" id="pauseBtn" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 border border-slate-700 text-slate-300">إيقاف مؤقت</button>
+            <button type="button" onclick="finishExam()" class="px-4 py-1.5 rounded-lg text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white">تسليم الاختبار</button>
+          </div>
+        </div>
+
+        <div id="navGrid" class="card rounded-xl p-3 mb-4 flex flex-wrap gap-1.5"></div>
+
+        <div class="card rounded-2xl p-6 mb-4">
+          <p id="questionCategoryBadge" class="text-xs text-amber-400 font-bold mb-2"></p>
+          <div id="questionImageBox" class="hidden mb-4">
+            <img id="questionImageDisplay" src="" alt="صورة توضيحية للسؤال" class="max-h-72 rounded-xl border border-slate-700 mx-auto object-contain bg-slate-950 p-1" />
+          </div>
+          <h3 id="questionText" class="text-xl font-bold text-white leading-relaxed mb-6 ltr-text"></h3>
+          <div id="optionsContainer" class="space-y-3"></div>
+
+          <div id="instantExplanationBox" class="hidden mt-6 p-4 rounded-xl bg-blue-950/60 border border-blue-800 text-slate-200">
+            <p class="font-bold text-blue-300 mb-1">💡 التفسير العلمي:</p>
+            <p id="instantExplanationText" class="text-sm leading-relaxed ltr-text"></p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <button type="button" onclick="prevQuestion()" id="prevBtn" class="px-5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-semibold disabled:opacity-40">السابق</button>
+          <button type="button" onclick="nextQuestion()" id="nextBtn" class="btn-gold px-6 py-2.5 rounded-xl text-sm">التالي</button>
+        </div>
+      </div>
+
+      <!-- شاشة النتيجة -->
+      <div id="resultScreen" class="hidden card rounded-2xl p-6">
+        <div class="text-center border-b border-slate-800 pb-6 mb-6">
+          <p class="text-sm text-slate-400 mb-1">انتهى الاختبار - التقييم النهائي للطالب: <span id="resultStudentName" class="text-white font-bold"></span></p>
+          <div id="scorePercentage" class="text-5xl font-black text-amber-400 my-2">0%</div>
+          <div id="studentGradeLabel" class="inline-block px-4 py-1 rounded-full text-sm font-bold bg-blue-950 text-blue-300 border border-blue-800"></div>
+          <p id="scoreSummaryText" class="text-slate-300 mt-3 text-sm"></p>
+        </div>
+        <div id="reviewContainer" class="space-y-4 mb-6"></div>
+        <button type="button" onclick="resetToHome()" class="btn-gold w-full py-3 rounded-xl text-sm">العودة للمادة والاختبارات</button>
+      </div>
+    </section>
+
+    <!-- 3. لوحة تحكم المدير الكاملة (منصة المالك) -->
+    <section id="adminView" class="hidden space-y-6">
+
+      <!-- شريط التحكم العلوي والنشر المباشر -->
+      <div class="card rounded-2xl p-6 border-amber-500/40 bg-gradient-to-l from-slate-900 to-[#0b1120] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <h2 class="text-xl font-black text-amber-400">👑 لوحة تحكم المدير الشاملة — منصة المالك</h2>
+            <p class="text-xs text-slate-400 mt-0.5">إدارة الاشتراكات، قفل/فتح المواد، بيانات الدفع والبنك، وقناة الواتساب.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" id="togglePlatformLockBtn" onclick="togglePlatformMaintenance()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-amber-300">
+              🔓 حالة المنصة: مفتوحة للطلاب
+            </button>
+            <button type="button" onclick="copyPlatformLink()" class="px-3.5 py-2 rounded-xl bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold">
+              🔗 نسخ رابط المنصة
+            </button>
+            <button type="button" onclick="logoutAdmin()" class="px-3.5 py-2 rounded-xl bg-red-950 text-red-200 border border-red-800 text-xs font-bold">
+              خروج المدير
+            </button>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-3 items-end">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">مفتاح GitHub Token (للنشر المباشر)</label>
+            <div class="flex gap-2">
+              <input id="ghTokenInput" type="password" placeholder="ghp_..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+              <button type="button" onclick="saveGithubToken()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white">
+                حفظ
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">تغيير كلمة مرور المدير</label>
+            <div class="flex gap-2">
+              <input id="adminPasswordEditInput" type="text" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-amber-400 font-bold text-xs" />
+              <button type="button" onclick="updateAdminPasswordLocally()" class="px-3 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-black">
+                تحديث
+              </button>
+            </div>
+          </div>
+          <div>
+            <button type="button" id="publishBtn" onclick="publishDirectlyToGitHub()" class="w-full py-2.5 rounded-xl font-black text-xs bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20">
+              🚀 نشر جميع التعديلات للطلاب فوراً
+            </button>
+          </div>
+        </div>
+        <p id="publishStatus" class="text-xs font-bold text-slate-300"></p>
+      </div>
+
+      <!-- تبويبات لوحة تحكم المدير -->
+      <div class="flex flex-wrap gap-2 bg-slate-950 p-2 rounded-2xl border border-slate-800">
+        <button type="button" id="admTabSubjects" onclick="switchAdminTab('subjects')" class="px-4 py-2 rounded-xl text-xs tab-active">
+          📚 المواد وقفلها/فتحها (<span id="admBadgeSubjects">0</span>)
+        </button>
+        <button type="button" id="admTabStudents" onclick="switchAdminTab('students')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          👨‍⚕️ الطلاب (<span id="admBadgeStudents">0</span>)
+        </button>
+        <button type="button" id="admTabPayment" onclick="switchAdminTab('payment')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          💳 البنك والدفع وقناة الواتس
+        </button>
+        <button type="button" id="admTabSmartFeed" onclick="switchAdminTab('smartfeed')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          ⚡ التغذية الذكية السريعة
+        </button>
+        <button type="button" id="admTabContent" onclick="switchAdminTab('content')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          🎥 المحاضرات والملفات (<span id="admBadgeContent">0</span>)
+        </button>
+        <button type="button" id="admTabQuestions" onclick="switchAdminTab('questions')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          📝 الأسئلة (<span id="admBadgeQuestions">0</span>)
+        </button>
+        <button type="button" id="admTabAnnouncements" onclick="switchAdminTab('announcements')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          📢 الإعلانات (<span id="admBadgeAnnouncements">0</span>)
+        </button>
+      </div>
+
+      <!-- القسم 1 في المدير: إدارة المواد + قفل/فتح المادة + الطلاب المفعّلة عندهم -->
+      <div id="adminPaneSubjects" class="card rounded-2xl p-6 space-y-5">
+        <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إضافة مادة جديدة والتحكم في حالتها والطلاب المشتركين بها</h3>
+        <form onsubmit="addSubject(event)" class="grid md:grid-cols-5 gap-3 items-end">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">السنة الدراسية</label>
+            <select id="subYearInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs">
+              <option value="السنة الأولى">السنة الأولى</option>
+              <option value="السنة الثانية">السنة الثانية</option>
+              <option value="السنة الثالثة">السنة الثالثة</option>
+              <option value="السنة الرابعة">السنة الرابعة</option>
+              <option value="السنة الخامسة">السنة الخامسة</option>
+              <option value="السنة السادسة">السنة السادسة</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">الفصل الدراسي</label>
+            <select id="subSemesterInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs">
+              <option value="الفصل الأول">الفصل الأول</option>
+              <option value="الفصل الثاني">الفصل الثاني</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">اسم المادة الدراسية</label>
+            <input id="subNameInput" required placeholder="مثال: General Biology" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">نوع الوصول</label>
+            <select id="subIsFreeInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-xs">
+              <option value="false">💎 مدفوعة (للمشتركين)</option>
+              <option value="true">🎁 تجربة مجانية (للجميع)</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-gold py-2.5 rounded-xl text-xs">+ إضافة المادة</button>
+        </form>
+
+        <!-- بطاقات المواد مع زر قفل/فتح + زر التجربة المجانية + قائمة الطلاب المفعّلة عندهم -->
+        <div id="adminSubjectsList" class="grid md:grid-cols-2 gap-4 pt-2"></div>
+      </div>
+
+      <!-- القسم 2 في المدير: إعدادات البنك وأرقام الدفع + رابط قناة الواتساب -->
+      <div id="adminPanePayment" class="hidden card rounded-2xl p-6 border-blue-500/30 space-y-5">
+        <div class="border-b border-slate-800 pb-3">
+          <h3 class="text-lg font-black text-blue-400">💳 إعدادات البنك وأرقام الدفع وقناة الواتساب</h3>
+          <p class="text-xs text-slate-400 mt-0.5">تظهر بيانات البنك في واجهة التسجيل للطلاب، ويظهر رابط قناة الواتساب في قسم الإعلانات داخل الواجهة المدفوعة.</p>
+        </div>
+
+        <form onsubmit="savePaymentAndWhatsappSettings(event)" class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">اسم البنك أو المحفظة الإلكترونية</label>
+            <input id="payBankNameInput" required placeholder="مثال: البنك العربي / بنك فلسطين / زين كاش..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">اسم صاحب الحساب المستفيد</label>
+            <input id="payAccountHolderInput" required placeholder="مثال: مالك نصار" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">رقم الحساب / الآيبان (IBAN)</label>
+            <input id="payAccountNumberInput" required placeholder="مثال: PS00ARAB0000000000000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">رقم الهاتف / الواتساب لإرسال إيصال الدفع</label>
+            <input id="payPhoneNumberInput" required placeholder="مثال: 0590000000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-bold text-emerald-400 mb-1">📲 رابط قناة الواتساب الرسمية (يظهر في الإعلانات داخل الواجهة المدفوعة)</label>
+            <input id="whatsappChannelUrlInput" type="url" placeholder="https://whatsapp.com/channel/..." class="w-full bg-slate-950 border border-emerald-700/50 rounded-xl px-3.5 py-2.5 text-white text-xs" />
+          </div>
+          <div class="md:col-span-2">
+            <button type="submit" class="btn-gold px-6 py-2.5 rounded-xl text-xs">
+              💾 حفظ بيانات الدفع وقناة الواتساب (ثم اضغط نشر)
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- القسم 3 في المدير: إدارة الطلاب -->
+      <div id="adminPaneStudents" class="hidden card rounded-2xl p-6 border-emerald-500/30 space-y-5">
+        <div class="border-b border-slate-800 pb-4">
+          <h3 class="text-lg font-extrabold text-emerald-400">إضافة طالب وتوليد كود له مباشرة (مُفعّل فوراً)</h3>
+          <form onsubmit="adminCreateStudentDirect(event)" class="grid md:grid-cols-4 gap-3 mt-3 items-end">
+            <input id="admNewStuName" required placeholder="اسم الطالب الكامل..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <input id="admNewStuId" required placeholder="الرقم الجامعي / الواتساب..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <select id="admNewStuYear" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs">
+              <option value="السنة الأولى">السنة الأولى</option>
+              <option value="السنة الثانية">السنة الثانية</option>
+              <option value="السنة الثالثة">السنة الثالثة</option>
+              <option value="السنة الرابعة">السنة الرابعة</option>
+              <option value="السنة الخامسة">السنة الخامسة</option>
+              <option value="السنة السادسة">السنة السادسة</option>
+            </select>
+            <button type="submit" class="btn-gold py-2 rounded-xl text-xs">+ إنشاء وتوليد كود مفعّل</button>
+          </form>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400">
+                <th class="py-3 px-3">اسم الطالب</th>
+                <th class="py-3 px-3">الرقم / الواتساب</th>
+                <th class="py-3 px-3">السنة</th>
+                <th class="py-3 px-3">كود الدخول</th>
+                <th class="py-3 px-3">الحالة</th>
+                <th class="py-3 px-3">المواد المسموحة</th>
+                <th class="py-3 px-3">التحكم الكامل</th>
+              </tr>
+            </thead>
+            <tbody id="adminStudentsTableBody" class="divide-y divide-slate-800"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- القسم 4 في المدير: التغذية الذكية السريعة -->
+      <div id="adminPaneSmartFeed" class="hidden card rounded-2xl p-6 border-amber-500/40 space-y-6">
+        <div class="border-b border-slate-800 pb-4">
+          <h3 class="text-lg font-black text-amber-400">⚡ التغذية الذكية السريعة دفعة واحدة (Bulk Feed)</h3>
+          <p class="text-xs text-slate-400 mt-1">الصق كود حزمة الملفات والمحاضرات أو كود الأسئلة المجهز لإضافتها في ثانية واحدة.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-blue-500/30 space-y-3">
+          <h4 class="text-sm font-extrabold text-blue-400">🌐 استيراد وتغذية تلقائية من رابط خارجي (URL)</h4>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="smartFeedUrlInput" type="url" placeholder="https://raw.githubusercontent.com/.../feed.json" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs" />
+            <button type="button" onclick="importFromRemoteFeedUrl()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shrink-0">
+              📥 سحب وتغذية المنصة الآن
+            </button>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="p-4 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-3">
+            <h4 class="text-sm font-extrabold text-emerald-400">📁 تغذية سريعة بالمواد والمحاضرات والملفات</h4>
+            <textarea id="bulkContentJsonInput" rows="6" placeholder='الصق كود حزمة الملفات والمحاضرات هنا...' class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white font-mono text-xs ltr-text focus:outline-none focus:border-emerald-500"></textarea>
+            <button type="button" onclick="processBulkContentFeed()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black">
+              ⚡ إضافة جميع المواد والملفات والمحاضرات فوراً
+            </button>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-950 border border-amber-500/30 space-y-3">
+            <h4 class="text-sm font-extrabold text-amber-400">📝 تغذية سريعة بأسئلة الاختبارات</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">المادة المستهدفة (اختياري)</label>
+                <select id="bulkQSubjectSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white text-xs"></select>
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">اسم النموذج الافتراضي</label>
+                <input id="bulkQDefaultModel" placeholder="مثال: Model 1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white text-xs" />
+              </div>
+            </div>
+            <textarea id="bulkQuestionsJsonInput" rows="4" placeholder='الصق كود حزمة الأسئلة المجهز هنا...' class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white font-mono text-xs ltr-text focus:outline-none focus:border-amber-500"></textarea>
+            <button type="button" onclick="processBulkQuestionsFeed()" class="btn-gold w-full py-2.5 rounded-xl text-xs">
+              ⚡ إضافة جميع الأسئلة للقائمة فوراً
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- القسم 5 في المدير: إضافة المحاضرات والملفات يدوياً -->
+      <div id="adminPaneContent" class="hidden card rounded-2xl p-6 space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <form onsubmit="addLecture(event)" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+            <h4 class="font-extrabold text-amber-400 text-sm">🎥 إضافة رابط محاضرة لمادة</h4>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">اختر المادة</label>
+              <select id="lecSubjectSelect" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">عنوان المحاضرة</label>
+              <input id="lecTitleInput" required placeholder="مثال: المحاضرة الأولى - مقدمة" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">رابط المحاضرة (YouTube / Drive / Zoom...)</label>
+              <input id="lecUrlInput" type="url" required placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            </div>
+            <button type="submit" class="btn-gold w-full py-2 rounded-xl text-xs">+ إضافة رابط المحاضرة</button>
+          </form>
+
+          <form onsubmit="addStudyFile(event)" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+            <h4 class="font-extrabold text-emerald-400 text-sm">📁 إضافة ملف لمادة (تلاخيص / شباتر / شروحات)</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">اختر المادة</label>
+                <select id="fileSubjectSelect" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs"></select>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">تصنيف الملف</label>
+                <select id="fileCategorySelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs">
+                  <option value="تلاخيص">تلاخيص</option>
+                  <option value="شباتر">شباتر</option>
+                  <option value="شروحات">شروحات</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">اسم الملف</label>
+              <input id="fileTitleInput" required placeholder="مثال: تلخيص شابتر 3 كامل PDF" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">رابط الملف (Google Drive / Telegram / PDF URL)</label>
+              <input id="fileUrlInput" type="url" required placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            </div>
+            <button type="submit" class="w-full py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white">+ إضافة الملف</button>
+          </form>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 pt-2">
+          <div>
+            <h4 class="font-bold text-sm text-white mb-2">روابط المحاضرات الحالية</h4>
+            <div id="adminLecturesList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+          </div>
+          <div>
+            <h4 class="font-bold text-sm text-white mb-2">الملفات الحالية (تلاخيص / شباتر / شروحات)</h4>
+            <div id="adminFilesList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- القسم 6 في المدير: إضافة وحذف أسئلة الاختبارات يدوياً -->
+      <div id="adminPaneQuestions" class="hidden card rounded-2xl p-6 space-y-5">
+        <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إضافة سؤال اختبار لمادة</h3>
+        <form onsubmit="addQuestion(event)" class="space-y-4">
+          <div class="grid md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">المادة التابع لها السؤال</label>
+              <select id="qSubjectSelect" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs"></select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">اسم النموذج (Model)</label>
+              <input id="qModel" required placeholder="مثال: Midterm Model 1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">الإجابة الصحيحة</label>
+              <select id="qCorrect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs">
+                <option value="0">الخيار الأول (A)</option>
+                <option value="1">الخيار الثاني (B)</option>
+                <option value="2">الخيار الثالث (C)</option>
+                <option value="3">الخيار الرابع (D)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">نص السؤال</label>
+            <textarea id="qText" required rows="2" placeholder="اكتب السؤال الطبي هنا..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm"></textarea>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <label class="block text-xs font-bold text-amber-400">🖼️ صورة توضيحية للسؤال (اختياري)</label>
+            <div class="grid md:grid-cols-2 gap-3">
+              <input id="qImageFile" type="file" accept="image/*" onchange="handleQuestionImageUpload(event)" class="w-full text-xs text-slate-300 file:ml-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400" />
+              <input id="qImageUrl" type="url" oninput="previewImageUrlInput()" placeholder="أو رابط صورة مباشر https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-white text-xs" />
+            </div>
+            <div id="adminImagePreviewBox" class="hidden flex items-center gap-3 pt-2">
+              <img id="adminImagePreview" src="" class="h-14 w-20 object-cover rounded-lg border border-slate-600" />
+              <button type="button" onclick="clearAdminQuestionImage()" class="text-xs px-2.5 py-1 rounded bg-red-900/60 text-red-200">إزالة الصورة</button>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-3">
+            <input id="opt0" required placeholder="الخيار A" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <input id="opt1" required placeholder="الخيار B" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <input id="opt2" required placeholder="الخيار C" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+            <input id="opt3" required placeholder="الخيار D" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">التفسير العلمي للإجابة</label>
+            <textarea id="qExp" required rows="2" placeholder="اشرح لماذا هذه الإجابة صحيحة..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs"></textarea>
+          </div>
+
+          <button type="submit" class="btn-gold px-6 py-2.5 rounded-xl text-xs">+ إضافة السؤال للقائمة</button>
+        </form>
+
+        <div class="pt-4 border-t border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-bold text-sm text-white">الأسئلة الحالية (<span id="adminQCount">0</span>)</h4>
+            <button type="button" onclick="clearAllQuestionsConfirm()" class="text-xs px-3 py-1 rounded bg-red-950 text-red-300 border border-red-800">حذف جميع الأسئلة</button>
+          </div>
+          <div id="adminQuestionsList" class="space-y-2.5 max-h-80 overflow-y-auto"></div>
+        </div>
+      </div>
+
+      <!-- القسم 7 في المدير: إدارة الاستعلامات والإعلانات -->
+      <div id="adminPaneAnnouncements" class="hidden card rounded-2xl p-6 space-y-5">
+        <h3 class="text-lg font-extrabold text-amber-400 border-b border-slate-800 pb-3">إدارة خانة الاستعلامات والإعلانات في الواجهة</h3>
+        <form onsubmit="addAnnouncement(event)" class="flex flex-col sm:flex-row gap-3">
+          <input id="annTextInput" required placeholder="اكتب الإعلان أو الاستعلام الجديد ليظهر في واجهة الطلاب..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-xs" />
+          <button type="submit" class="btn-gold px-6 py-2.5 rounded-xl text-xs shrink-0">+ نشر الإعلان</button>
+        </form>
+        <div id="adminAnnouncementsList" class="space-y-2"></div>
+      </div>
+
+    </section>
+
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-400">
-    جميع الحقوق محفوظة &copy; 2026 منصة المالك الطبية - Dr. Malek
-  </footer>
-
-  <!-- Activation Modal -->
-  <div id="activation-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-extrabold text-white">تفعيل اشتراك الطالب</h3>
-        <button onclick="app.closeModal('activation-modal')" class="text-slate-400 hover:text-white text-xl">&times;</button>
-      </div>
-      <p class="text-sm text-slate-300 mb-4 leading-relaxed">
-        أدخل كود التفعيل الخاص بك لفتح جميع المواد، الشروحات، وبنوك الأسئلة الكاملة.
-      </p>
-      <input type="text" id="activation-code-input" placeholder="مثال: MALEK-2026-VIP"
-             class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-center font-bold tracking-wider mb-3 focus:outline-none focus:border-orange-500" />
-      <button onclick="app.activateCode()"
-              class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl transition shadow-lg">
-        تفعيل الكود الآن
-      </button>
-      <div class="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-400 space-y-1">
-        <p class="font-bold text-slate-200">للحصول على كود التفعيل:</p>
-        <p>تواصل مباشرة مع إدارة المنصة (Dr. Malek) عبر واتساب بعد إتمام التحويل البنكي / المحفظة.</p>
+  <!-- نافذة كلمة مرور المدير -->
+  <div id="adminModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="card rounded-2xl p-6 max-w-sm w-full border-amber-500/30">
+      <h3 class="text-lg font-black text-amber-400 mb-1">دخول إدارة منصة المالك</h3>
+      <p class="text-xs text-slate-400 mb-4">أدخل كلمة مرور المدير لفتح لوحة التحكم الكاملة:</p>
+      <input id="adminPassInput" type="password" placeholder="كلمة مرور المدير" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white mb-4 focus:outline-none focus:border-amber-500" />
+      <div class="flex gap-2">
+        <button type="button" onclick="checkAdminLogin()" class="btn-gold flex-1 py-2.5 rounded-xl text-xs">دخول</button>
+        <button type="button" onclick="closeAdminModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">إلغاء</button>
       </div>
     </div>
   </div>
 
-  <!-- Admin Panel Modal -->
-  <div id="admin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4 overflow-y-auto">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full p-6 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
-        <h3 class="text-xl font-extrabold text-orange-400">لوحة تحكم Dr. Malek</h3>
-        <button onclick="app.closeModal('admin-modal')" class="text-slate-400 hover:text-white text-2xl">&times;</button>
-      </div>
-
-      <!-- Admin Tabs -->
-      <div class="flex flex-wrap gap-2 mb-5">
-        <button onclick="app.switchAdminTab('json-import')" class="admin-tab-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-bold">إضافة محتوى JSON</button>
-        <button onclick="app.switchAdminTab('codes-mgmt')" class="admin-tab-btn bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold">أكواد التفعيل</button>
-        <button onclick="app.switchAdminTab('github-sync')" class="admin-tab-btn bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold">النشر المباشر GitHub</button>
-      </div>
-
-      <!-- Tab 1: JSON Import -->
-      <div id="tab-json-import" class="admin-tab-content space-y-4">
-        <p class="text-xs text-slate-300">الصق كود JSON الخاص بالأسئلة أو المحاضرات والملفات وسيتم دمجه وتحديث المنصة فوراً:</p>
-        <textarea id="bulk-json-input" rows="8" placeholder='{"questions": [...]} أو {"subjects": [...], "lectures": [...], "files": [...]}'
-                  class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-emerald-400 font-mono ltr-text focus:outline-none focus:border-orange-500"></textarea>
-        <div class="flex flex-wrap gap-3">
-          <button onclick="app.importBulkJSON()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm">
-            حفظ ودمج البيانات
-          </button>
-          <button onclick="app.resetDefaultData()" class="bg-red-600/20 border border-red-500/40 text-red-400 hover:bg-red-600/30 font-bold px-4 py-2.5 rounded-xl text-sm">
-            إعادة ضبط البيانات الافتراضية
-          </button>
+  <!-- نافذة تحديد المواد المسموحة لكل طالب -->
+  <div id="studentPermissionsModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="card rounded-2xl p-6 max-w-lg w-full border-amber-500/40 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base font-black text-amber-400">📚 تحديد المواد المسموحة للطالب</h3>
+          <p id="permModalStudentInfo" class="text-xs text-slate-300 mt-0.5"></p>
         </div>
+        <button type="button" onclick="closeStudentPermissionsModal()" class="text-slate-400 hover:text-white text-sm font-bold">✕</button>
       </div>
 
-      <!-- Tab 2: Activation Codes -->
-      <div id="tab-codes-mgmt" class="admin-tab-content hidden space-y-4">
-        <div class="flex gap-2">
-          <input type="text" id="new-code-str" placeholder="أدخل كود جديد (مثال: MED2026)" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white" />
-          <select id="new-code-subject" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
-            <option value="ALL">جميع المواد (VIP)</option>
-          </select>
-          <button onclick="app.addActivationCode()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-sm">إضافة</button>
-        </div>
-        <div id="codes-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+      <div class="flex gap-2">
+        <button type="button" onclick="toggleAllPermissionsCheckboxes(true)" class="px-3 py-1.5 rounded-lg bg-emerald-900/50 text-emerald-300 border border-emerald-700 text-xs font-bold">
+          ✅ السماح بجميع المواد
+        </button>
+        <button type="button" onclick="toggleAllPermissionsCheckboxes(false)" class="px-3 py-1.5 rounded-lg bg-red-950/60 text-red-300 border border-red-800 text-xs font-bold">
+          ❌ إلغاء تحديد الكل
+        </button>
       </div>
 
-      <!-- Tab 3: GitHub Publish -->
-      <div id="tab-github-sync" class="admin-tab-content hidden space-y-3">
-        <p class="text-xs text-slate-300">لتحديث المنصة لجميع الطلاب على GitHub Pages، أدخل بيانات المستودع والتوكن:</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="gh-owner" value="nassarmalek833-ctrl" placeholder="اسم المستخدم (Owner)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white ltr-text" />
-          <input type="text" id="gh-repo" value="Malek-Medical-Student-" placeholder="اسم المستودع (Repo)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white ltr-text" />
+      <div id="permSubjectsChecklist" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
+
+      <div class="flex gap-2 pt-2 border-t border-slate-800">
+        <button type="button" onclick="saveStudentSubjectPermissions()" class="btn-gold flex-1 py-2.5 rounded-xl text-xs">
+          💾 حفظ صلاحيات المواد
+        </button>
+        <button type="button" onclick="closeStudentPermissionsModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة إدارة الطلاب المفعّلة عندهم مادة معينة -->
+  <div id="subjectStudentsModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="card rounded-2xl p-6 max-w-lg w-full border-emerald-500/40 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base font-black text-emerald-400">👨‍⚕️ الطلاب المفعّلة عندهم المادة</h3>
+          <p id="subStuModalInfo" class="text-xs text-slate-300 mt-0.5"></p>
         </div>
-        <input type="password" id="gh-token" placeholder="GitHub Personal Access Token (ghp_...)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white ltr-text" />
-        <button onclick="app.exportUpdatedHTML()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm">
-          تحميل ملف index.html المحدّث بالبيانات الجديدة
+        <button type="button" onclick="closeSubjectStudentsModal()" class="text-slate-400 hover:text-white text-sm font-bold">✕</button>
+      </div>
+
+      <div id="subStudentsChecklist" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
+
+      <div class="flex gap-2 pt-2 border-t border-slate-800">
+        <button type="button" onclick="saveSubjectStudentsAssignment()" class="btn-gold flex-1 py-2.5 rounded-xl text-xs">
+          💾 حفظ تفعيل المادة لهؤلاء الطلاب
+        </button>
+        <button type="button" onclick="closeSubjectStudentsModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">
+          إلغاء
         </button>
       </div>
     </div>
   </div>
 
   <script>
-    // ==========================================
-    // 1. DEFAULT PLATFORM DATA (EMBEDDED)
-    // ==========================================
-    const DEFAULT_DATA = {
-      adminPass: "malek2026",
-      codes: [
-        { code: "MALEK2026", access: "ALL" },
-        { code: "AZHAR101", access: "ALL" }
-      ],
-      subjects: [
-        { id: "احياء عامة", name: "أحياء عامة (General Biology)", year: "السنة الأولى - طب بشري", icon: "🧬", desc: "محاضرات، تلاخيص، وبنوك أسئلة الميدتيرم والفاينل - جامعة الأزهر" },
-        { id: "كيمياء عامة", name: "كيمياء عامة (General Chemistry)", year: "السنة الأولى - طب بشري", icon: "⚗️", desc: "شروحات تفاعلية وأسئلة امتحانات سابقة" },
-        { id: "كيمياء عضوية", name: "كيمياء عضوية (Organic Chemistry)", year: "السنة الأولى - طب بشري", icon: "🧪", desc: "التشابه الفراغي، التفاعلات، والمركبات الحيوية" },
-        { id: "تشريح بشري", name: "تشريح بشري (Human Anatomy)", year: "السنة الأولى - طب بشري", icon: "🫀", desc: "أطالس، شباتر، ومجسمات ثلاثية الأبعاد" },
-        { id: "فيزياء طبية", name: "فيزياء طبية (Medical Physics)", year: "السنة الأولى - طب بشري", icon: "⚛️", desc: "تلاخيص القوانين وحلول المسائل" }
-      ],
-      files: [
-        { id: "f1", subjectId: "احياء عامة", category: "شباتر", title: "Chapter 1-7: General Biology Complete Slides", url: "https://drive.google.com", isFree: true },
-        { id: "f2", subjectId: "احياء عامة", category: "تلاخيص", title: "ملخص الميدتيرم الشامل - إعداد Dr. Malek", url: "https://drive.google.com", isFree: true }
-      ],
-      lectures: [
-        { id: "l1", subjectId: "احياء عامة", title: "المحاضرة 1: خصائص الماء والروابط الهيدروجينية", url: "https://youtube.com", isFree: true },
-        { id: "l2", subjectId: "احياء عامة", title: "المحاضرة 2: المحاليل والـ pH والأنظمة المنظمة Buffers", url: "https://youtube.com", isFree: false }
-      ],
-      questions: [
-        {
-          "subjectId": "احياء عامة",
-          "model": "Midterm Exam 2026 - Al-Azhar",
-          "text": "The freezing point of Benzene (C6H6) is 5.53 °C and the depression in the freezing point of Benzene is 5.10 °C per mole of solute. What is the freezing point of 0.1 M solution of HCl dissolved in Benzene?",
-          "options": ["0.43 °C", "4.51 °C", "5.02 °C", "1.02 °C"],
-          "correct": 2,
-          "explanation": "Benzene is a non-polar solvent, so HCl does not ionize in it (i = 1). ΔTf = i × Kf × m = 1 × 5.10 × 0.1 = 0.51 °C. New freezing point = 5.53 - 0.51 = 5.02 °C."
-        },
-        {
-          "subjectId": "احياء عامة",
-          "model": "Midterm Exam 2026 - Al-Azhar",
-          "text": "What is the pH for an aqueous solution of equal concentrations of H2PO4^-1 and PO4^-3? Given that for phosphoric acid H3PO4: pK1 = 2.14, pK2 = 6.86, pK3 = 12.4",
-          "options": ["13.4", "pH cannot be determined or this is not a buffer system", "12.4", "6.86"],
-          "correct": 1,
-          "explanation": "A buffer system must consist of a weak acid and its immediate conjugate base (differing by only one proton H+). H2PO4^-1 and PO4^-3 differ by two protons, so they do not form a conjugate acid-base buffer pair."
-        },
-        {
-          "subjectId": "احياء عامة",
-          "model": "Midterm Exam 2026 - Al-Azhar",
-          "text": "Which of the following is a non-reducing sugar?",
-          "options": ["β-Lactose", "None of the choices is correct", "α-Maltose", "Ribose"],
-          "correct": 1,
-          "explanation": "Lactose, maltose, ribose, and fructose all possess a free anomeric carbon (hemiacetal/hemiketal group) capable of mutarotation and reducing agents; hence none of the listed choices is a non-reducing sugar (such as sucrose or trehalose)."
-        }
-      ]
+    // إعدادات المدير والمستودع
+    let ADMIN_PASSWORD = "malek2026";
+    let PLATFORM_LOCKED = false;
+    const GITHUB_OWNER = "nassarmalek833-ctrl";
+    const GITHUB_REPO = "Malek-Medical-";
+    const GITHUB_FILE_PATH = "index.html";
+
+    // بيانات الدفع وقناة الواتساب
+    const DEFAULT_PAYMENT_CONFIG = {
+      bankName: "البنك العربي / المحفظة الإلكترونية",
+      accountHolder: "مالك نصار",
+      accountNumber: "PS00ARAB0000000000000",
+      phoneNumber: "0590000000",
+      whatsappChannel: ""
     };
 
+    // بيانات المنصة المنشورة
+    const DEFAULT_STUDENTS = [];
+
+    const DEFAULT_ANNOUNCEMENTS = [
+      { id: "ann1", text: "أهلاً بكم في منصة المالك الطبية! تم تفعيل نظام المواد والاختبارات الإلكترونية.", date: "2026" }
+    ];
+
+    const DEFAULT_SUBJECTS = [
+      { id: "sub_anat_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم التشريح العام (General Anatomy)", isOpen: true, isFreeTrial: true },
+      { id: "sub_phys_1", year: "السنة الأولى", semester: "الفصل الأول", name: "علم وظائف الأعضاء (Physiology)", isOpen: true, isFreeTrial: false }
+    ];
+
+    const DEFAULT_LECTURES = [
+      { id: "lec_1", subjectId: "sub_anat_1", title: "المحاضرة 1: مقدمة في المصطلحات التشريحية (عينة مجانية)", url: "https://www.youtube.com" }
+    ];
+
+    const DEFAULT_FILES = [
+      { id: "file_1", subjectId: "sub_anat_1", category: "تلاخيص", title: "ملخص شامل للمحاضرة الأولى", url: "https://drive.google.com" },
+      { id: "file_2", subjectId: "sub_anat_1", category: "شباتر", title: "Chapter 1 - Introduction to Anatomy", url: "https://drive.google.com" },
+      { id: "file_3", subjectId: "sub_anat_1", category: "شروحات", title: "شرح تفصيلي بالصور للجهاز الهيكلي", url: "https://drive.google.com" }
+    ];
+
+    const DEFAULT_QUESTIONS = [
+      {
+        subjectId: "sub_anat_1",
+        model: "Model 1 - General Anatomy",
+        text: "Which cranial nerve is primarily responsible for parasympathetic innervation to the thoracic and abdominal viscera?",
+        image: "",
+        options: ["Glossopharyngeal nerve (CN IX)", "Vagus nerve (CN X)", "Accessory nerve (CN XI)", "Hypoglossal nerve (CN XII)"],
+        correct: 1,
+        explanation: "The Vagus nerve (CN X) provides extensive parasympathetic fibers to the heart, lungs, and digestive tract up to the splenic flexure."
+      },
+      {
+        subjectId: "sub_phys_1",
+        model: "Model 1 - Cardiology",
+        text: "What is the primary pacemaker of the normal human heart?",
+        image: "",
+        options: ["Atrioventricular (AV) node", "Bundle of His", "Sinoatrial (SA) node", "Purkinje fibers"],
+        correct: 2,
+        explanation: "The SA node in the right atrium normally initiates cardiac impulses at 60–100 bpm due to its fastest spontaneous depolarization rate."
+      }
+    ];
+
     // ==========================================
-    // 2. ROBUST APPLICATION ENGINE
+    // دوال الحماية والتطبيع (منع تعطل الأزرار أو تلف البيانات)
     // ==========================================
-    const app = {
-      data: null,
-      state: {
-        view: 'home', // 'home' | 'subject' | 'quiz' | 'result'
-        activeSubjectId: null,
-        activeTab: 'exams', // 'exams' | 'تلاخيص' | 'شباتر' | 'شروحات'
-        unlockedAccess: [], // ['ALL'] or ['احياء عامة', ...]
-        quiz: {
-          modelName: '',
-          questions: [],
-          currentIndex: 0,
-          answers: {},
-          flagged: {},
-          mode: 'practice', // 'practice' | 'exam'
-          secondsLeft: 2700,
-          timerInterval: null
-        }
-      },
+    function normalizeId(str) {
+      if (str === null || str === undefined) return "";
+      return String(str).trim().replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/\s+/g, " ").toLowerCase();
+    }
 
-      // Normalize Arabic strings (handles أ/إ/آ vs ا and extra spaces) so clicks NEVER fail
-      normalizeId(str) {
-        if (!str) return '';
-        return String(str).trim().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').toLowerCase();
-      },
+    function escapeHtmlAttr(str) {
+      if (str === null || str === undefined) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "\\'")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
 
-      init() {
-        try {
-          const saved = localStorage.getItem('malek_lms_data_v2');
-          this.data = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_DATA));
-          if (!Array.isArray(this.data.subjects)) this.data.subjects = DEFAULT_DATA.subjects;
-          if (!Array.isArray(this.data.questions)) this.data.questions = DEFAULT_DATA.questions;
-          if (!Array.isArray(this.data.files)) this.data.files = DEFAULT_DATA.files;
-          if (!Array.isArray(this.data.lectures)) this.data.lectures = DEFAULT_DATA.lectures;
-        } catch (e) {
-          console.error("Storage recovery triggered:", e);
-          this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-        }
+    function loadObjectOrDefault(key, defVal) {
+      try {
+        const saved = localStorage.getItem(key);
+        if (!saved) return { ...defVal };
+        const parsed = JSON.parse(saved);
+        return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? { ...defVal, ...parsed } : { ...defVal };
+      } catch (e) {
+        console.warn("Storage recovery for key:", key, e);
+        localStorage.removeItem(key);
+        return { ...defVal };
+      }
+    }
 
-        try {
-          const savedAuth = localStorage.getItem('malek_lms_auth_v2');
-          if (savedAuth) this.state.unlockedAccess = JSON.parse(savedAuth);
-        } catch (e) {
-          this.state.unlockedAccess = [];
-        }
+    function loadLocalOrDefault(key, defVal) {
+      try {
+        const saved = localStorage.getItem(key);
+        if (!saved) return [...defVal];
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) ? parsed : [...defVal];
+      } catch (e) {
+        console.warn("Storage recovery for key:", key, e);
+        localStorage.removeItem(key);
+        return [...defVal];
+      }
+    }
 
-        this.updateAuthUI();
-        this.render();
-      },
-
-      saveData() {
-        localStorage.setItem('malek_lms_data_v2', JSON.stringify(this.data));
-      },
-
-      hasAccess(subjectId) {
-        if (this.state.unlockedAccess.includes('ALL')) return true;
-        const normSub = this.normalizeId(subjectId);
-        return this.state.unlockedAccess.some(a => this.normalizeId(a) === normSub);
-      },
-
-      updateAuthUI() {
-        const badge = document.getElementById('user-tier-label');
-        if (this.state.unlockedAccess.includes('ALL')) {
-          badge.textContent = 'مشترك VIP (مفعّل)';
-          badge.className = 'text-emerald-400';
-        } else if (this.state.unlockedAccess.length > 0) {
-          badge.textContent = `مفعّل (${this.state.unlockedAccess.length} مواد)`;
-          badge.className = 'text-emerald-400';
-        } else {
-          badge.textContent = 'تجريبي (اضغط للتفعيل)';
-          badge.className = 'text-orange-400';
-        }
-      },
-
-      // Navigation Actions
-      goHome() {
-        this.stopTimer();
-        this.state.view = 'home';
-        this.state.activeSubjectId = null;
-        this.render();
-      },
-
-      openSubject(subjectId) {
-        this.stopTimer();
-        this.state.view = 'subject';
-        this.state.activeSubjectId = subjectId;
-        this.state.activeTab = 'exams';
-        this.render();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      },
-
-      setSubjectTab(tabName) {
-        this.state.activeTab = tabName;
-        this.render();
-      },
-
-      // Modal Helpers
-      openModal(id) {
-        const el = document.getElementById(id);
-        if (el) {
-          el.classList.remove('hidden');
-          el.classList.add('flex');
-        }
-      },
-
-      closeModal(id) {
-        const el = document.getElementById(id);
-        if (el) {
-          el.classList.add('hidden');
-          el.classList.remove('flex');
-        }
-      },
-
-      // Activation System
-      activateCode() {
-        const input = document.getElementById('activation-code-input').value.trim().toUpperCase();
-        if (!input) return alert('يرجى إدخال كود التفعيل');
-        const found = (this.data.codes || []).find(c => c.code.toUpperCase() === input);
-        if (found) {
-          if (!this.state.unlockedAccess.includes(found.access)) {
-            this.state.unlockedAccess.push(found.access);
-            localStorage.setItem('malek_lms_auth_v2', JSON.stringify(this.state.unlockedAccess));
-          }
-          this.updateAuthUI();
-          this.closeModal('activation-modal');
-          alert('تم تفعيل اشتراكك بنجاح! جميع الخانات مفتوحة الآن.');
-          this.render();
-        } else {
-          alert('كود التفعيل غير صحيح. تأكد من كتابته بشكل سليم أو تواصل مع Dr. Malek.');
-        }
-      },
-
-      // Admin Functions
-      openAdminLogin() {
-        const pass = prompt('أدخل كلمة مرور الإدارة (Dr. Malek):');
-        if (pass === (this.data.adminPass || 'malek2026')) {
-          this.populateAdminSelect();
-          this.renderCodesList();
-          this.openModal('admin-modal');
-        } else if (pass !== null) {
-          alert('كلمة المرور غير صحيحة');
-        }
-      },
-
-      switchAdminTab(tabId) {
-        document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
-        document.getElementById('tab-' + tabId).classList.remove('hidden');
-        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-          btn.classList.remove('bg-orange-500', 'text-white');
-          btn.classList.add('bg-slate-800', 'text-slate-300');
+    function loadMergedArray(key, defVal, uniqueProp) {
+      try {
+        const raw = localStorage.getItem(key);
+        const localData = raw ? JSON.parse(raw) : [];
+        const validLocal = Array.isArray(localData) ? localData : [];
+        const map = new Map();
+        [...defVal, ...validLocal].forEach(item => {
+          if (item && item[uniqueProp]) map.set(item[uniqueProp], item);
         });
-        event.target.classList.remove('bg-slate-800', 'text-slate-300');
-        event.target.classList.add('bg-orange-500', 'text-white');
-      },
+        return Array.from(map.values());
+      } catch (e) {
+        console.warn("Storage recovery for merged key:", key, e);
+        localStorage.removeItem(key);
+        return [...defVal];
+      }
+    }
 
-      populateAdminSelect() {
-        const sel = document.getElementById('new-code-subject');
-        sel.innerHTML = '<option value="ALL">جميع المواد (VIP)</option>' +
-          this.data.subjects.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-      },
+    let paymentConfig = loadObjectOrDefault("malek_payment_v5", DEFAULT_PAYMENT_CONFIG);
+    let studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+    let announcementsList = loadLocalOrDefault("malek_announcements_v5", DEFAULT_ANNOUNCEMENTS);
+    let subjectsList = loadLocalOrDefault("malek_subjects_v5", DEFAULT_SUBJECTS);
+    let lecturesList = loadLocalOrDefault("malek_lectures_v5", DEFAULT_LECTURES);
+    let filesList = loadLocalOrDefault("malek_files_v5", DEFAULT_FILES);
+    let questions = loadLocalOrDefault("malek_questions_v5", DEFAULT_QUESTIONS);
 
-      addActivationCode() {
-        const code = document.getElementById('new-code-str').value.trim().toUpperCase();
-        const access = document.getElementById('new-code-subject').value;
-        if (!code) return;
-        this.data.codes.push({ code, access });
-        this.saveData();
-        document.getElementById('new-code-str').value = '';
-        this.renderCodesList();
-      },
+    let currentStudent = null;
+    let isFreeTrialSession = false;
+    let editingStudentIdx = null;
+    let editingSubjectIdForStudents = null;
+    let selectedYear = "";
+    let selectedSemester = "";
+    let selectedSubject = null;
+    let currentFileFilter = "الكل";
+    let pendingQuestionImageData = "";
 
-      renderCodesList() {
-        const box = document.getElementById('codes-list');
-        box.innerHTML = this.data.codes.map((c, idx) => `
-          <div class="flex justify-between items-center bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg text-xs">
-            <div>
-              <span class="font-bold text-orange-400 font-mono">${c.code}</span>
-              <span class="text-slate-400 mr-2">(${c.access})</span>
-            </div>
-            <button onclick="app.deleteCode(${idx})" class="text-red-400 hover:text-red-300">حذف</button>
+    let activeQuestions = [];
+    let currentIdx = 0;
+    let userAnswers = {};
+    let flaggedSet = new Set();
+    let timerInterval = null;
+    let remainingSeconds = 2700;
+    let isPaused = false;
+    let currentMode = "practice";
+
+    function saveAllLocalState() {
+      try {
+        localStorage.setItem("malek_payment_v5", JSON.stringify(paymentConfig));
+        localStorage.setItem("malek_students_v5", JSON.stringify(studentsList));
+        localStorage.setItem("malek_announcements_v5", JSON.stringify(announcementsList));
+        localStorage.setItem("malek_subjects_v5", JSON.stringify(subjectsList));
+        localStorage.setItem("malek_lectures_v5", JSON.stringify(lecturesList));
+        localStorage.setItem("malek_files_v5", JSON.stringify(filesList));
+        localStorage.setItem("malek_questions_v5", JSON.stringify(questions));
+      } catch (e) {
+        alert("⚠️ تنبيه: مساحة التخزين المحلية في المتصفح ممتلئة. يُنصح بالضغط على 'نشر جميع التعديلات للطلاب فوراً' لحفظ البيانات على GitHub.");
+      }
+    }
+
+    function getEffectiveAdminPassword() {
+      return localStorage.getItem("malek_custom_admin_pass_v5") || ADMIN_PASSWORD;
+    }
+
+    function isPlatformLocked() {
+      const localLock = localStorage.getItem("malek_platform_locked_v5");
+      return localLock !== null ? localLock === "true" : PLATFORM_LOCKED;
+    }
+
+    // عرض بيانات الدفع والبنك في الواجهة الرئيسية فور تحميل الصفحة
+    function renderPublicPaymentInfo() {
+      const box = document.getElementById("publicPaymentInfoBox");
+      if (!box) return;
+      box.innerHTML = `
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <span class="text-slate-400">البنك / المحفظة:</span>
+          <span class="font-bold text-white">${paymentConfig.bankName || "—"}</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <span class="text-slate-400">اسم المستفيد:</span>
+          <span class="font-bold text-amber-400">${paymentConfig.accountHolder || "—"}</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
+          <span class="text-slate-400 shrink-0">رقم الحساب / IBAN:</span>
+          <div class="flex items-center gap-2">
+            <span class="font-mono font-bold text-emerald-400 select-all">${paymentConfig.accountNumber || "—"}</span>
+            <button type="button" onclick="copyTextQuick('${escapeHtmlAttr(paymentConfig.accountNumber)}')" class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-white border border-slate-700">نسخ</button>
           </div>
-        `).join('');
-      },
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
+          <span class="text-slate-400 shrink-0">رقم التواصل / الواتساب:</span>
+          <div class="flex items-center gap-2">
+            <span class="font-mono font-bold text-blue-400 select-all">${paymentConfig.phoneNumber || "—"}</span>
+            <button type="button" onclick="copyTextQuick('${escapeHtmlAttr(paymentConfig.phoneNumber)}')" class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-white border border-slate-700">نسخ</button>
+          </div>
+        </div>
+      `;
+    }
 
-      deleteCode(idx) {
-        this.data.codes.splice(idx, 1);
-        this.saveData();
-        this.renderCodesList();
-      },
+    function copyTextQuick(txt) {
+      if (!txt) return;
+      navigator.clipboard.writeText(txt).then(() => alert("تم النسخ: " + txt));
+    }
 
-      importBulkJSON() {
-        const raw = document.getElementById('bulk-json-input').value.trim();
-        if (!raw) return alert('الرجاء لصق كود JSON أولاً.');
-        try {
-          const parsed = JSON.parse(raw);
-          let addedCount = 0;
+    // التحقق هل المادة متاحة للمستخدم الحالي (مع مطابقة ذكية للـ ID)
+    function isSubjectAccessible(sub) {
+      if (!sub || sub.isOpen === false) return false;
+      if (isFreeTrialSession) return sub.isFreeTrial === true;
+      if (!currentStudent) return false;
+      if (!Array.isArray(currentStudent.allowedSubjects)) return false;
+      const normSubId = normalizeId(sub.id);
+      const normSubName = normalizeId(sub.name);
+      return currentStudent.allowedSubjects.some(allowed => {
+        const normAllowed = normalizeId(allowed);
+        return normAllowed === normSubId || normAllowed === normSubName;
+      });
+    }
 
-          if (Array.isArray(parsed.subjects)) {
-            parsed.subjects.forEach(sub => {
-              if (!this.data.subjects.some(s => this.normalizeId(s.id) === this.normalizeId(sub.id))) {
-                this.data.subjects.push(sub);
-              }
-            });
+    // التحقق هل العنصر (سؤال / ملف / محاضرة) تابع لمادة معينة (يطابق الـ ID أو اسم المادة بمرونة)
+    function belongsToSubject(itemSubjectId, sub) {
+      if (!sub) return false;
+      const normItem = normalizeId(itemSubjectId);
+      if (!normItem) return false;
+      return normItem === normalizeId(sub.id) || normItem === normalizeId(sub.name);
+    }
+
+    // الدخول لواجهة التجربة المجانية
+    function enterFreeTrialMode() {
+      if (isPlatformLocked()) {
+        alert("⛔ المنصة مغلقة مؤقتاً للصيانة والتحديث من قبل الإدارة.");
+        return;
+      }
+      isFreeTrialSession = true;
+      currentStudent = null;
+
+      document.getElementById("studentLoginScreen").classList.add("hidden");
+      document.getElementById("adminView").classList.add("hidden");
+      document.getElementById("studentView").classList.remove("hidden");
+
+      document.getElementById("freeTrialBanner").classList.remove("hidden");
+      document.getElementById("paidWhatsappChannelBtn").classList.add("hidden");
+
+      const badge = document.getElementById("loggedStudentHeaderBadge");
+      badge.textContent = "🎁 وضع التجربة المجانية";
+      badge.classList.remove("hidden");
+
+      document.getElementById("academicExplorerTitle").textContent = "محتوى التجربة المجانية";
+      document.getElementById("academicExplorerSubtitle").textContent = "تصفح العينات المجانية المتاحة في المحاضرات والملفات والاختبارات";
+
+      renderStudentAnnouncements();
+      showYearsStep();
+    }
+
+    // بوابة الطلاب المدفوعة
+    function switchAuthTab(tab) {
+      const loginForm = document.getElementById("codeLoginForm");
+      const regForm = document.getElementById("studentRegisterForm");
+      const loginBtn = document.getElementById("tabCodeLoginBtn");
+      const regBtn = document.getElementById("tabRegisterBtn");
+      document.getElementById("pendingApprovalNotice").classList.add("hidden");
+
+      if (tab === "login") {
+        loginForm.classList.remove("hidden");
+        regForm.classList.add("hidden");
+        loginBtn.className = "py-2 rounded-xl text-xs tab-active transition";
+        regBtn.className = "py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
+      } else {
+        loginForm.classList.add("hidden");
+        regForm.classList.remove("hidden");
+        regBtn.className = "py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white transition";
+        loginBtn.className = "py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
+      }
+    }
+
+    function generateUniqueStudentCode() {
+      let code = "";
+      do {
+        const num = Math.floor(1000 + Math.random() * 9000);
+        code = "MED-" + num;
+      } while (studentsList.some(s => s.code === code));
+      return code;
+    }
+
+    function registerNewStudent(e) {
+      e.preventDefault();
+      const name = document.getElementById("regStudentName").value.trim();
+      const studentId = document.getElementById("regStudentId").value.trim();
+      const year = document.getElementById("regStudentYear").value;
+      if (!name || !studentId) return;
+
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+      const secretCode = generateUniqueStudentCode();
+      studentsList.push({
+        name,
+        studentId,
+        year,
+        code: secretCode,
+        approved: false,
+        allowedSubjects: [],
+        results: []
+      });
+      saveAllLocalState();
+
+      document.getElementById("pendingApprovalNotice").classList.remove("hidden");
+      e.target.reset();
+    }
+
+    function loginWithStudentCode(e) {
+      e.preventDefault();
+      if (isPlatformLocked()) {
+        alert("⛔ المنصة مغلقة مؤقتاً للصيانة والتحديث من قبل الإدارة.");
+        return;
+      }
+
+      const enteredCode = document.getElementById("studentCodeInput").value.trim().toUpperCase();
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+      const found = studentsList.find(s => String(s.code || "").trim().toUpperCase() === enteredCode);
+
+      if (!found) {
+        alert("⛔ كود الدخول غير صحيح! لا يمكنك الدخول إلا بكود مفعّل صادر من إدارة منصة المالك.");
+        return;
+      }
+
+      if (found.approved !== true) {
+        alert("⏳ حسابك غير مفعّل بعد! يجب أن يقوم المدير بتفعيل حسابك أولاً.");
+        return;
+      }
+
+      isFreeTrialSession = false;
+      currentStudent = found;
+
+      document.getElementById("studentLoginScreen").classList.add("hidden");
+      document.getElementById("adminView").classList.add("hidden");
+      document.getElementById("studentView").classList.remove("hidden");
+
+      document.getElementById("freeTrialBanner").classList.add("hidden");
+
+      // إظهار رابط قناة الواتساب في قسم الإعلانات داخل الواجهة المدفوعة
+      const waBtn = document.getElementById("paidWhatsappChannelBtn");
+      if (paymentConfig.whatsappChannel && paymentConfig.whatsappChannel.trim() !== "") {
+        waBtn.href = paymentConfig.whatsappChannel.trim();
+        waBtn.classList.remove("hidden");
+      } else {
+        waBtn.classList.add("hidden");
+      }
+
+      const badge = document.getElementById("loggedStudentHeaderBadge");
+      badge.textContent = `👑 ${found.name} | ${found.code}`;
+      badge.classList.remove("hidden");
+
+      document.getElementById("academicExplorerTitle").textContent = "المكتبة الأكاديمية والاختبارات (النسخة الكاملة)";
+      document.getElementById("academicExplorerSubtitle").textContent = "تظهر لك المواد المفعّلة والمصرّح لك بالوصول إليها";
+
+      renderStudentAnnouncements();
+      showYearsStep();
+    }
+
+    function renderStudentAnnouncements() {
+      const box = document.getElementById("studentAnnouncementsList");
+      if (announcementsList.length === 0) {
+        box.innerHTML = `<p class="text-xs text-slate-400">لا توجد استعلامات أو إعلانات جديدة حالياً.</p>`;
+        return;
+      }
+      box.innerHTML = announcementsList.map(a => `
+        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start gap-2.5">
+          <span class="text-amber-400 font-bold">•</span>
+          <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${a.text}</p>
+        </div>
+      `).join("");
+    }
+
+    // التنقل الأكاديمي للطلاب
+    function updateBreadcrumb() {
+      const bc = document.getElementById("academicBreadcrumb");
+      let parts = ["السنوات الدراسية"];
+      if (selectedYear) parts.push(selectedYear);
+      if (selectedSemester) parts.push(selectedSemester);
+      if (selectedSubject) parts.push(selectedSubject.name);
+      bc.textContent = parts.join("  /  ");
+    }
+
+    function showYearsStep() {
+      selectedYear = "";
+      selectedSemester = "";
+      selectedSubject = null;
+      updateBreadcrumb();
+
+      document.getElementById("stepYearsView").classList.remove("hidden");
+      document.getElementById("stepSemestersView").classList.add("hidden");
+      document.getElementById("stepSubjectsView").classList.add("hidden");
+      document.getElementById("stepSubjectContentView").classList.add("hidden");
+
+      const years = ["السنة الأولى", "السنة الثانية", "السنة الثالثة", "السنة الرابعة", "السنة الخامسة", "السنة السادسة"];
+      document.getElementById("stepYearsView").innerHTML = years.map((y, idx) => {
+        const count = subjectsList.filter(s => normalizeId(s.year) === normalizeId(y) && isSubjectAccessible(s)).length;
+        return `
+          <button type="button" onclick="selectYear('${escapeHtmlAttr(y)}')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
+            <span class="text-xs font-black text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg">المستوى ${idx + 1}</span>
+            <h3 class="text-lg font-extrabold text-white mt-3 group-hover:text-amber-400">${y}</h3>
+            <p class="text-xs text-slate-400 mt-1">المواد المتاحة لك: <span class="text-emerald-400 font-bold">${count}</span></p>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function selectYear(year) { selectedYear = year; showSemestersStep(); }
+
+    function showSemestersStep() {
+      selectedSemester = "";
+      selectedSubject = null;
+      updateBreadcrumb();
+      document.getElementById("stepYearsView").classList.add("hidden");
+      document.getElementById("stepSemestersView").classList.remove("hidden");
+      document.getElementById("stepSubjectsView").classList.add("hidden");
+      document.getElementById("stepSubjectContentView").classList.add("hidden");
+    }
+
+    function selectSemester(sem) { selectedSemester = sem; showSubjectsStep(); }
+
+    function showSubjectsStep() {
+      selectedSubject = null;
+      updateBreadcrumb();
+      document.getElementById("stepYearsView").classList.add("hidden");
+      document.getElementById("stepSemestersView").classList.add("hidden");
+      document.getElementById("stepSubjectsView").classList.remove("hidden");
+      document.getElementById("stepSubjectContentView").classList.add("hidden");
+
+      const accessibleSubjects = subjectsList.filter(s =>
+        normalizeId(s.year) === normalizeId(selectedYear) &&
+        normalizeId(s.semester) === normalizeId(selectedSemester) &&
+        isSubjectAccessible(s)
+      );
+
+      const grid = document.getElementById("subjectsGrid");
+
+      if (accessibleSubjects.length === 0) {
+        grid.innerHTML = `<div class="col-span-full p-6 text-center rounded-2xl bg-slate-950 border border-slate-800 text-slate-400 text-sm">${
+          isFreeTrialSession
+            ? "🎁 لا توجد مواد تجريبية مجانية في هذا الفصل حالياً. اختر فصلاً آخر أو انتقل للاشتراك الكامل."
+            : "🔒 لا توجد مواد مفتوحة ومفعّلة لك في هذا الفصل حالياً."
+        }</div>`;
+        return;
+      }
+
+      grid.innerHTML = accessibleSubjects.map(sub => `
+        <button type="button" onclick="openSubject('${escapeHtmlAttr(sub.id)}')" class="p-5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition group">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-2xl">🧬</span>
+            ${sub.isFreeTrial ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">تجربة مجانية</span>` : `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">مشترك</span>`}
+          </div>
+          <h4 class="text-base font-extrabold text-white group-hover:text-amber-400">${sub.name}</h4>
+          <p class="text-xs text-emerald-400 mt-1">✅ مفتوحة — اضغط للدخول</p>
+        </button>
+      `).join("");
+    }
+
+    function openSubject(subjectId) {
+      const normTarget = normalizeId(subjectId);
+      const sub = subjectsList.find(s => normalizeId(s.id) === normTarget || normalizeId(s.name) === normTarget);
+      if (!sub || !isSubjectAccessible(sub)) {
+        alert("⛔ هذه المادة مغلقة حالياً أو غير مصرّح لك بالدخول إليها.");
+        return;
+      }
+      selectedSubject = sub;
+      updateBreadcrumb();
+      document.getElementById("stepSubjectsView").classList.add("hidden");
+      document.getElementById("stepSubjectContentView").classList.remove("hidden");
+      document.getElementById("currentSubjectTitle").textContent = selectedSubject.name;
+      switchSubjectTab("lectures");
+    }
+
+    function switchSubjectTab(tab) {
+      const panes = ["subjectLecturesPane", "subjectFilesPane", "subjectExamsPane"];
+      const btns = ["subTabLectures", "subTabFiles", "subTabExams"];
+      panes.forEach(p => document.getElementById(p).classList.add("hidden"));
+      btns.forEach(b => document.getElementById(b).className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white");
+
+      if (tab === "lectures") {
+        document.getElementById("subjectLecturesPane").classList.remove("hidden");
+        document.getElementById("subTabLectures").className = "px-4 py-2 rounded-lg text-xs tab-active";
+        renderSubjectLectures();
+      } else if (tab === "files") {
+        document.getElementById("subjectFilesPane").classList.remove("hidden");
+        document.getElementById("subTabFiles").className = "px-4 py-2 rounded-lg text-xs tab-active";
+        filterFilesCategory("الكل");
+      } else {
+        document.getElementById("subjectExamsPane").classList.remove("hidden");
+        document.getElementById("subTabExams").className = "px-4 py-2 rounded-lg text-xs tab-active";
+        populateSubjectExamModels();
+      }
+    }
+
+    function renderSubjectLectures() {
+      const list = lecturesList.filter(l => belongsToSubject(l.subjectId, selectedSubject));
+      const container = document.getElementById("subjectLecturesPane");
+      if (list.length === 0) {
+        container.innerHTML = `<p class="p-5 text-center rounded-xl bg-slate-950 border border-slate-800 text-slate-400 text-xs">لا توجد محاضرات مضافة لهذه المادة بعد.</p>`;
+        return;
+      }
+      container.innerHTML = list.map((lec, i) => `
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-bold text-amber-400">محاضرة ${i + 1}</span>
+            <h4 class="text-sm font-bold text-white mt-0.5">${lec.title}</h4>
+          </div>
+          <a href="${lec.url}" target="_blank" rel="noopener" class="btn-gold px-4 py-2 rounded-xl text-xs">
+            مشاهدة المحاضرة ↗
+          </a>
+        </div>
+      `).join("");
+    }
+
+    function filterFilesCategory(cat) {
+      currentFileFilter = cat;
+      const mapBtns = { "الكل": "fileCatAll", "تلاخيص": "fileCatSummaries", "شباتر": "fileCatChapters", "شروحات": "fileCatExplanations" };
+      Object.entries(mapBtns).forEach(([k, id]) => {
+        document.getElementById(id).className = (k === cat)
+          ? "px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40"
+          : "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-300 border border-slate-700";
+      });
+
+      let list = filesList.filter(f => belongsToSubject(f.subjectId, selectedSubject));
+      if (cat !== "الكل") list = list.filter(f => normalizeId(f.category) === normalizeId(cat));
+
+      const container = document.getElementById("subjectFilesList");
+      if (list.length === 0) {
+        container.innerHTML = `<p class="col-span-full p-5 text-center rounded-xl bg-slate-950 border border-slate-800 text-slate-400 text-xs">لا توجد ملفات في هذا القسم حالياً.</p>`;
+        return;
+      }
+
+      container.innerHTML = list.map(f => `
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3">
+          <div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">${f.category}</span>
+            <h4 class="text-sm font-bold text-white mt-1.5">${f.title}</h4>
+          </div>
+          <a href="${f.url}" target="_blank" rel="noopener" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-700 shrink-0">
+            فتح الملف 📥
+          </a>
+        </div>
+      `).join("");
+    }
+
+    function populateSubjectExamModels() {
+      const subQuestions = questions.filter(q => belongsToSubject(q.subjectId, selectedSubject));
+      const models = [...new Set(subQuestions.map(q => q.model || "Model 1"))];
+      const select = document.getElementById("modelSelect");
+
+      if (subQuestions.length === 0) {
+        select.innerHTML = `<option value="">لا توجد اختبارات مضافة لهذه المادة بعد</option>`;
+        return;
+      }
+
+      select.innerHTML = `<option value="ALL">جميع أسئلة المادة (${subQuestions.length} سؤال)</option>` +
+        models.map(m => `<option value="${escapeHtmlAttr(m)}">${m}</option>`).join("");
+    }
+
+    function startExam() {
+      const subQuestions = questions.filter(q => belongsToSubject(q.subjectId, selectedSubject));
+      const selectedModel = document.getElementById("modelSelect").value;
+      if (!selectedModel || subQuestions.length === 0) {
+        alert("لا توجد أسئلة متاحة في هذه المادة حالياً.");
+        return;
+      }
+
+      currentMode = document.getElementById("modeSelect").value;
+      const mins = parseInt(document.getElementById("durationInput").value) || 45;
+
+      activeQuestions = selectedModel === "ALL"
+        ? [...subQuestions]
+        : subQuestions.filter(q => normalizeId(q.model || "Model 1") === normalizeId(selectedModel));
+
+      if (activeQuestions.length === 0) {
+        alert("لا توجد أسئلة مطابقة لهذا النموذج.");
+        return;
+      }
+
+      currentIdx = 0;
+      userAnswers = {};
+      flaggedSet.clear();
+      remainingSeconds = mins * 60;
+      isPaused = false;
+
+      document.getElementById("academicExplorerCard").classList.add("hidden");
+      document.getElementById("resultScreen").classList.add("hidden");
+      document.getElementById("examRunner").classList.remove("hidden");
+
+      startTimer();
+      renderQuestion();
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      updateTimerUI();
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          remainingSeconds--;
+          updateTimerUI();
+          if (remainingSeconds <= 0) {
+            clearInterval(timerInterval);
+            finishExam();
           }
-          if (Array.isArray(parsed.questions)) {
-            this.data.questions.push(...parsed.questions);
-            addedCount += parsed.questions.length;
-          }
-          if (Array.isArray(parsed.files)) {
-            this.data.files.push(...parsed.files);
-            addedCount += parsed.files.length;
-          }
-          if (Array.isArray(parsed.lectures)) {
-            this.data.lectures.push(...parsed.lectures);
-            addedCount += parsed.lectures.length;
-          }
-
-          this.saveData();
-          document.getElementById('bulk-json-input').value = '';
-          alert(`تم دمج البيانات بنجاح! (${addedCount} عنصر جديد).`);
-          this.render();
-        } catch (err) {
-          alert('خطأ في صيغة JSON: تأكد من صحة الأقواس وعلامات التنصيص.\n' + err.message);
         }
-      },
+      }, 1000);
+    }
 
-      resetDefaultData() {
-        if (confirm('هل أنت متأكد من إعادة ضبط البيانات الافتراضية؟')) {
-          localStorage.removeItem('malek_lms_data_v2');
-          this.init();
-          alert('تمت استعادة البيانات الافتراضية بنجاح.');
+    function updateTimerUI() {
+      const m = String(Math.floor(remainingSeconds / 60)).padStart(2, "0");
+      const s = String(remainingSeconds % 60).padStart(2, "0");
+      document.getElementById("timerDisplay").textContent = `${m}:${s}`;
+    }
+
+    function togglePause() {
+      isPaused = !isPaused;
+      document.getElementById("pauseBtn").textContent = isPaused ? "استئناف" : "إيقاف مؤقت";
+    }
+
+    function renderQuestion() {
+      const q = activeQuestions[currentIdx];
+      document.getElementById("questionProgressText").textContent = `سؤال ${currentIdx + 1} من ${activeQuestions.length}`;
+      document.getElementById("questionCategoryBadge").textContent = `${selectedSubject.name} — ${q.model || "Model 1"}`;
+      document.getElementById("questionText").textContent = q.text;
+
+      const imgBox = document.getElementById("questionImageBox");
+      const imgEl = document.getElementById("questionImageDisplay");
+      if (q.image && q.image.trim() !== "") {
+        imgEl.src = q.image;
+        imgBox.classList.remove("hidden");
+      } else {
+        imgEl.src = "";
+        imgBox.classList.add("hidden");
+      }
+
+      const flagBtn = document.getElementById("flagBtn");
+      flagBtn.classList.toggle("bg-amber-600", flaggedSet.has(currentIdx));
+      flagBtn.classList.toggle("text-white", flaggedSet.has(currentIdx));
+
+      const letters = ["A", "B", "C", "D"];
+      const container = document.getElementById("optionsContainer");
+      const chosen = userAnswers[currentIdx];
+      const showInstant = currentMode === "practice" && chosen !== undefined;
+
+      container.innerHTML = q.options.map((opt, idx) => {
+        let cls = "option-btn w-full text-left ltr-text p-4 rounded-xl flex items-center gap-3 font-semibold ";
+        if (showInstant) {
+          if (idx === q.correct) cls += "option-correct";
+          else if (idx === chosen) cls += "option-wrong";
+        } else if (chosen === idx) {
+          cls += "option-selected";
         }
-      },
+        return `
+          <button type="button" onclick="selectOption(${idx})" ${showInstant ? "disabled" : ""} class="${cls}">
+            <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-sm font-bold text-amber-400 shrink-0">${letters[idx]}</span>
+            <span>${opt}</span>
+          </button>
+        `;
+      }).join("");
 
-      exportUpdatedHTML() {
-        const currentHTML = document.documentElement.outerHTML;
-        const dataString = JSON.stringify(this.data, null, 2);
-        const updatedHTML = currentHTML.replace(
-          /const DEFAULT_DATA = \{[\s\S]*?\n    \};/,
-          `const DEFAULT_DATA = ${dataString};`
-        );
-        const blob = new Blob(['<!DOCTYPE html>\n' + updatedHTML], { type: 'text/html' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'index.html';
-        a.click();
-      },
+      const expBox = document.getElementById("instantExplanationBox");
+      if (showInstant && q.explanation) {
+        document.getElementById("instantExplanationText").textContent = q.explanation;
+        expBox.classList.remove("hidden");
+      } else {
+        expBox.classList.add("hidden");
+      }
 
-      // ==========================================
-      // 3. EXAM & QUIZ ENGINE
-      // ==========================================
-      startQuiz(subjectId, modelName, mode = 'practice') {
-        const normSub = this.normalizeId(subjectId);
-        const qs = this.data.questions.filter(q =>
-          this.normalizeId(q.subjectId) === normSub &&
-          (modelName === 'ALL' || q.model === modelName)
-        );
+      document.getElementById("prevBtn").disabled = currentIdx === 0;
+      document.getElementById("nextBtn").textContent = currentIdx === activeQuestions.length - 1 ? "إنهاء وعرض النتيجة" : "التالي";
+      renderNavGrid();
+    }
 
-        if (qs.length === 0) {
-          alert('لا توجد أسئلة مضافة في هذا النموذج حالياً.');
-          return;
+    function renderNavGrid() {
+      const grid = document.getElementById("navGrid");
+      grid.innerHTML = activeQuestions.map((_, i) => {
+        let bg = "bg-slate-800 text-slate-300 border-slate-700";
+        if (flaggedSet.has(i)) bg = "bg-amber-600 text-white border-amber-500";
+        else if (userAnswers[i] !== undefined) bg = "bg-blue-700 text-white border-blue-500";
+        if (i === currentIdx) bg += " ring-2 ring-amber-400";
+        return `<button type="button" onclick="jumpTo(${i})" class="w-8 h-8 rounded-lg border text-xs font-bold ${bg}">${i + 1}</button>`;
+      }).join("");
+    }
+
+    function selectOption(idx) {
+      if (currentMode === "practice" && userAnswers[currentIdx] !== undefined) return;
+      userAnswers[currentIdx] = idx;
+      renderQuestion();
+    }
+    function toggleFlag() { flaggedSet.has(currentIdx) ? flaggedSet.delete(currentIdx) : flaggedSet.add(currentIdx); renderQuestion(); }
+    function jumpTo(i) { currentIdx = i; renderQuestion(); }
+    function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
+    function nextQuestion() { currentIdx < activeQuestions.length - 1 ? (currentIdx++, renderQuestion()) : finishExam(); }
+
+    function finishExam() {
+      clearInterval(timerInterval);
+      document.getElementById("examRunner").classList.add("hidden");
+      document.getElementById("resultScreen").classList.remove("hidden");
+
+      let correctCount = 0;
+      activeQuestions.forEach((q, i) => { if (userAnswers[i] === q.correct) correctCount++; });
+      const pct = Math.round((correctCount / activeQuestions.length) * 100);
+
+      if (currentStudent && !isFreeTrialSession) {
+        studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+        const target = studentsList.find(s => s.code === currentStudent.code);
+        if (target) {
+          if (!target.results) target.results = [];
+          target.results.push({ subject: selectedSubject.name, score: pct });
+          saveAllLocalState();
         }
+      }
 
-        // Free tier check: allow first 5 questions if locked
-        const unlocked = this.hasAccess(subjectId);
-        const finalQuestions = unlocked ? qs : qs.slice(0, 5);
+      document.getElementById("resultStudentName").textContent = currentStudent ? currentStudent.name : "زائر (تجربة مجانية)";
+      document.getElementById("scorePercentage").textContent = `${pct}%`;
+      document.getElementById("scoreSummaryText").textContent = `أجبت بشكل صحيح على ${correctCount} من أصل ${activeQuestions.length} سؤال`;
+      document.getElementById("studentGradeLabel").textContent =
+        pct >= 90 ? "ممتاز (Excellent)" : pct >= 80 ? "جيد جداً (Very Good)" : pct >= 65 ? "جيد (Good)" : "بحاجة لمراجعة (Needs Improvement)";
 
-        if (!unlocked && qs.length > 5) {
-          alert('أنت في الوضع التجريبي: سيتم فتح أول 5 أسئلة مجاناً. فعّل اشتراكك لفتح باقي الأسئلة (' + qs.length + ' سؤال).');
-        }
+      const letters = ["A", "B", "C", "D"];
+      document.getElementById("reviewContainer").innerHTML = activeQuestions.map((q, i) => {
+        const chosen = userAnswers[i];
+        const isRight = chosen === q.correct;
+        const imgTag = (q.image && q.image.trim() !== "") ? `<img src="${q.image}" class="max-h-44 rounded-lg border border-slate-700 my-2 object-contain bg-slate-950 p-1" />` : "";
+        return `
+          <div class="p-4 rounded-xl border ${isRight ? "border-emerald-700 bg-emerald-950/30" : "border-red-800 bg-red-950/30"}">
+            <p class="font-bold text-white mb-2 ltr-text">${i + 1}. ${q.text}</p>
+            ${imgTag}
+            <p class="text-xs text-slate-300 ltr-text">Your Answer: <span class="font-bold">${chosen !== undefined ? letters[chosen] + " - " + q.options[chosen] : "Not Answered"}</span></p>
+            <p class="text-xs text-emerald-400 mt-1 ltr-text">Correct Answer: <span class="font-bold">${letters[q.correct]} - ${q.options[q.correct]}</span></p>
+            ${q.explanation ? `<p class="text-xs text-blue-300 mt-2 bg-slate-900/80 p-2.5 rounded-lg ltr-text">💡 ${q.explanation}</p>` : ""}
+          </div>
+        `;
+      }).join("");
+    }
 
-        this.stopTimer();
-        this.state.quiz = {
-          modelName: modelName === 'ALL' ? 'بنك الأسئلة الشامل' : modelName,
-          questions: finalQuestions,
-          currentIndex: 0,
-          answers: {},
-          flagged: {},
-          mode: mode,
-          secondsLeft: finalQuestions.length * 90, // 1.5 min per question
-          timerInterval: null
-        };
+    function resetToHome() {
+      document.getElementById("resultScreen").classList.add("hidden");
+      document.getElementById("academicExplorerCard").classList.remove("hidden");
+    }
 
-        this.state.view = 'quiz';
-        this.startTimer();
-        this.render();
-      },
+    // ==========================================
+    // لوحة تحكم المدير (إدارة المواد، قفلها/فتحها، الطلاب المفعّلة عندهم، البنك وقناة الواتس)
+    // ==========================================
+    let tapCount = 0;
+    let tapTimer = null;
 
-      startTimer() {
-        this.state.quiz.timerInterval = setInterval(() => {
-          if (this.state.quiz.secondsLeft > 0) {
-            this.state.quiz.secondsLeft--;
-            const timerEl = document.getElementById('quiz-timer');
-            if (timerEl) timerEl.textContent = this.formatTime(this.state.quiz.secondsLeft);
-          } else {
-            this.finishQuiz();
-          }
-        }, 1000);
-      },
+    function handleSecretTap() {
+      tapCount++;
+      clearTimeout(tapTimer);
+      if (tapCount >= 5) {
+        tapCount = 0;
+        openAdminModal();
+      } else {
+        tapTimer = setTimeout(() => { tapCount = 0; }, 2000);
+      }
+    }
 
-      stopTimer() {
-        if (this.state.quiz.timerInterval) {
-          clearInterval(this.state.quiz.timerInterval);
-          this.state.quiz.timerInterval = null;
-        }
-      },
+    function openAdminModal() {
+      document.getElementById("adminPassInput").value = "";
+      document.getElementById("adminModal").classList.remove("hidden");
+    }
 
-      formatTime(sec) {
-        const m = Math.floor(sec / 60).toString().padStart(2, '0');
-        const s = (sec % 60).toString().padStart(2, '0');
-        return `${m}:${s}`;
-      },
+    function closeAdminModal() {
+      document.getElementById("adminModal").classList.add("hidden");
+    }
 
-      selectOption(optIndex) {
-        const qIdx = this.state.quiz.currentIndex;
-        if (this.state.quiz.mode === 'practice' && this.state.quiz.answers[qIdx] !== undefined) {
-          return; // Lock answer in practice mode after selection
-        }
-        this.state.quiz.answers[qIdx] = optIndex;
-        this.render();
-      },
+    function checkAdminLogin() {
+      const pass = document.getElementById("adminPassInput").value.trim();
+      if (pass === getEffectiveAdminPassword()) {
+        closeAdminModal();
+        const savedToken = localStorage.getItem("malek_gh_token");
+        if (savedToken) document.getElementById("ghTokenInput").value = savedToken;
+        document.getElementById("adminPasswordEditInput").value = getEffectiveAdminPassword();
+        updatePlatformLockButtonUI();
+        populatePaymentFormFields();
 
-      toggleFlag() {
-        const qIdx = this.state.quiz.currentIndex;
-        this.state.quiz.flagged[qIdx] = !this.state.quiz.flagged[qIdx];
-        this.render();
-      },
+        document.getElementById("studentLoginScreen").classList.add("hidden");
+        document.getElementById("studentView").classList.add("hidden");
+        document.getElementById("loggedStudentHeaderBadge").classList.add("hidden");
+        document.getElementById("adminView").classList.remove("hidden");
 
-      jumpToQuestion(idx) {
-        if (idx >= 0 && idx < this.state.quiz.questions.length) {
-          this.state.quiz.currentIndex = idx;
-          this.render();
-        }
-      },
+        refreshAllAdminViews();
+        switchAdminTab("subjects");
+      } else {
+        alert("كلمة مرور المدير غير صحيحة!");
+      }
+    }
 
-      finishQuiz() {
-        this.stopTimer();
-        this.state.view = 'result';
-        this.render();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      },
+    function logoutAdmin() {
+      document.getElementById("adminView").classList.add("hidden");
+      document.getElementById("studentView").classList.add("hidden");
+      document.getElementById("studentLoginScreen").classList.remove("hidden");
+      renderPublicPaymentInfo();
+    }
 
-      // ==========================================
-      // 4. VIEW RENDERERS
-      // ==========================================
-      render() {
-        const root = document.getElementById('app-root');
-        if (this.state.view === 'home') {
-          root.innerHTML = this.renderHome();
-        } else if (this.state.view === 'subject') {
-          root.innerHTML = this.renderSubject();
-        } else if (this.state.view === 'quiz') {
-          root.innerHTML = this.renderQuiz();
-        } else if (this.state.view === 'result') {
-          root.innerHTML = this.renderResult();
-        }
-      },
+    function resetAllToStudentLogin() {
+      clearInterval(timerInterval);
+      currentStudent = null;
+      isFreeTrialSession = false;
+      document.getElementById("loggedStudentHeaderBadge").classList.add("hidden");
+      document.getElementById("adminView").classList.add("hidden");
+      document.getElementById("studentView").classList.add("hidden");
+      document.getElementById("studentLoginScreen").classList.remove("hidden");
+      renderPublicPaymentInfo();
+    }
 
-      renderHome() {
-        const cards = this.data.subjects.map(sub => {
-          const normId = this.normalizeId(sub.id);
-          const qCount = this.data.questions.filter(q => this.normalizeId(q.subjectId) === normId).length;
-          const fCount = this.data.files.filter(f => this.normalizeId(f.subjectId) === normId).length;
-          const lCount = this.data.lectures.filter(l => this.normalizeId(l.subjectId) === normId).length;
-          const unlocked = this.hasAccess(sub.id);
+    function updatePlatformLockButtonUI() {
+      const btn = document.getElementById("togglePlatformLockBtn");
+      if (isPlatformLocked()) {
+        btn.textContent = "🔒 حالة المنصة: مغلقة عن الطلاب";
+        btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-red-950 border border-red-700 text-red-300";
+      } else {
+        btn.textContent = "🔓 حالة المنصة: مفتوحة للطلاب";
+        btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-emerald-400";
+      }
+    }
 
+    function togglePlatformMaintenance() {
+      const nextState = !isPlatformLocked();
+      PLATFORM_LOCKED = nextState;
+      localStorage.setItem("malek_platform_locked_v5", String(nextState));
+      updatePlatformLockButtonUI();
+      alert(nextState ? "تم إغلاق المنصة عن الطلاب مؤقتاً (اضغط نشر لتثبيت الإغلاق)." : "تم فتح المنصة للطلاب.");
+    }
+
+    function updateAdminPasswordLocally() {
+      const newPass = document.getElementById("adminPasswordEditInput").value.trim();
+      if (!newPass || newPass.length < 4) return alert("أدخل كلمة مرور من 4 أحرف على الأقل.");
+      ADMIN_PASSWORD = newPass;
+      localStorage.setItem("malek_custom_admin_pass_v5", newPass);
+      alert("تم تحديث كلمة مرور المدير! اضغط 'نشر جميع التعديلات' لتثبيتها.");
+    }
+
+    function saveGithubToken() {
+      const token = document.getElementById("ghTokenInput").value.trim();
+      if (!token) return alert("يرجى إدخال المفتاح أولاً.");
+      localStorage.setItem("malek_gh_token", token);
+      alert("تم حفظ المفتاح بنجاح!");
+    }
+
+    function copyPlatformLink() {
+      const cleanUrl = window.location.origin + window.location.pathname;
+      const text = `منصة المالك الطبية (Al-Malik Medical Platform):\n${cleanUrl}\nجرّب المنصة مجاناً أو اشترك للحصول على كود الدخول الكامل.`;
+      navigator.clipboard.writeText(text).then(() => alert("تم نسخ رابط منصة المالك:\n\n" + text));
+    }
+
+    // تعبئة وحفظ بيانات الدفع والبنك وقناة الواتساب
+    function populatePaymentFormFields() {
+      document.getElementById("payBankNameInput").value = paymentConfig.bankName || "";
+      document.getElementById("payAccountHolderInput").value = paymentConfig.accountHolder || "";
+      document.getElementById("payAccountNumberInput").value = paymentConfig.accountNumber || "";
+      document.getElementById("payPhoneNumberInput").value = paymentConfig.phoneNumber || "";
+      document.getElementById("whatsappChannelUrlInput").value = paymentConfig.whatsappChannel || "";
+    }
+
+    function savePaymentAndWhatsappSettings(e) {
+      e.preventDefault();
+      paymentConfig = {
+        bankName: document.getElementById("payBankNameInput").value.trim(),
+        accountHolder: document.getElementById("payAccountHolderInput").value.trim(),
+        accountNumber: document.getElementById("payAccountNumberInput").value.trim(),
+        phoneNumber: document.getElementById("payPhoneNumberInput").value.trim(),
+        whatsappChannel: document.getElementById("whatsappChannelUrlInput").value.trim()
+      };
+      saveAllLocalState();
+      renderPublicPaymentInfo();
+      alert("✅ تم حفظ بيانات البنك والدفع ورابط قناة الواتساب! اضغط الآن على '🚀 نشر جميع التعديلات للطلاب فوراً' لتحديثها للجميع.");
+    }
+
+    function switchAdminTab(tab) {
+      const tabs = {
+        subjects: ["admTabSubjects", "adminPaneSubjects"],
+        students: ["admTabStudents", "adminPaneStudents"],
+        payment: ["admTabPayment", "adminPanePayment"],
+        smartfeed: ["admTabSmartFeed", "adminPaneSmartFeed"],
+        content: ["admTabContent", "adminPaneContent"],
+        questions: ["admTabQuestions", "adminPaneQuestions"],
+        announcements: ["admTabAnnouncements", "adminPaneAnnouncements"]
+      };
+      Object.entries(tabs).forEach(([k, [btnId, paneId]]) => {
+        document.getElementById(paneId).classList.toggle("hidden", k !== tab);
+        document.getElementById(btnId).className = (k === tab)
+          ? "px-4 py-2 rounded-xl text-xs tab-active"
+          : "px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white";
+      });
+    }
+
+    function refreshAllAdminViews() {
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+      document.getElementById("admBadgeStudents").textContent = studentsList.length;
+      document.getElementById("admBadgeSubjects").textContent = subjectsList.length;
+      document.getElementById("admBadgeContent").textContent = lecturesList.length + filesList.length;
+      document.getElementById("admBadgeQuestions").textContent = questions.length;
+      document.getElementById("admBadgeAnnouncements").textContent = announcementsList.length;
+
+      renderAdminSubjectsList();
+      renderAdminStudentsTable();
+      populateAdminSubjectSelects();
+      renderAdminContentLists();
+      renderAdminQuestionsList();
+      renderAdminAnnouncementsList();
+    }
+
+    // إدارة المواد (قفل/فتح المادة + مجانية/مدفوعة + الطلاب المفعّلة عندهم)
+    function addSubject(e) {
+      e.preventDefault();
+      const year = document.getElementById("subYearInput").value;
+      const semester = document.getElementById("subSemesterInput").value;
+      const name = document.getElementById("subNameInput").value.trim();
+      const isFreeTrial = document.getElementById("subIsFreeInput").value === "true";
+      if (!name) return;
+
+      subjectsList.push({
+        id: "sub_" + Date.now(),
+        year,
+        semester,
+        name,
+        isOpen: true,
+        isFreeTrial
+      });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      alert("تمت إضافة المادة بنجاح!");
+    }
+
+    function toggleSubjectOpenStatus(id) {
+      const sub = subjectsList.find(s => normalizeId(s.id) === normalizeId(id));
+      if (!sub) return;
+      sub.isOpen = sub.isOpen === false ? true : false;
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    function toggleSubjectFreeTrialStatus(id) {
+      const sub = subjectsList.find(s => normalizeId(s.id) === normalizeId(id));
+      if (!sub) return;
+      sub.isFreeTrial = !sub.isFreeTrial;
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    function deleteSubject(id) {
+      if (!confirm("هل تريد حذف هذه المادة؟")) return;
+      subjectsList = subjectsList.filter(s => normalizeId(s.id) !== normalizeId(id));
+      saveAllLocalState();
+      refreshAllAdminViews();
+    }
+
+    // نافذة إدارة الطلاب المفعّلة عندهم مادة معينة (من بطاقة المادة)
+    function openSubjectStudentsModal(subjectId) {
+      editingSubjectIdForStudents = subjectId;
+      const sub = subjectsList.find(s => normalizeId(s.id) === normalizeId(subjectId));
+      if (!sub) return;
+
+      document.getElementById("subStuModalInfo").textContent = `المادة: ${sub.name} (${sub.year} • ${sub.semester})`;
+      const container = document.getElementById("subStudentsChecklist");
+
+      if (studentsList.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">لا يوجد طلاب مسجلون في المنصة بعد.</p>`;
+      } else {
+        container.innerHTML = studentsList.map((stu, idx) => {
+          const hasSub = Array.isArray(stu.allowedSubjects) && stu.allowedSubjects.some(a => normalizeId(a) === normalizeId(subjectId));
           return `
-            <div onclick="app.openSubject('${sub.id.replace(/'/g, "\\'")}')"
-                 class="card-hover bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 cursor-pointer">
               <div>
-                <div class="flex items-center justify-between mb-3">
-                  <span class="text-3xl bg-slate-800/80 w-12 h-12 rounded-xl flex items-center justify-center">${sub.icon || '📚'}</span>
-                  <span class="text-xs px-2.5 py-1 rounded-full font-bold ${unlocked ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'}">
-                    ${unlocked ? 'مفتوح بالكامل' : 'معاينة مجانية'}
+                <p class="text-xs font-bold text-white">${stu.name} <span class="font-mono text-amber-400">(${stu.code})</span></p>
+                <span class="text-[11px] text-slate-400">${stu.year || ""} • ${stu.approved ? "حساب مفعّل" : "حساب غير مفعّل"}</span>
+              </div>
+              <input type="checkbox" data-stu-idx="${idx}" ${hasSub ? "checked" : ""} class="sub-stu-checkbox w-4 h-4 accent-emerald-500 rounded" />
+            </label>
+          `;
+        }).join("");
+      }
+
+      document.getElementById("subjectStudentsModal").classList.remove("hidden");
+    }
+
+    function closeSubjectStudentsModal() {
+      editingSubjectIdForStudents = null;
+      document.getElementById("subjectStudentsModal").classList.add("hidden");
+    }
+
+    function saveSubjectStudentsAssignment() {
+      if (!editingSubjectIdForStudents) return;
+      const normTarget = normalizeId(editingSubjectIdForStudents);
+      document.querySelectorAll(".sub-stu-checkbox").forEach(cb => {
+        const idx = parseInt(cb.getAttribute("data-stu-idx"));
+        const stu = studentsList[idx];
+        if (!stu) return;
+        if (!Array.isArray(stu.allowedSubjects)) stu.allowedSubjects = [];
+
+        if (cb.checked) {
+          if (!stu.allowedSubjects.some(a => normalizeId(a) === normTarget)) {
+            stu.allowedSubjects.push(editingSubjectIdForStudents);
+          }
+        } else {
+          stu.allowedSubjects = stu.allowedSubjects.filter(id => normalizeId(id) !== normTarget);
+        }
+      });
+
+      saveAllLocalState();
+      closeSubjectStudentsModal();
+      refreshAllAdminViews();
+      alert("✅ تم تحديث قائمة الطلاب المفعّلة عندهم المادة! اضغط 'نشر جميع التعديلات' لتثبيتها.");
+    }
+
+    function renderAdminSubjectsList() {
+      document.getElementById("adminSubjectsList").innerHTML = subjectsList.map(s => {
+        const isOpen = s.isOpen !== false;
+        const enrolledStudents = studentsList.filter(stu =>
+          Array.isArray(stu.allowedSubjects) && stu.allowedSubjects.some(a => normalizeId(a) === normalizeId(s.id) || normalizeId(a) === normalizeId(s.name))
+        );
+        const enrolledNames = enrolledStudents.length > 0
+          ? enrolledStudents.map(st => st.name).join("، ")
+          : "لا يوجد طلاب مفعّلة عندهم بعد";
+
+        return `
+          <div class="p-4 rounded-2xl bg-slate-950 border ${isOpen ? "border-slate-800" : "border-red-900/60"} flex flex-col justify-between gap-3">
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                <span class="text-[11px] font-bold text-amber-400">${s.year} • ${s.semester}</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded ${s.isFreeTrial ? "bg-emerald-500/20 text-emerald-300" : "bg-blue-500/20 text-blue-300"}">
+                    ${s.isFreeTrial ? "🎁 تجربة مجانية" : "💎 مدفوعة"}
+                  </span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded ${isOpen ? "bg-emerald-950 text-emerald-400 border border-emerald-800" : "bg-red-950 text-red-400 border border-red-800"}">
+                    ${isOpen ? "🔓 مفتوحة" : "🔒 مقفولة"}
                   </span>
                 </div>
-                <p class="text-xs text-orange-400 font-semibold mb-1">${sub.year || 'العلوم الطبية'}</p>
-                <h3 class="text-lg font-extrabold text-white mb-2">${sub.name}</h3>
-                <p class="text-xs text-slate-400 leading-relaxed mb-4">${sub.desc || ''}</p>
               </div>
-              <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-300">
-                <span>📝 ${qCount} سؤال</span>
-                <span>📄 ${fCount} ملف</span>
-                <span>🎥 ${lCount} شرح</span>
+              <h4 class="text-base font-extrabold text-white">${s.name}</h4>
+              <div class="mt-2 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800">
+                <p class="text-[11px] font-bold text-slate-300">👨‍⚕️ الطلاب المفعّلة عندهم (${enrolledStudents.length}):</p>
+                <p class="text-[11px] text-emerald-400 mt-0.5 leading-relaxed">${enrolledNames}</p>
               </div>
             </div>
+
+            <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/80">
+              <button type="button" onclick="toggleSubjectOpenStatus('${escapeHtmlAttr(s.id)}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold ${isOpen ? "bg-amber-900/50 text-amber-200 hover:bg-amber-800" : "bg-emerald-700 text-white hover:bg-emerald-600"}">
+                ${isOpen ? "🔒 قفل على الطلاب" : "🔓 فتح للطلاب"}
+              </button>
+              <button type="button" onclick="openSubjectStudentsModal('${escapeHtmlAttr(s.id)}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-blue-950 text-blue-300 border border-blue-800 hover:bg-blue-900">
+                👥 الطلاب (${enrolledStudents.length})
+              </button>
+              <button type="button" onclick="toggleSubjectFreeTrialStatus('${escapeHtmlAttr(s.id)}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-200 hover:bg-slate-700">
+                ${s.isFreeTrial ? "تحويل لمدفوعة" : "إتاحة كمجانية"}
+              </button>
+              <button type="button" onclick="deleteSubject('${escapeHtmlAttr(s.id)}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-red-950 text-red-300 hover:bg-red-900 mr-auto">
+                حذف
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // إدارة الطلاب
+    function adminCreateStudentDirect(e) {
+      e.preventDefault();
+      const name = document.getElementById("admNewStuName").value.trim();
+      const studentId = document.getElementById("admNewStuId").value.trim();
+      const year = document.getElementById("admNewStuYear").value;
+      if (!name || !studentId) return;
+
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+      const code = generateUniqueStudentCode();
+      studentsList.push({
+        name,
+        studentId,
+        year,
+        code,
+        approved: true,
+        allowedSubjects: [],
+        results: []
+      });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      navigator.clipboard.writeText(code).catch(() => {});
+      alert(`✅ تم إنشاء حساب مفعّل للطالب (${name})\nكود الدخول: ${code}\n\nحدد له المواد المسموحة الآن ثم اضغط "نشر جميع التعديلات".`);
+    }
+
+    function copyStudentCodeForAdmin(code, name) {
+      const msg = `مرحباً ${name}، تم تفعيل اشتراكك في منصة المالك الطبية.\nرابط المنصة: ${window.location.origin + window.location.pathname}\nكود الدخول الخاص بك: ${code}`;
+      navigator.clipboard.writeText(msg).then(() => {
+        alert("تم نسخ رسالة التفعيل مع الكود لإرسالها للطالب:\n\n" + msg);
+      });
+    }
+
+    function openStudentPermissionsModal(idx) {
+      editingStudentIdx = idx;
+      const stu = studentsList[idx];
+      if (!stu) return;
+      if (!Array.isArray(stu.allowedSubjects)) stu.allowedSubjects = [];
+      document.getElementById("permModalStudentInfo").textContent = `الطالب: ${stu.name} (${stu.code}) — ${stu.year || ""}`;
+
+      const listContainer = document.getElementById("permSubjectsChecklist");
+      if (subjectsList.length === 0) {
+        listContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">لا توجد مواد مضافة بعد.</p>`;
+      } else {
+        listContainer.innerHTML = subjectsList.map(sub => {
+          const isChecked = stu.allowedSubjects.some(a => normalizeId(a) === normalizeId(sub.id) || normalizeId(a) === normalizeId(sub.name)) ? "checked" : "";
+          return `
+            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-500/50 cursor-pointer">
+              <div>
+                <p class="text-xs font-bold text-white">${sub.name}</p>
+                <span class="text-[11px] text-amber-400">${sub.year} • ${sub.semester}</span>
+              </div>
+              <input type="checkbox" value="${escapeHtmlAttr(sub.id)}" ${isChecked} class="perm-subject-checkbox w-4 h-4 accent-amber-500 rounded" />
+            </label>
           `;
-        }).join('');
-
-        return `
-          <div class="bg-gradient-to-l from-slate-900 via-slate-900 to-orange-950/30 border border-slate-800 rounded-3xl p-6 sm:p-8 mb-8">
-            <span class="inline-block bg-orange-500/10 text-orange-400 border border-orange-500/20 text-xs font-bold px-3 py-1 rounded-full mb-3">
-              المنصة التعليمية الأولى لطلبة الطب والعلوم الصحية
-            </span>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">أهلاً بك في منصة المالك الطبية</h2>
-            <p class="text-sm text-slate-300 max-w-2xl leading-relaxed">
-              اختر المادة الدراسية للوصول إلى التلاخيص المعتمدة، الشباتر، شروحات الفيديو، والاختبارات التفاعلية المزودة بالتصحيح الفوري والشرح العلمي لكل سؤال.
-            </p>
-          </div>
-
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-extrabold text-white">المواد الدراسية المتاحة</h3>
-            <span class="text-xs text-slate-400">اضغط على أي مادة لفتح محتواها</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            ${cards}
-          </div>
-        `;
-      },
-
-      renderSubject() {
-        const normId = this.normalizeId(this.state.activeSubjectId);
-        const sub = this.data.subjects.find(s => this.normalizeId(s.id) === normId) || { id: this.state.activeSubjectId, name: this.state.activeSubjectId };
-        const unlocked = this.hasAccess(sub.id);
-
-        const subQuestions = this.data.questions.filter(q => this.normalizeId(q.subjectId) === normId);
-        const models = [...new Set(subQuestions.map(q => q.model || 'نموذج عام'))];
-        const subFiles = this.data.files.filter(f => this.normalizeId(f.subjectId) === normId);
-        const subLectures = this.data.lectures.filter(l => this.normalizeId(l.subjectId) === normId);
-
-        let tabContent = '';
-
-        if (this.state.activeTab === 'exams') {
-          if (models.length === 0) {
-            tabContent = `<div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-sm">لا توجد اختبارات مضافة لهذه المادة حالياً.</div>`;
-          } else {
-            const modelCards = models.map(m => {
-              const count = subQuestions.filter(q => (q.model || 'نموذج عام') === m).length;
-              return `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <span class="text-xs text-orange-400 font-bold">نموذج اختبار تفاعلي</span>
-                    <h4 class="text-base font-extrabold text-white mt-0.5 ltr-text">${m}</h4>
-                    <p class="text-xs text-slate-400 mt-1">عدد الأسئلة: ${count} سؤال اختيار من متعدد مع الشرح</p>
-                  </div>
-                  <div class="flex flex-wrap gap-2">
-                    <button onclick="app.startQuiz('${sub.id.replace(/'/g, "\\'")}', '${m.replace(/'/g, "\\'")}', 'practice')"
-                            class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition">
-                      تدريب (تصحيح فوري)
-                    </button>
-                    <button onclick="app.startQuiz('${sub.id.replace(/'/g, "\\'")}', '${m.replace(/'/g, "\\'")}', 'exam')"
-                            class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-bold px-4 py-2 rounded-xl text-xs transition">
-                      امتحان حقيقي (مؤقت)
-                    </button>
-                  </div>
-                </div>
-              `;
-            }).join('');
-
-            tabContent = `
-              <div class="space-y-4">
-                ${models.length > 1 ? `
-                  <div class="bg-gradient-to-l from-orange-500/10 to-slate-900 border border-orange-500/30 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <h4 class="text-base font-extrabold text-white">بنك الأسئلة الشامل للمادة (${subQuestions.length} سؤال)</h4>
-                      <p class="text-xs text-slate-300">يجمع كافة أسئلة النماذج في اختبار واحد متكامل</p>
-                    </div>
-                    <button onclick="app.startQuiz('${sub.id.replace(/'/g, "\\'")}', 'ALL', 'practice')"
-                            class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs">
-                      بدء البنك الشامل
-                    </button>
-                  </div>
-                ` : ''}
-                ${modelCards}
-              </div>
-            `;
-          }
-        } else if (this.state.activeTab === 'تلاخيص' || this.state.activeTab === 'شباتر') {
-          const filteredFiles = subFiles.filter(f => f.category === this.state.activeTab);
-          tabContent = filteredFiles.length === 0
-            ? `<div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-sm">لا توجد ${this.state.activeTab} مضافة حالياً.</div>`
-            : `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">` + filteredFiles.map(f => {
-                const canOpen = unlocked || f.isFree;
-                return `
-                  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between gap-3">
-                    <div>
-                      <span class="text-xs text-orange-400 font-bold">${f.category}</span>
-                      <h4 class="text-sm font-bold text-white mt-0.5">${f.title}</h4>
-                    </div>
-                    ${canOpen
-                      ? `<a href="${f.url}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0">فتح الملف</a>`
-                      : `<button onclick="app.openModal('activation-modal')" class="bg-slate-800 text-orange-400 border border-orange-500/30 text-xs font-bold px-3 py-2 rounded-xl shrink-0">🔒 للمشتركين</button>`
-                    }
-                  </div>
-                `;
-              }).join('') + `</div>`;
-        } else if (this.state.activeTab === 'شروحات') {
-          tabContent = subLectures.length === 0
-            ? `<div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-sm">لا توجد شروحات فيديو مضافة حالياً.</div>`
-            : `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">` + subLectures.map(l => {
-                const canOpen = unlocked || l.isFree;
-                return `
-                  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between gap-3">
-                    <div>
-                      <span class="text-xs text-blue-400 font-bold">شرح فيديو</span>
-                      <h4 class="text-sm font-bold text-white mt-0.5">${l.title}</h4>
-                    </div>
-                    ${canOpen
-                      ? `<a href="${l.url}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0">مشاهدة</a>`
-                      : `<button onclick="app.openModal('activation-modal')" class="bg-slate-800 text-orange-400 border border-orange-500/30 text-xs font-bold px-3 py-2 rounded-xl shrink-0">🔒 للمشتركين</button>`
-                    }
-                  </div>
-                `;
-              }).join('') + `</div>`;
-        }
-
-        const tabs = [
-          { id: 'exams', label: `الاختبارات (${subQuestions.length})` },
-          { id: 'تلاخيص', label: 'تلاخيص' },
-          { id: 'شباتر', label: 'شباتر' },
-          { id: 'شروحات', label: 'شروحات' }
-        ];
-
-        return `
-          <div class="mb-6">
-            <button onclick="app.goHome()" class="text-xs text-slate-400 hover:text-orange-400 font-bold mb-3 inline-flex items-center gap-1">
-              &rarr; العودة إلى جميع المواد
-            </button>
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h2 class="text-2xl font-extrabold text-white">${sub.name}</h2>
-                <p class="text-xs text-slate-400 mt-1">${sub.desc || ''}</p>
-              </div>
-              ${!unlocked ? `
-                <button onclick="app.openModal('activation-modal')" class="bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shrink-0">
-                  تفعيل المادة بالكامل 🔓
-                </button>
-              ` : ''}
-            </div>
-          </div>
-
-          <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-800 pb-3">
-            ${tabs.map(t => `
-              <button onclick="app.setSubjectTab('${t.id}')"
-                      class="px-4 py-2 rounded-xl text-xs font-bold transition ${this.state.activeTab === t.id ? 'bg-orange-500 text-white' : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'}">
-                ${t.label}
-              </button>
-            `).join('')}
-          </div>
-
-          ${tabContent}
-        `;
-      },
-
-      renderQuiz() {
-        const qState = this.state.quiz;
-        const idx = qState.currentIndex;
-        const q = qState.questions[idx];
-        const userAns = qState.answers[idx];
-        const isAnswered = userAns !== undefined;
-        const showImmediateFeedback = qState.mode === 'practice' && isAnswered;
-        const letters = ['A', 'B', 'C', 'D'];
-
-        return `
-          <div class="max-w-4xl mx-auto">
-            <!-- Top Bar -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <span class="text-xs text-orange-400 font-bold">${qState.mode === 'practice' ? 'وضع التدريب الفوري' : 'وضع الامتحان الحقيقي'}</span>
-                <h3 class="text-sm font-extrabold text-white ltr-text">${qState.modelName}</h3>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-orange-400">
-                  ⏱️ <span id="quiz-timer">${this.formatTime(qState.secondsLeft)}</span>
-                </div>
-                <button onclick="app.finishQuiz()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl">
-                  إنهاء وعرض النتيجة
-                </button>
-              </div>
-            </div>
-
-            <!-- Question Palette -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 mb-5 flex flex-wrap gap-1.5">
-              ${qState.questions.map((_, i) => {
-                const answered = qState.answers[i] !== undefined;
-                const flagged = qState.flagged[i];
-                let cls = 'bg-slate-950 text-slate-400 border-slate-800';
-                if (i === idx) cls = 'bg-orange-500 text-white border-orange-400 ring-2 ring-orange-500/40';
-                else if (flagged) cls = 'bg-amber-500/20 text-amber-300 border-amber-500/50';
-                else if (answered) cls = 'bg-blue-600/20 text-blue-300 border-blue-500/40';
-
-                return `<button onclick="app.jumpToQuestion(${i})" class="w-8 h-8 rounded-lg border text-xs font-bold ${cls}">${i + 1}</button>`;
-              }).join('')}
-            </div>
-
-            <!-- Question Card -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-5">
-              <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-slate-400">سؤال ${idx + 1} من ${qState.questions.length}</span>
-                <button onclick="app.toggleFlag()" class="text-xs px-3 py-1 rounded-lg border ${qState.flagged[idx] ? 'bg-amber-500/20 border-amber-500 text-amber-300' : 'bg-slate-800 border-slate-700 text-slate-300'}">
-                  ${qState.flagged[idx] ? '🚩 مُعلّم للمراجعة' : '🏳️ تعليم السؤال'}
-                </button>
-              </div>
-
-              <p class="text-base sm:text-lg font-bold text-white leading-relaxed mb-6 ltr-text">${q.text}</p>
-
-              <div class="space-y-3">
-                ${q.options.map((opt, oIdx) => {
-                  let btnStyle = 'bg-slate-950 border-slate-800 hover:border-slate-600 text-slate-200';
-                  if (showImmediateFeedback) {
-                    if (oIdx === q.correct) {
-                      btnStyle = 'bg-emerald-950/60 border-emerald-500 text-emerald-200';
-                    } else if (oIdx === userAns && userAns !== q.correct) {
-                      btnStyle = 'bg-red-950/60 border-red-500 text-red-200';
-                    }
-                  } else if (userAns === oIdx) {
-                    btnStyle = 'bg-orange-500/20 border-orange-500 text-white';
-                  }
-
-                  return `
-                    <button onclick="app.selectOption(${oIdx})"
-                            class="w-full text-left ltr-text p-4 rounded-xl border transition flex items-center gap-3 ${btnStyle}">
-                      <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-extrabold shrink-0">${letters[oIdx]}</span>
-                      <span class="text-sm font-semibold">${opt}</span>
-                    </button>
-                  `;
-                }).join('')}
-              </div>
-
-              ${showImmediateFeedback && q.explanation ? `
-                <div class="mt-5 p-4 rounded-xl bg-slate-950 border border-emerald-500/30">
-                  <p class="text-xs font-extrabold text-emerald-400 mb-1">💡 التفسير العلمي (Scientific Explanation):</p>
-                  <p class="text-xs sm:text-sm text-slate-300 leading-relaxed ltr-text">${q.explanation}</p>
-                </div>
-              ` : ''}
-            </div>
-
-            <!-- Bottom Navigation -->
-            <div class="flex justify-between items-center">
-              <button onclick="app.jumpToQuestion(${idx - 1})" ${idx === 0 ? 'disabled' : ''}
-                      class="bg-slate-800 disabled:opacity-40 hover:bg-slate-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs">
-                &rarr; السابق
-              </button>
-              <button onclick="app.jumpToQuestion(${idx + 1})" ${idx === qState.questions.length - 1 ? 'disabled' : ''}
-                      class="bg-orange-500 disabled:opacity-40 hover:bg-orange-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs">
-                التالي &larr;
-              </button>
-            </div>
-          </div>
-        `;
-      },
-
-      renderResult() {
-        const qState = this.state.quiz;
-        let correctCount = 0;
-        qState.questions.forEach((q, i) => {
-          if (qState.answers[i] === q.correct) correctCount++;
-        });
-        const total = qState.questions.length;
-        const pct = Math.round((correctCount / total) * 100);
-        let gradeLabel = 'يحتاج إلى مراجعة';
-        let gradeColor = 'text-red-400';
-        if (pct >= 90) { gradeLabel = 'ممتاز (Excellent)'; gradeColor = 'text-emerald-400'; }
-        else if (pct >= 80) { gradeLabel = 'جيد جداً (Very Good)'; gradeColor = 'text-blue-400'; }
-        else if (pct >= 65) { gradeLabel = 'جيد (Good)'; gradeColor = 'text-amber-400'; }
-
-        const letters = ['A', 'B', 'C', 'D'];
-
-        return `
-          <div class="max-w-4xl mx-auto">
-            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center mb-8">
-              <p class="text-xs text-slate-400 font-bold mb-1">نتيجة الاختبار</p>
-              <h2 class="text-4xl font-extrabold text-white mb-2">${pct}%</h2>
-              <p class="text-base font-extrabold ${gradeColor} mb-4">${gradeLabel}</p>
-              <p class="text-sm text-slate-300 mb-6">أجبت بشكل صحيح على <span class="text-emerald-400 font-bold">${correctCount}</span> من أصل <span class="font-bold">${total}</span> سؤال.</p>
-              <div class="flex flex-wrap justify-center gap-3">
-                <button onclick="app.startQuiz('${this.state.activeSubjectId.replace(/'/g, "\\'")}', '${qState.modelName === 'بنك الأسئلة الشامل' ? 'ALL' : qState.modelName.replace(/'/g, "\\'")}', '${qState.mode}')"
-                        class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs">
-                  إعادة الاختبار
-                </button>
-                <button onclick="app.openSubject('${this.state.activeSubjectId.replace(/'/g, "\\'")}')"
-                        class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs">
-                  العودة للمادة
-                </button>
-              </div>
-            </div>
-
-            <h3 class="text-lg font-extrabold text-white mb-4">مراجعة الإجابات والشروحات العلمية</h3>
-            <div class="space-y-4">
-              ${qState.questions.map((q, i) => {
-                const uAns = qState.answers[i];
-                const isRight = uAns === q.correct;
-                return `
-                  <div class="bg-slate-900 border ${isRight ? 'border-emerald-500/40' : 'border-red-500/40'} rounded-2xl p-5">
-                    <div class="flex justify-between items-center mb-2">
-                      <span class="text-xs font-bold ${isRight ? 'text-emerald-400' : 'text-red-400'}">
-                        ${isRight ? '✅ إجابة صحيحة' : '❌ إجابة خاطئة'} (سؤال ${i + 1})
-                      </span>
-                    </div>
-                    <p class="text-sm font-bold text-white mb-3 ltr-text">${q.text}</p>
-                    <div class="text-xs space-y-1 mb-3 ltr-text">
-                      <p class="text-slate-300">إجابتك: <span class="font-bold ${isRight ? 'text-emerald-400' : 'text-red-400'}">${uAns !== undefined ? letters[uAns] + ') ' + q.options[uAns] : 'لم يتم الحل'}</span></p>
-                      <p class="text-emerald-400">الإجابة الصحيحة: <span class="font-bold">${letters[q.correct]}) ${q.options[q.correct]}</span></p>
-                    </div>
-                    ${q.explanation ? `<p class="text-xs text-slate-300 bg-slate-950 p-3 rounded-xl border border-slate-800 ltr-text">💡 ${q.explanation}</p>` : ''}
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          </div>
-        `;
+        }).join("");
       }
-    };
 
-    // Start Platform Safely
-    document.addEventListener('DOMContentLoaded', () => app.init());
+      document.getElementById("studentPermissionsModal").classList.remove("hidden");
+    }
+
+    function closeStudentPermissionsModal() { editingStudentIdx = null; document.getElementById("studentPermissionsModal").classList.add("hidden"); }
+    function toggleAllPermissionsCheckboxes(state) { document.querySelectorAll(".perm-subject-checkbox").forEach(cb => cb.checked = state); }
+
+    function saveStudentSubjectPermissions() {
+      if (editingStudentIdx === null) return;
+      const selectedIds = Array.from(document.querySelectorAll(".perm-subject-checkbox:checked")).map(cb => cb.value);
+      studentsList[editingStudentIdx].allowedSubjects = selectedIds;
+      saveAllLocalState();
+      closeStudentPermissionsModal();
+      refreshAllAdminViews();
+      alert(`✅ تم حفظ صلاحيات المواد (${selectedIds.length} مادة). اضغط "نشر جميع التعديلات" لتثبيتها.`);
+    }
+
+    function renderAdminStudentsTable() {
+      studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+      document.getElementById("admBadgeStudents").textContent = studentsList.length;
+      const tbody = document.getElementById("adminStudentsTableBody");
+
+      if (studentsList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-5 text-center text-slate-400">لا يوجد طلاب مسجلون بعد.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = studentsList.map((s, idx) => {
+        const statusBadge = s.approved
+          ? `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">مُفعّل ✅</span>`
+          : `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold">بانتظار التفعيل ⏳</span>`;
+
+        const toggleBtn = s.approved
+          ? `<button type="button" onclick="toggleStudentApproval(${idx}, false)" class="px-2 py-1 rounded-lg bg-amber-900/60 text-amber-200 hover:bg-amber-800 font-bold">🔒 إغلاق</button>`
+          : `<button type="button" onclick="toggleStudentApproval(${idx}, true)" class="px-2 py-1 rounded-lg bg-emerald-700 text-white hover:bg-emerald-600 font-bold">✅ تفعيل</button>`;
+
+        const allowedCount = Array.isArray(s.allowedSubjects) ? s.allowedSubjects.length : 0;
+        const allowedNames = Array.isArray(s.allowedSubjects) && s.allowedSubjects.length > 0
+          ? s.allowedSubjects.map(id => subjectsList.find(sub => normalizeId(sub.id) === normalizeId(id))?.name || id).join("، ")
+          : "لا توجد مواد مسموحة بعد";
+
+        return `
+          <tr class="hover:bg-slate-900/60">
+            <td class="py-3 px-3 font-bold text-white">${s.name}</td>
+            <td class="py-3 px-3 text-slate-300">${s.studentId}</td>
+            <td class="py-3 px-3 text-slate-300">${s.year || "—"}</td>
+            <td class="py-3 px-3 font-mono font-bold text-amber-400">
+              <div class="flex items-center gap-1.5">
+                <span>${s.code}</span>
+                <button type="button" onclick="copyStudentCodeForAdmin('${escapeHtmlAttr(s.code)}', '${escapeHtmlAttr(s.name)}')" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-white hover:border-amber-500">نسخ</button>
+              </div>
+            </td>
+            <td class="py-3 px-3">${statusBadge}</td>
+            <td class="py-3 px-3">
+              <button type="button" onclick="openStudentPermissionsModal(${idx})" class="px-2.5 py-1 rounded-lg bg-blue-950 text-blue-300 border border-blue-700 hover:bg-blue-900 font-bold">
+                📚 صلاحيات المواد (${allowedCount})
+              </button>
+              <p class="text-[10px] text-slate-400 mt-1 max-w-[180px] truncate" title="${escapeHtmlAttr(allowedNames)}">${allowedNames}</p>
+            </td>
+            <td class="py-3 px-3">
+              <div class="flex items-center gap-1.5">
+                ${toggleBtn}
+                <button type="button" onclick="deleteStudentRecord(${idx})" class="px-2 py-1 rounded-lg bg-red-900/60 text-red-200 hover:bg-red-800 font-bold">حذف</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function toggleStudentApproval(idx, state) { studentsList[idx].approved = state; saveAllLocalState(); renderAdminStudentsTable(); }
+    function deleteStudentRecord(idx) { studentsList.splice(idx, 1); saveAllLocalState(); refreshAllAdminViews(); }
+
+    // التغذية الذكية السريعة
+    function applyFeedPayload(payload) {
+      let addedSubjects = 0, addedLectures = 0, addedFiles = 0, addedQuestions = 0;
+
+      if (Array.isArray(payload.subjects)) {
+        payload.subjects.forEach(s => {
+          if (!s.name) return;
+          const id = s.id || ("sub_" + Date.now() + "_" + Math.floor(Math.random() * 999));
+          const exists = subjectsList.some(ex =>
+            normalizeId(ex.id) === normalizeId(id) ||
+            (normalizeId(ex.name) === normalizeId(s.name) && normalizeId(ex.year) === normalizeId(s.year || "السنة الأولى") && normalizeId(ex.semester) === normalizeId(s.semester || "الفصل الأول"))
+          );
+          if (!exists) {
+            subjectsList.push({
+              id,
+              year: s.year || "السنة الأولى",
+              semester: s.semester || "الفصل الأول",
+              name: s.name,
+              isOpen: s.isOpen !== false,
+              isFreeTrial: s.isFreeTrial === true
+            });
+            addedSubjects++;
+          }
+        });
+      }
+
+      if (Array.isArray(payload.lectures)) {
+        payload.lectures.forEach(l => {
+          if (!l.title || !l.url) return;
+          const subId = resolveSubjectId(l.subjectId, l.subjectName);
+          if (subId) {
+            lecturesList.push({ id: "lec_" + Date.now() + "_" + Math.floor(Math.random() * 999), subjectId: subId, title: l.title, url: l.url });
+            addedLectures++;
+          }
+        });
+      }
+
+      if (Array.isArray(payload.files)) {
+        payload.files.forEach(f => {
+          if (!f.title || !f.url) return;
+          const subId = resolveSubjectId(f.subjectId, f.subjectName);
+          if (subId) {
+            filesList.push({
+              id: "file_" + Date.now() + "_" + Math.floor(Math.random() * 999),
+              subjectId: subId,
+              category: ["تلاخيص", "شباتر", "شروحات"].includes(f.category) ? f.category : "تلاخيص",
+              title: f.title,
+              url: f.url
+            });
+            addedFiles++;
+          }
+        });
+      }
+
+      if (Array.isArray(payload.questions)) {
+        const fallbackSub = document.getElementById("bulkQSubjectSelect")?.value || (subjectsList[0]?.id || "");
+        const fallbackModel = document.getElementById("bulkQDefaultModel")?.value.trim() || "Model 1";
+        payload.questions.forEach(q => {
+          if (!q.text || !Array.isArray(q.options)) return;
+          const subId = resolveSubjectId(q.subjectId, q.subjectName) || fallbackSub;
+          if (subId) {
+            questions.push({
+              subjectId: subId,
+              model: q.model || fallbackModel,
+              text: q.text,
+              image: q.image || "",
+              options: q.options,
+              correct: typeof q.correct === "number" ? q.correct : 0,
+              explanation: q.explanation || ""
+            });
+            addedQuestions++;
+          }
+        });
+      }
+
+      saveAllLocalState();
+      refreshAllAdminViews();
+      return { addedSubjects, addedLectures, addedFiles, addedQuestions };
+    }
+
+    function resolveSubjectId(id, name) {
+      if (id) {
+        const normId = normalizeId(id);
+        const byId = subjectsList.find(s => normalizeId(s.id) === normId || normalizeId(s.name) === normId);
+        if (byId) return byId.id;
+      }
+      if (name) {
+        const normName = normalizeId(name);
+        const found = subjectsList.find(s => normalizeId(s.name).includes(normName) || normName.includes(normalizeId(s.name)));
+        if (found) return found.id;
+      }
+      return subjectsList[0]?.id || "";
+    }
+
+    function processBulkContentFeed() {
+      const raw = document.getElementById("bulkContentJsonInput").value.trim();
+      if (!raw) return alert("يرجى لصق كود حزمة الملفات والمحاضرات أولاً.");
+      try {
+        const parsed = JSON.parse(raw);
+        const res = applyFeedPayload(parsed);
+        document.getElementById("bulkContentJsonInput").value = "";
+        alert(`✅ تمت التغذية بنجاح!\n• مواد: ${res.addedSubjects}\n• محاضرات: ${res.addedLectures}\n• ملفات: ${res.addedFiles}`);
+      } catch (err) {
+        alert("❌ تنسيق الكود غير صحيح، تأكد من نسخ الكود كاملاً بدون نقص.");
+      }
+    }
+
+    function processBulkQuestionsFeed() {
+      const raw = document.getElementById("bulkQuestionsJsonInput").value.trim();
+      if (!raw) return alert("يرجى لصق كود حزمة الأسئلة أولاً.");
+      try {
+        const parsed = JSON.parse(raw);
+        const payload = Array.isArray(parsed) ? { questions: parsed } : parsed;
+        const res = applyFeedPayload(payload);
+        document.getElementById("bulkQuestionsJsonInput").value = "";
+        alert(`✅ تمت إضافة (${res.addedQuestions}) سؤال بنجاح!`);
+      } catch (err) {
+        alert("❌ تنسيق كود الأسئلة غير صحيح، تأكد من نسخ الكود كاملاً بدون نقص.");
+      }
+    }
+
+    async function importFromRemoteFeedUrl() {
+      const url = document.getElementById("smartFeedUrlInput").value.trim();
+      if (!url) return alert("يرجى لصق رابط التغذية (URL) أولاً.");
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("تعذر الوصول إلى الرابط.");
+        const data = await res.json();
+        const stats = applyFeedPayload(data);
+        document.getElementById("smartFeedUrlInput").value = "";
+        alert(`✅ تم سحب البيانات وتغذية المنصة بنجاح!\n• مواد: ${stats.addedSubjects}\n• محاضرات: ${stats.addedLectures}\n• ملفات: ${stats.addedFiles}\n• أسئلة: ${stats.addedQuestions}`);
+      } catch (err) {
+        alert("❌ خطأ أثناء السحب من الرابط: " + err.message);
+      }
+    }
+
+    function populateAdminSubjectSelects() {
+      const optionsHtml = subjectsList.map(s => `<option value="${escapeHtmlAttr(s.id)}">${s.year} (${s.semester}) — ${s.name}</option>`).join("");
+      ["lecSubjectSelect", "fileSubjectSelect", "qSubjectSelect", "bulkQSubjectSelect"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = optionsHtml || `<option value="">أضف مادة أولاً</option>`;
+      });
+    }
+
+    function addLecture(e) {
+      e.preventDefault();
+      const subjectId = document.getElementById("lecSubjectSelect").value;
+      const title = document.getElementById("lecTitleInput").value.trim();
+      const url = document.getElementById("lecUrlInput").value.trim();
+      if (!subjectId) return alert("اختر المادة أولاً.");
+      lecturesList.push({ id: "lec_" + Date.now(), subjectId, title, url });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      alert("تمت إضافة رابط المحاضرة!");
+    }
+
+    function deleteLecture(id) { lecturesList = lecturesList.filter(l => l.id !== id); saveAllLocalState(); refreshAllAdminViews(); }
+
+    function addStudyFile(e) {
+      e.preventDefault();
+      const subjectId = document.getElementById("fileSubjectSelect").value;
+      const category = document.getElementById("fileCategorySelect").value;
+      const title = document.getElementById("fileTitleInput").value.trim();
+      const url = document.getElementById("fileUrlInput").value.trim();
+      if (!subjectId) return alert("اختر المادة أولاً.");
+      filesList.push({ id: "file_" + Date.now(), subjectId, category, title, url });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+      alert("تمت إضافة الملف بنجاح!");
+    }
+
+    function deleteStudyFile(id) { filesList = filesList.filter(f => f.id !== id); saveAllLocalState(); refreshAllAdminViews(); }
+
+    function renderAdminContentLists() {
+      document.getElementById("adminLecturesList").innerHTML = lecturesList.map(l => {
+        const sub = subjectsList.find(s => belongsToSubject(l.subjectId, s));
+        return `
+          <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2 text-xs">
+            <div>
+              <span class="text-amber-400 font-bold">${sub ? sub.name : "مادة"}</span>
+              <p class="text-white font-semibold">${l.title}</p>
+            </div>
+            <button type="button" onclick="deleteLecture('${escapeHtmlAttr(l.id)}')" class="px-2 py-1 rounded bg-red-900/60 text-red-200">حذف</button>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("adminFilesList").innerHTML = filesList.map(f => {
+        const sub = subjectsList.find(s => belongsToSubject(f.subjectId, s));
+        return `
+          <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2 text-xs">
+            <div>
+              <span class="text-emerald-400 font-bold">[${f.category}] ${sub ? sub.name : ""}</span>
+              <p class="text-white font-semibold">${f.title}</p>
+            </div>
+            <button type="button" onclick="deleteStudyFile('${escapeHtmlAttr(f.id)}')" class="px-2 py-1 rounded bg-red-900/60 text-red-200">حذف</button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function handleQuestionImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const maxWidth = 800;
+          const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+          pendingQuestionImageData = canvas.toDataURL("image/jpeg", 0.75);
+          document.getElementById("qImageUrl").value = "";
+          document.getElementById("adminImagePreview").src = pendingQuestionImageData;
+          document.getElementById("adminImagePreviewBox").classList.remove("hidden");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewImageUrlInput() {
+      const url = document.getElementById("qImageUrl").value.trim();
+      if (url) {
+        pendingQuestionImageData = url;
+        document.getElementById("qImageFile").value = "";
+        document.getElementById("adminImagePreview").src = url;
+        document.getElementById("adminImagePreviewBox").classList.remove("hidden");
+      } else {
+        clearAdminQuestionImage();
+      }
+    }
+
+    function clearAdminQuestionImage() {
+      pendingQuestionImageData = "";
+      document.getElementById("qImageFile").value = "";
+      document.getElementById("qImageUrl").value = "";
+      document.getElementById("adminImagePreview").src = "";
+      document.getElementById("adminImagePreviewBox").classList.add("hidden");
+    }
+
+    function addQuestion(e) {
+      e.preventDefault();
+      const subjectId = document.getElementById("qSubjectSelect").value;
+      if (!subjectId) return alert("يرجى إضافة مادة أولاً.");
+      questions.push({
+        subjectId,
+        model: document.getElementById("qModel").value.trim(),
+        text: document.getElementById("qText").value.trim(),
+        image: pendingQuestionImageData || "",
+        options: [
+          document.getElementById("opt0").value.trim(),
+          document.getElementById("opt1").value.trim(),
+          document.getElementById("opt2").value.trim(),
+          document.getElementById("opt3").value.trim()
+        ],
+        correct: parseInt(document.getElementById("qCorrect").value),
+        explanation: document.getElementById("qExp").value.trim()
+      });
+      saveAllLocalState();
+      e.target.reset();
+      clearAdminQuestionImage();
+      refreshAllAdminViews();
+      alert("تمت إضافة السؤال! اضغط 'نشر جميع التعديلات للطلاب فوراً'.");
+    }
+
+    function deleteQuestion(idx) { questions.splice(idx, 1); saveAllLocalState(); refreshAllAdminViews(); }
+    function clearAllQuestionsConfirm() { if (confirm("هل أنت متأكد من حذف جميع الأسئلة؟")) { questions = []; saveAllLocalState(); refreshAllAdminViews(); } }
+
+    function renderAdminQuestionsList() {
+      document.getElementById("adminQCount").textContent = questions.length;
+      document.getElementById("adminQuestionsList").innerHTML = questions.map((q, i) => {
+        const sub = subjectsList.find(s => belongsToSubject(q.subjectId, s));
+        return `
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between gap-3">
+            <div class="flex items-start gap-3">
+              ${q.image ? `<img src="${q.image}" class="w-12 h-12 rounded-lg object-cover border border-slate-700 shrink-0" />` : ""}
+              <div>
+                <span class="text-xs text-amber-400 font-bold">${sub ? sub.name : ""} • ${q.model}</span>
+                <p class="text-xs font-semibold text-white mt-1 ltr-text">${i + 1}. ${q.text}</p>
+              </div>
+            </div>
+            <button type="button" onclick="deleteQuestion(${i})" class="text-xs px-2.5 py-1 rounded bg-red-900/60 text-red-200 shrink-0">حذف</button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function addAnnouncement(e) {
+      e.preventDefault();
+      const text = document.getElementById("annTextInput").value.trim();
+      if (!text) return;
+      announcementsList.unshift({ id: "ann_" + Date.now(), text, date: new Date().toLocaleDateString("ar-EG") });
+      saveAllLocalState();
+      e.target.reset();
+      refreshAllAdminViews();
+    }
+
+    function deleteAnnouncement(id) { announcementsList = announcementsList.filter(a => a.id !== id); saveAllLocalState(); refreshAllAdminViews(); }
+
+    function renderAdminAnnouncementsList() {
+      document.getElementById("adminAnnouncementsList").innerHTML = announcementsList.map(a => `
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3 text-xs">
+          <p class="text-slate-200">${a.text}</p>
+          <button type="button" onclick="deleteAnnouncement('${escapeHtmlAttr(a.id)}')" class="px-2.5 py-1 rounded bg-red-900/60 text-red-200 shrink-0">حذف</button>
+        </div>
+      `).join("");
+    }
+
+    // النشر المباشر لجميع التعديلات إلى GitHub
+    async function publishDirectlyToGitHub() {
+      const token = (localStorage.getItem("malek_gh_token") || document.getElementById("ghTokenInput").value).trim();
+      if (!token) {
+        alert("يرجى لصق مفتاح GitHub Token في الخانة بالأعلى أولاً ثم الضغط على حفظ.");
+        return;
+      }
+
+      const currentAdminPass = document.getElementById("adminPasswordEditInput").value.trim() || getEffectiveAdminPassword();
+      const btn = document.getElementById("publishBtn");
+      const status = document.getElementById("publishStatus");
+      btn.disabled = true;
+      btn.textContent = "⏳ جاري النشر للطلاب...";
+      status.textContent = "جاري تحديث بيانات الدفع، قناة الواتساب، المواد، الطلاب، والاختبارات...";
+
+      try {
+        studentsList = loadMergedArray("malek_students_v5", DEFAULT_STUDENTS, "code");
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
+        const getRes = await fetch(apiUrl, {
+          headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+
+        if (!getRes.ok) {
+          const errData = await getRes.json().catch(() => ({}));
+          throw new Error(`(${getRes.status}) ${errData.message || "تأكد من صحة مفتاح GitHub Token وصلاحياته (repo)."}`);
+        }
+        const fileData = await getRes.json();
+
+        const currentContent = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ""))));
+        let updatedContent = currentContent
+          .replace(/let ADMIN_PASSWORD = ".*?";/, `let ADMIN_PASSWORD = ${JSON.stringify(currentAdminPass)};`)
+          .replace(/let PLATFORM_LOCKED = (true|false);/, `let PLATFORM_LOCKED = ${isPlatformLocked()};`)
+          .replace(/const DEFAULT_PAYMENT_CONFIG = \{[\s\S]*?\};/, `const DEFAULT_PAYMENT_CONFIG = ${JSON.stringify(paymentConfig, null, 2)};`)
+          .replace(/const DEFAULT_STUDENTS = \[[\s\S]*?\];/, `const DEFAULT_STUDENTS = ${JSON.stringify(studentsList, null, 2)};`)
+          .replace(/const DEFAULT_ANNOUNCEMENTS = \[[\s\S]*?\];/, `const DEFAULT_ANNOUNCEMENTS = ${JSON.stringify(announcementsList, null, 2)};`)
+          .replace(/const DEFAULT_SUBJECTS = \[[\s\S]*?\];/, `const DEFAULT_SUBJECTS = ${JSON.stringify(subjectsList, null, 2)};`)
+          .replace(/const DEFAULT_LECTURES = \[[\s\S]*?\];/, `const DEFAULT_LECTURES = ${JSON.stringify(lecturesList, null, 2)};`)
+          .replace(/const DEFAULT_FILES = \[[\s\S]*?\];/, `const DEFAULT_FILES = ${JSON.stringify(filesList, null, 2)};`)
+          .replace(/const DEFAULT_QUESTIONS = \[[\s\S]*?\];/, `const DEFAULT_QUESTIONS = ${JSON.stringify(questions, null, 2)};`);
+
+        const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
+
+        const putRes = await fetch(apiUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: "Publish free trial, paid portal, bank & WhatsApp updates from Al-Malik LMS",
+            content: encodedContent,
+            sha: fileData.sha
+          })
+        });
+
+        if (!putRes.ok) throw new Error("فشل رفع التحديثات إلى GitHub.");
+
+        ADMIN_PASSWORD = currentAdminPass;
+        localStorage.setItem("malek_custom_admin_pass_v5", currentAdminPass);
+        status.className = "text-xs font-bold text-emerald-400";
+        status.textContent = "✅ تم النشر بنجاح! جميع التعديلات متاحة الآن للطلاب.";
+        alert("تم نشر جميع التعديلات بنجاح للطلاب!");
+      } catch (err) {
+        status.className = "text-xs font-bold text-red-400";
+        status.textContent = "❌ خطأ: " + err.message;
+        alert("خطأ أثناء النشر: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "🚀 نشر جميع التعديلات للطلاب فوراً";
+      }
+    }
+
+    // تهيئة بيانات الدفع عند فتح الصفحة بأمان
+    document.addEventListener("DOMContentLoaded", () => {
+      renderPublicPaymentInfo();
+    });
   </script>
 </body>
 </html>
